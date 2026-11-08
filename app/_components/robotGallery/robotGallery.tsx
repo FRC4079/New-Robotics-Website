@@ -24,7 +24,7 @@ export default function RobotGallery({ title, robots, basePath }: RobotGalleryPr
         <EditableText
           value={title}
           path={`${basePath}.title`}
-          as="h1"
+          as="h2"
         />
         <div className={styles.robotGrid}>
           {robots.map((robot, index) => (
@@ -34,22 +34,22 @@ export default function RobotGallery({ title, robots, basePath }: RobotGalleryPr
                   src={robot.image}
                   alt={`${robot.year} Robot - ${robot.name}`}
                   path={`${basePath}.robots.${index}.image`}
+                  width={640}
+                  height={420}
                 />
               </div>
               <div className={styles.robotInfo}>
-                <h3>
-                  <EditableText
-                    value={robot.year}
-                    path={`${basePath}.robots.${index}.year`}
-                    as="span"
-                  />
-                  {" - \""}
-                  <EditableText
-                    value={robot.name}
-                    path={`${basePath}.robots.${index}.name`}
-                    as="span"
-                  />
-                  {"\""}</h3>
+                <EditableText
+                  value={robot.year}
+                  path={`${basePath}.robots.${index}.year`}
+                  as="span"
+                  className={styles.robotYear}
+                />
+                <EditableText
+                  value={robot.name}
+                  path={`${basePath}.robots.${index}.name`}
+                  as="h3"
+                />
                 <EditableText
                   value={robot.description}
                   path={`${basePath}.robots.${index}.description`}

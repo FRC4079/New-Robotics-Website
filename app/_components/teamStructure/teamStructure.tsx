@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./teamStructure.module.scss";
 import EditableText from "@/components/editable/EditableText";
+import EditableIcon from "@/components/icons/EditableIcon";
 
 interface Subteam {
   icon: string;
@@ -22,16 +23,16 @@ export default function TeamStructure({ title, subteams, basePath }: TeamStructu
         <EditableText
           value={title}
           path={`${basePath}.title`}
-          as="h1"
+          as="h2"
         />
         <div className={styles.subteamsGrid}>
           {subteams.map((subteam, index) => (
             <div key={index} className={styles.subteam}>
               <div className={styles.subteamIcon}>
-                <EditableText
+                <EditableIcon
                   value={subteam.icon}
                   path={`${basePath}.subteams.${index}.icon`}
-                  as="span"
+                  size={24}
                 />
               </div>
               <EditableText

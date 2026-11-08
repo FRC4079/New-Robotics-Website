@@ -1,131 +1,93 @@
-.teamOverview {
-  padding: 8vh 0;
-  background: #000000;
-  color: white;
+@use '../../styles/mixins' as *;
 
-  .container {
-    max-width: 1400px;
-    width: 90%;
-    margin: 0 auto;
-    padding: 0 2vw;
-  }
-
-  .overviewContent {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 4rem;
-    align-items: start;
-
-    .overviewText {
-      h1 {
-        font-size: 3.5rem;
-        color: red;
-        margin-bottom: 2rem;
-        font-weight: 900;
-      }
-
-      p {
-        font-size: 1.2rem;
-        color: #ccc;
-        line-height: 1.7;
-        margin-bottom: 2rem;
-      }
-
-      .highlights {
-        display: grid;
-        gap: 2rem;
-        margin-top: 3rem;
-
-        .highlight {
-          background: #111111;
-          border: 2px solid #333;
-          border-radius: 15px;
-          padding: 2rem;
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: red;
-            background: #1a1a1a;
-            transform: translateY(-2px);
-          }
-
-          h3 {
-            font-size: 1.4rem;
-            color: red;
-            margin-bottom: 1rem;
-            font-weight: 700;
-          }
-
-          p {
-            font-size: 1rem;
-            color: #bbb;
-            margin: 0;
-            line-height: 1.5;
-          }
-        }
-      }
-    }
-
-    .overviewImage {
-      position: relative;
-
-      img {
-        width: 100%;
-        height: auto;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        transition: transform 0.3s ease;
-
-        &:hover {
-          transform: scale(1.02);
-        }
-      }
-
-      .imageCaption {
-        background: #111111;
-        border: 2px solid #333;
-        border-radius: 10px;
-        padding: 1rem;
-        margin-top: 1rem;
-        font-size: 0.9rem;
-        color: #999;
-        text-align: center;
-      }
-    }
-  }
+.container {
+  @include container;
 }
 
-// Responsive design
-@media (max-width: 1200px) {
-  .teamOverview .overviewContent {
+.overviewContent {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4rem);
+
+  @include bp-down(900px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
-
-    .overviewText h1 {
-      font-size: 2.8rem;
-    }
   }
 }
 
-@media (max-width: 768px) {
-  .teamOverview {
-    .container {
-      width: 95%;
-      padding: 0 1vw;
-    }
+.overviewText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 
-    .overviewContent .overviewText {
-      h1 {
-        font-size: 2.2rem;
-      }
-
-      .highlights {
-        gap: 1.5rem;
-
-        .highlight {
-          padding: 1.5rem;
-        }
-      }
-    }
+  h2 {
+    @include section-title;
+    margin: 0;
   }
+
+  > p {
+    @include lead;
+    margin: 0;
+  }
+}
+
+.highlights {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.highlight {
+  @include card(var(--space-4) var(--space-5));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+
+  h3 {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+}
+
+.highlightIcon {
+  @include icon-tile(2.75rem);
+}
+
+.highlightBody {
+  min-width: 0;
+}
+
+.overviewImage {
+  margin: 0;
+  position: sticky;
+  top: calc(var(--nav-height) + var(--space-5));
+
+  @include bp-down(900px) {
+    position: static;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.imageCaption {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
 }

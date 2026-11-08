@@ -1,118 +1,83 @@
-.competitionSchedule {
-  padding: 8vh 0;
-  background: #0a0a0a;
-  color: white;
+@use '../../styles/mixins' as *;
 
-  .container {
-    max-width: 1400px;
-    width: 90%;
-    margin: 0 auto;
-    padding: 0 2vw;
-  }
+.container {
+  @include container;
 
-  h1 {
-    font-size: 4rem;
-    color: red;
-    text-align: center;
-    margin-bottom: 5rem;
-    font-weight: 900;
-  }
-
-  .scheduleGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
-
-    .eventCard {
-      background: #111111;
-      border: 2px solid #333;
-      border-radius: 20px;
-      padding: 2rem;
-      display: flex;
-      gap: 2rem;
-      align-items: center;
-      transition: all 0.4s ease;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-
-      &:hover {
-        transform: translateY(-8px);
-        border-color: red;
-        box-shadow: 0 20px 40px rgba(255, 0, 0, 0.2);
-        background: #1a1a1a;
-      }
-
-      .eventDate {
-        text-align: center;
-        min-width: 80px;
-        padding: 1rem;
-        background: red;
-        border-radius: 15px;
-        color: white;
-
-        .month {
-          font-size: 0.9rem;
-          font-weight: 700;
-          margin-bottom: 0.5rem;
-        }
-
-        .day {
-          font-size: 2rem;
-          font-weight: 900;
-        }
-      }
-
-      .eventInfo {
-        flex: 1;
-
-        h3 {
-          font-size: 1.4rem;
-          color: red;
-          margin-bottom: 0.5rem;
-          font-weight: 700;
-        }
-
-        p {
-          font-size: 1rem;
-          color: #ccc;
-          line-height: 1.5;
-          margin-bottom: 0.8rem;
-        }
-
-        .eventLocation {
-          font-size: 0.9rem;
-          color: #999;
-          font-style: italic;
-        }
-      }
-    }
+  > h2 {
+    @include section-title;
+    margin-bottom: var(--space-7);
   }
 }
 
-// Responsive design
-@media (max-width: 768px) {
-  .competitionSchedule {
-    .container {
-      width: 95%;
-      padding: 0 1vw;
-    }
+.scheduleGrid {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 52rem;
+}
 
-    h1 {
-      font-size: 2.5rem;
-    }
+.eventCard {
+  @include card(var(--space-4) var(--space-5));
+  @include card-hover;
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
 
-    .scheduleGrid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-
-      .eventCard {
-        padding: 1.5rem;
-        flex-direction: column;
-        text-align: center;
-
-        .eventDate {
-          margin-bottom: 1rem;
-        }
-      }
-    }
+  @include bp-down(520px) {
+    align-items: flex-start;
+    gap: var(--space-4);
   }
+}
+
+.eventDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  text-align: center;
+  line-height: 1.1;
+}
+
+.month {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.day {
+  margin-top: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 900;
+  color: var(--text);
+}
+
+.eventInfo {
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+}
+
+.eventLocation {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-subtle);
 }

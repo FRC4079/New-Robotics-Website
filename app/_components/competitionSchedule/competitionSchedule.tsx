@@ -23,7 +23,7 @@ export default function CompetitionSchedule({ title, events, basePath }: Competi
         <EditableText
           value={title}
           path={`${basePath}.title`}
-          as="h1"
+          as="h2"
         />
         <div className={styles.scheduleGrid}>
           {events.map((event, index) => (
