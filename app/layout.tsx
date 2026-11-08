@@ -7,6 +7,7 @@ import { EditModeProvider } from '@/contexts/EditModeContext';
 import { ContentProvider } from '@/contexts/ContentContext';
 import EditToolbar from '@/components/editable/EditToolbar';
 import { getServerContent } from '@/utils/contentStore';
+import { fontVariables } from '@/utils/globalFonts';
 
 // Content is edited at runtime, so pages must be rendered per request
 // instead of being frozen at build time.
@@ -26,7 +27,7 @@ export default async function RootLayout({children}: { children: React.ReactNode
     const content = await getServerContent();
 
     return (
-        <html lang="en">
+        <html lang="en" className={fontVariables}>
         <body>
             <ContentProvider initialContent={content}>
                 <AuthProvider>

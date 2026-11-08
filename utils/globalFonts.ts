@@ -1,4 +1,22 @@
-import { Montserrat, Titillium_Web } from "next/font/google";
+import { Inter, Montserrat, Titillium_Web } from "next/font/google";
+
+// Site-wide font variables. Applied on <html> in the root layout and consumed
+// through --font-display / --font-body in app/globals.scss.
+const display = Titillium_Web({
+    weight: ["400", "600", "700", "900"],
+    style: "normal",
+    subsets: ["latin"],
+    variable: "--font-titillium",
+    display: "swap",
+});
+
+const body = Inter({
+    subsets: ["latin"],
+    variable: "--font-inter",
+    display: "swap",
+});
+
+export const fontVariables: string = `${display.variable} ${body.variable}`;
 
 // Titillium Web
 const Titillium_Web_300 = Titillium_Web({
