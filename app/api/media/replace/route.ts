@@ -1,82 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, unlink } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { stat, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { requireAdmin } from '@/utils/auth';
+import {
+  MAX_UPLOAD_BYTES,
+  MEDIA_EXTENSIONS,
+  backupFile,
+  isAllowedUpload,
+  resolveInPublic,
+  toPublicUrl,
+} from '@/utils/media';
+
+function fail(error: string, status: number) {
+  return NextResponse.json({ success: false, error }, { status });
+}
 
 // Replace existing media file
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const existingPath = formData.get('existingPath') as string;
-    
-    if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'No file provided' },
-        { status: 400 }
-      );
+    const file = formData.get('file');
+    const existingPath = formData.get('existingPath');
+
+    if (!(file instanceof File)) {
+      return fail('No file provided', 400);
+    }
+    if (typeof existingPath !== 'string' || existingPath === '') {
+      return fail('No existing file path provided', 400);
+    }
+    if (!isAllowedUpload(file)) {
+      return fail('Invalid file type. Only images are allowed.', 400);
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return fail(`File is too large. The limit is ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`, 413);
     }
 
-    if (!existingPath) {
-      return NextResponse.json(
-        { success: false, error: 'No existing file path provided' },
-        { status: 400 }
-      );
+    const existingFullPath = resolveInPublic(existingPath);
+    if (!existingFullPath || !MEDIA_EXTENSIONS.has(path.extname(existingFullPath).toLowerCase())) {
+      return fail('Invalid file path', 400);
     }
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid file type. Only images are allowed.' },
-        { status: 400 }
-      );
+    const info = await stat(existingFullPath).catch(() => null);
+    if (!info?.isFile()) {
+      return fail('Existing file not found', 404);
     }
 
-    // Get the full path of existing file
-    const existingFullPath = path.join(process.cwd(), 'public', existingPath);
-    
-    if (!existsSync(existingFullPath)) {
-      return NextResponse.json(
-        { success: false, error: 'Existing file not found' },
-        { status: 404 }
-      );
-    }
+    await backupFile(existingFullPath);
+    await writeFile(existingFullPath, Buffer.from(await file.arrayBuffer()));
 
-    // Create backup of existing file (optional)
-    const backupDir = path.join(process.cwd(), 'public', '.backups');
-    if (!existsSync(backupDir)) {
-      await require('fs/promises').mkdir(backupDir, { recursive: true });
-    }
-    
-    const timestamp = Date.now();
-    const existingFileName = path.basename(existingPath);
-    const backupPath = path.join(backupDir, `${timestamp}-${existingFileName}`);
-    
-    try {
-      await require('fs/promises').copyFile(existingFullPath, backupPath);
-    } catch (backupError) {
-      console.warn('Could not create backup:', backupError);
-    }
-
-    // Replace the file
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    
-    await writeFile(existingFullPath, buffer);
-    
     return NextResponse.json({
       success: true,
       message: 'File replaced successfully',
-      filePath: `/${existingPath}`,
-      backupCreated: true
+      filePath: toPublicUrl(existingFullPath),
+      backupCreated: true,
     });
-    
   } catch (error) {
     console.error('Error replacing file:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to replace file' },
-      { status: 500 }
-    );
+    return fail('Failed to replace file', 500);
   }
 }
