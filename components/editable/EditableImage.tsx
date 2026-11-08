@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useEditMode } from '@/contexts/EditModeContext';
 import { useContent } from '@/hooks/useContent';
@@ -47,86 +47,38 @@ export default function EditableImage({
   const [isUploading, setIsUploading] = useState(false);
   const [showStyleEditor, setShowStyleEditor] = useState(false);
   const [styleEditorPosition, setStyleEditorPosition] = useState({ x: 0, y: 0 });
-  const [localStyle, setLocalStyle] = useState<ImageStyle>(initialStyle || {});
-  const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-  const [mounted, setMounted] = useState(false);
+  // Portals only render in edit mode, which never happens on the server.
+  const mounted = typeof document !== 'undefined';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const hasChanges = pendingChanges.has(path) || pendingChanges.has(`${path}.style`);
 
-  // Load style from content JSON using the path
-  useEffect(() => {
-    if (!initialStyle && content && path) {
-      // Navigate through the content object using the path
-      const keys = path.split('.').flatMap(key => {
-        const arrayMatch = key.match(/^([^\[]+)\[(\d+)\]$/);
-        if (arrayMatch) {
-          return [arrayMatch[1], arrayMatch[2]];
-        }
-        return key;
-      });
-      
-      let current: any = content;
-      for (const key of keys) {
-        if (current && typeof current === 'object' && key in current) {
-          current = current[key];
-        } else {
-          current = null;
-          break;
-        }
-      }
-      
-      // Extract style from the value
-      const style = getContentImageStyle(current);
-      if (style) {
-        setLocalStyle(style);
+  // The style stored with this image in the content, unless one is passed in.
+  const incomingStyle = useMemo<ImageStyle | null>(() => {
+    if (initialStyle || !content || !path) return initialStyle ?? null;
+
+    const keys = path.split('.').flatMap((key) => {
+      const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/);
+      return arrayMatch ? [arrayMatch[1], arrayMatch[2]] : key;
+    });
+    let current: unknown = content;
+    for (const key of keys) {
+      if (current && typeof current === 'object' && key in current) {
+        current = (current as Record<string, unknown>)[key];
+      } else {
+        return null;
       }
     }
+    return getContentImageStyle(current) ?? null;
   }, [content, path, initialStyle]);
 
-  // Track if component is mounted for portal
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  // Update button position when hovering
-  useEffect(() => {
-    if (isEditMode && isHovered && imageRef.current) {
-      let rafId: number | null = null;
-      
-      const updateButtonPosition = () => {
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-        
-        rafId = requestAnimationFrame(() => {
-          if (imageRef.current) {
-            const rect = imageRef.current.getBoundingClientRect();
-            // Position button below and to the right to never overlap
-            setButtonPosition({
-              x: rect.right + 8,   // 8px to the right
-              y: rect.bottom + 4   // 4px below the image
-            });
-          }
-        });
-      };
-      
-      updateButtonPosition();
-      
-      // Use passive listeners and throttle with RAF
-      window.addEventListener('scroll', updateButtonPosition, { passive: true, capture: true });
-      window.addEventListener('resize', updateButtonPosition, { passive: true });
-      
-      return () => {
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
-        window.removeEventListener('scroll', updateButtonPosition, true);
-        window.removeEventListener('resize', updateButtonPosition);
-      };
-    }
-  }, [isEditMode, isHovered]);
+  const incomingKey = incomingStyle ? JSON.stringify(incomingStyle) : '';
+  const [localStyle, setLocalStyle] = useState<ImageStyle>(incomingStyle ?? {});
+  const [seenStyleKey, setSeenStyleKey] = useState(incomingKey);
+  if (seenStyleKey !== incomingKey) {
+    setSeenStyleKey(incomingKey);
+    if (incomingStyle) setLocalStyle(incomingStyle);
+  }
 
   const handleReplaceClick = () => {
     if (isEditMode) {
@@ -196,7 +148,6 @@ export default function EditableImage({
     if (!showStyleEditor && imageRef.current) {
       const rect = imageRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
       
       // Calculate initial position to the right of the element
       let x = rect.right + 10;
@@ -261,7 +212,7 @@ export default function EditableImage({
               alt={alt}
               fill
               style={{ 
-                objectFit: imageStyle.objectFit as any, 
+                objectFit: imageStyle.objectFit, 
                 objectPosition: imageStyle.objectPosition,
                 borderRadius: imageStyle.borderRadius 
               }}
@@ -274,7 +225,7 @@ export default function EditableImage({
               width={width || 500}
               height={height || 300}
               style={{ 
-                objectFit: imageStyle.objectFit as any, 
+                objectFit: imageStyle.objectFit, 
                 objectPosition: imageStyle.objectPosition,
                 borderRadius: imageStyle.borderRadius 
               }}
@@ -290,7 +241,7 @@ export default function EditableImage({
             loading="lazy"
             decoding="async"
             className={className}
-            style={imageStyle as any}
+            style={imageStyle}
           />
         )}
 

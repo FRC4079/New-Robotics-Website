@@ -214,10 +214,10 @@ export interface SiteContent {
         image?: string;
         tags: string[];
       }>;
-      teamOverview?: any;
-      robots?: any[];
-      teamStructure?: any;
-      schedule?: any[];
+      teamOverview?: TeamSlot;
+      robots?: TeamSlot[];
+      teamStructure?: TeamSlot;
+      schedule?: TeamSlot[];
     };
     ftc: {
       title: string;
@@ -231,12 +231,12 @@ export interface SiteContent {
         description?: string;
         icon?: string;
       }>;
-      achievements?: any[];
-      news?: any[];
-      teamOverview?: any;
-      robots?: any[];
-      teamStructure?: any;
-      schedule?: any[];
+      achievements?: TeamSlot[];
+      news?: TeamSlot[];
+      teamOverview?: TeamSlot;
+      robots?: TeamSlot[];
+      teamStructure?: TeamSlot;
+      schedule?: TeamSlot[];
     };
     vex: {
       title: string;
@@ -250,12 +250,12 @@ export interface SiteContent {
         description?: string;
         icon?: string;
       }>;
-      achievements?: any[];
-      news?: any[];
-      teamOverview?: any;
-      robots?: any[];
-      teamStructure?: any;
-      schedule?: any[];
+      achievements?: TeamSlot[];
+      news?: TeamSlot[];
+      teamOverview?: TeamSlot;
+      robots?: TeamSlot[];
+      teamStructure?: TeamSlot;
+      schedule?: TeamSlot[];
     };
   };
   teamsOverview: Array<{
@@ -396,3 +396,8 @@ export interface SiteContent {
     };
   };
 }
+
+// The team pages store these sections in a shape that each page component
+// defines for itself, so the content layer keeps them loose on purpose.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TeamSlot = any;

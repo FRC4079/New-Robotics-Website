@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect } from 'react';
 import styles from './StyleEditor.module.scss';
 import { ImageStyle, TextStyle } from '@/utils/content';
 
+type AnyStyle = TextStyle & ImageStyle;
+
 interface StyleEditorProps {
   type: 'text' | 'image';
-  currentStyles: any;
-  onStyleChange: (styles: any) => void;
+  currentStyles: AnyStyle;
+  onStyleChange: (styles: AnyStyle) => void;
   onClose: () => void;
   position: { x: number; y: number };
 }
@@ -22,9 +24,12 @@ export default function StyleEditor({
   const [adjustedPosition, setAdjustedPosition] = useState(position);
   const editorRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Follow the styles passed in when they change (adjusting state while rendering).
+  const [seenStyles, setSeenStyles] = useState(currentStyles);
+  if (seenStyles !== currentStyles) {
+    setSeenStyles(currentStyles);
     setLocalStyles(currentStyles);
-  }, [currentStyles]);
+  }
 
   // Adjust position to keep editor within viewport bounds
   // Use useLayoutEffect for immediate measurement before paint
@@ -76,7 +81,7 @@ export default function StyleEditor({
 
   const handleReset = (property: string) => {
     const updated = { ...localStyles };
-    delete (updated as any)[property];
+    delete (updated as Record<string, unknown>)[property];
     setLocalStyles(updated);
     onStyleChange(updated);
   };

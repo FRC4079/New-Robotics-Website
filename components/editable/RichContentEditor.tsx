@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './RichContentEditor.module.scss';
 import { useEditMode } from '@/contexts/EditModeContext';
 
@@ -20,22 +20,7 @@ interface RichContentEditorProps {
   className?: string;
 }
 
-export default function RichContentEditor({
-  content,
-  path,
-  onChange,
-  className = '',
-}: RichContentEditorProps) {
-  const { isEditMode, addPendingChange, notify } = useEditMode();
-  const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseContent(content));
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Update blocks when content prop changes
-  useEffect(() => {
-    setBlocks(parseContent(content));
-  }, [content]);
-
-  function parseContent(html: string): ContentBlock[] {
+function parseContent(html: string): ContentBlock[] {
     // Simple parser - split by image tags and create blocks
     const parts: ContentBlock[] = [];
     const imgRegex = /<img[^>]+src="([^"]+)"[^>]*>/g;
@@ -85,6 +70,25 @@ export default function RichContentEditor({
       id: 'block-0',
     }];
   }
+
+export default function RichContentEditor({
+  content,
+  path,
+  onChange,
+  className = '',
+}: RichContentEditorProps) {
+  const { isEditMode, addPendingChange, notify } = useEditMode();
+  const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseContent(content));
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Take new content from the props when it changes (adjusting state while rendering).
+  const [seenContent, setSeenContent] = useState(content);
+  if (seenContent !== content) {
+    setSeenContent(content);
+    setBlocks(parseContent(content));
+  }
+
+
 
   function serializeContent(blocks: ContentBlock[]): string {
     return blocks.map(block => {
@@ -153,7 +157,7 @@ export default function RichContentEditor({
     };
   };
 
-  const handleImageStyleChange = (blockId: string, newStyle: any) => {
+  const handleImageStyleChange = (blockId: string, newStyle: ContentBlock['imageStyle']) => {
     const newBlocks = blocks.map(block =>
       block.id === blockId ? { ...block, imageStyle: newStyle } : block
     );
@@ -191,7 +195,7 @@ export default function RichContentEditor({
         style={{ display: 'none' }}
       />
       
-      {blocks.map((block, index) => (
+      {blocks.map((block) => (
         <div key={block.id} className={styles.block}>
           {block.type === 'text' ? (
             <div className={styles.textBlock}>
@@ -242,7 +246,7 @@ export default function RichContentEditor({
                   value={block.imageStyle?.alignment || 'center'}
                   onChange={(e) => handleImageStyleChange(block.id, {
                     ...block.imageStyle,
-                    alignment: e.target.value as any,
+                    alignment: e.target.value as 'left' | 'center' | 'right' | 'full',
                   })}
                   className={styles.alignmentSelector}
                 >

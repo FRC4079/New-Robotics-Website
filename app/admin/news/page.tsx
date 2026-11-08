@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import ui from '../ui.module.scss';
@@ -78,19 +78,24 @@ export default function NewsManager() {
 
   const allowed = canEdit('news');
 
-  const refresh = useCallback(async () => {
-    try {
-      setArticles((await loadArticles()).slice().sort(byNewest));
-    } catch (error) {
-      setStatus({ kind: 'error', text: error instanceof Error ? error.message : 'Could not load the articles.' });
-    }
-  }, []);
-
   useEffect(() => {
     if (isLoading) return;
-    if (!allowed) router.replace('/admin');
-    else void refresh();
-  }, [isLoading, allowed, router, refresh]);
+    if (!allowed) {
+      router.replace('/admin');
+      return;
+    }
+    let active = true;
+    loadArticles()
+      .then((list) => {
+        if (active) setArticles(list.slice().sort(byNewest));
+      })
+      .catch((error) => {
+        if (active) setStatus({ kind: 'error', text: error instanceof Error ? error.message : 'Could not load the articles.' });
+      });
+    return () => {
+      active = false;
+    };
+  }, [isLoading, allowed, router]);
 
   if (!allowed || !user) return null;
 
@@ -277,7 +282,6 @@ export default function NewsManager() {
           <div className={ui.field}>
             <label htmlFor="imageFile">Cover image</label>
             {draft.image && (
-              // eslint-disable-next-line @next/next/no-img-element -- previewing an arbitrary saved URL
               <img src={draft.image} alt="" className={styles.preview} />
             )}
             <input

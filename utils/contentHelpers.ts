@@ -4,7 +4,10 @@
 import { TextStyle, ImageStyle } from './content';
 
 // Helper to normalize content values that may be strings or objects with value/style
-export function normalizeContentValue(value: any): { value: string; style?: TextStyle } {
+type StyledValue = { value?: unknown; src?: unknown; style?: TextStyle & ImageStyle };
+
+export function normalizeContentValue(input: unknown): { value: string; style?: TextStyle } {
+  const value = input as StyledValue | string | null | undefined;
   // Handle null or undefined
   if (value === null || value === undefined) {
     return { value: '' };
@@ -16,7 +19,7 @@ export function normalizeContentValue(value: any): { value: string; style?: Text
   }
   
   // If it's an object with a value property
-  if (typeof value === 'object' && value !== null) {
+  if (typeof value === 'object') {
     // Handle both { value: ..., style: ... } and { src: ..., style: ... } formats
     if ('value' in value) {
       return {
@@ -34,23 +37,23 @@ export function normalizeContentValue(value: any): { value: string; style?: Text
   }
   
   // Fallback: convert to string
-  return { value: String(value) };
+  return { value: String(input) };
 }
 
 // Helper to extract just the string value from normalized content
-export function getContentValue(value: any): string {
+export function getContentValue(value: unknown): string {
   const normalized = normalizeContentValue(value);
   return normalized.value;
 }
 
 // Helper to extract style from normalized content
-export function getContentStyle(value: any): TextStyle | undefined {
+export function getContentStyle(value: unknown): TextStyle | undefined {
   return normalizeContentValue(value).style;
 }
 
 // Helper to extract image style from normalized content
-export function getContentImageStyle(value: any): ImageStyle | undefined {
-  if (typeof value === 'object' && value !== null && value.style) {
+export function getContentImageStyle(value: unknown): ImageStyle | undefined {
+  if (typeof value === 'object' && value !== null && 'style' in value && value.style) {
     return value.style as ImageStyle;
   }
   return undefined;

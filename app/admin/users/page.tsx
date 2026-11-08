@@ -26,6 +26,16 @@ type Draft = {
 
 const emptyDraft: Draft = { existing: null, username: '', displayName: '', password: '', permissions: [] };
 
+async function fetchAccounts(): Promise<{ accounts?: Account[]; error: string }> {
+  try {
+    const response = await fetch('/api/users', { cache: 'no-store' });
+    const data = await response.json();
+    return data.success ? { accounts: data.users, error: '' } : { error: data.error ?? 'Could not load accounts.' };
+  } catch {
+    return { error: 'Could not reach the server.' };
+  }
+}
+
 async function call(url: string, method: string, body?: unknown): Promise<{ ok: boolean; error?: string }> {
   try {
     const response = await fetch(url, {
@@ -50,20 +60,24 @@ export default function UsersPage() {
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    try {
-      const response = await fetch('/api/users', { cache: 'no-store' });
-      const data = await response.json();
-      if (data.success) setAccounts(data.users);
-      else setStatus({ kind: 'error', text: data.error ?? 'Could not load accounts.' });
-    } catch {
-      setStatus({ kind: 'error', text: 'Could not reach the server.' });
-    }
+    const result = await fetchAccounts();
+    if (result.accounts) setAccounts(result.accounts);
+    else setStatus({ kind: 'error', text: result.error });
   }, []);
 
   useEffect(() => {
     if (!isLoading && !isSuperAdmin) router.replace('/admin');
-    if (isSuperAdmin) void load();
-  }, [isLoading, isSuperAdmin, router, load]);
+    if (!isSuperAdmin) return;
+    let active = true;
+    fetchAccounts().then((result) => {
+      if (!active) return;
+      if (result.accounts) setAccounts(result.accounts);
+      else setStatus({ kind: 'error', text: result.error });
+    });
+    return () => {
+      active = false;
+    };
+  }, [isLoading, isSuperAdmin, router]);
 
   if (!isSuperAdmin) return null;
 

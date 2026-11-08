@@ -9,8 +9,8 @@ interface EditModeContextType {
   enableEditMode: () => void;
   disableEditMode: () => void;
   toggleEditMode: () => void;
-  pendingChanges: Map<string, any>;
-  addPendingChange: (path: string, value: any) => void;
+  pendingChanges: Map<string, unknown>;
+  addPendingChange: (path: string, value: unknown) => void;
   clearPendingChanges: () => void;
   savePendingChanges: () => Promise<boolean>;
   /** A short message shown in the edit bar, instead of a browser dialog. */
@@ -25,7 +25,7 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
   const [editRequested, setIsEditMode] = useState(false);
   // Editing is only possible while signed in, so logging out also ends edit mode.
   const isEditMode = editRequested && isAuthenticated && canEditAny;
-  const [pendingChanges, setPendingChanges] = useState<Map<string, any>>(new Map());
+  const [pendingChanges, setPendingChanges] = useState<Map<string, unknown>>(new Map());
   const [notice, setNotice] = useState<string | null>(null);
 
   const notify = useCallback((message: string) => setNotice(message), []);
@@ -52,7 +52,7 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isEditMode]);
 
-  const addPendingChange = useCallback((path: string, value: any) => {
+  const addPendingChange = useCallback((path: string, value: unknown) => {
     setPendingChanges(prev => {
       const newMap = new Map(prev);
       newMap.set(path, value);
@@ -71,7 +71,7 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
 
     try {
       // Convert Map to object for API
-      const changes: Record<string, any> = {};
+      const changes: Record<string, unknown> = {};
       pendingChanges.forEach((value, key) => {
         changes[key] = value;
       });

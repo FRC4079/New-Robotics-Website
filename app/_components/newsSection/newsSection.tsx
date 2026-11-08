@@ -38,10 +38,12 @@ export default function NewsSection({
     const [selectedCategory, setSelectedCategory] = React.useState<string>('All');
     const [localArticles, setLocalArticles] = React.useState<NewsArticle[]>(articles);
 
-    // Update local articles when prop changes
-    React.useEffect(() => {
+    // Take new articles from the props when they change (adjusting state while rendering).
+    const [seenArticles, setSeenArticles] = React.useState(articles);
+    if (seenArticles !== articles) {
+        setSeenArticles(articles);
         setLocalArticles(articles);
-    }, [articles]);
+    }
 
     const categories = ['All', 'Competition', 'Achievement', 'Event', 'Newsletter', 'General'];
 

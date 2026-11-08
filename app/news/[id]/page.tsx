@@ -19,7 +19,7 @@ export default function ArticlePage() {
     const { isEditMode } = useEditMode();
 
     const articles = content?.news?.articles || [];
-    const articleIndex = articles.findIndex((a: any) => a.id === articleId);
+    const articleIndex = articles.findIndex((a) => a.id === articleId);
     const article = articles[articleIndex];
 
     if (!article && !isEditMode) {
@@ -50,15 +50,16 @@ export default function ArticlePage() {
     // Get article image and style for banner
     const articleImagePath = `${articlePath}.image`;
     let articleImageSrc = '/images/PlaceholderBanner.jpg';
-    let articleImageStyle: any = {};
+    let articleImageStyle: { objectPosition?: string; objectFit?: string } = {};
     
     if (article?.image) {
-        const imageValue: any = article.image;
+        const imageValue = article.image as unknown;
         if (typeof imageValue === 'string') {
             articleImageSrc = imageValue;
         } else if (typeof imageValue === 'object' && imageValue !== null) {
-            articleImageSrc = imageValue.src || imageValue.value || '/images/PlaceholderBanner.jpg';
-            articleImageStyle = imageValue.style || {};
+            const object = imageValue as { src?: string; value?: string; style?: typeof articleImageStyle };
+            articleImageSrc = object.src || object.value || '/images/PlaceholderBanner.jpg';
+            articleImageStyle = object.style || {};
         }
     }
 

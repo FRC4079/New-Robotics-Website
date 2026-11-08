@@ -34,21 +34,22 @@ export default function Title({
     // Get the banner image from content or use default
     const bannerPath = `${heroPath}.bannerImage`;
     const pathParts = bannerPath.split('.');
-    let bannerValue: any = content;
+    let bannerValue: unknown = content;
     for (const part of pathParts) {
-        bannerValue = bannerValue?.[part];
+        bannerValue = (bannerValue as Record<string, unknown> | null | undefined)?.[part];
     }
     
     // Extract src and style from bannerValue
     let bannerSrc = img1.src;
-    let bannerStyle: any = {};
+    let bannerStyle: { objectPosition?: string; objectFit?: string } = {};
     
     if (bannerValue) {
         if (typeof bannerValue === 'string') {
             bannerSrc = bannerValue;
         } else if (typeof bannerValue === 'object') {
-            bannerSrc = bannerValue.src || img1.src;
-            bannerStyle = bannerValue.style || {};
+            const object = bannerValue as { src?: string; style?: typeof bannerStyle };
+            bannerSrc = object.src || img1.src;
+            bannerStyle = object.style || {};
         }
     }
 

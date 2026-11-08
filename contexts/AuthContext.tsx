@@ -43,8 +43,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void checkAuth();
-  }, [checkAuth]);
+    let active = true;
+    fetch('/api/auth/session', { cache: 'no-store' })
+      .then((response) => response.json())
+      .then((data) => {
+        if (active) setState({ isAuthenticated: data.authenticated === true, isLoading: false, user: data.user ?? null });
+      })
+      .catch((error) => {
+        console.error('Auth check failed:', error);
+        if (active) setState({ isAuthenticated: false, isLoading: false, user: null });
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const logout = useCallback(async () => {
     try {

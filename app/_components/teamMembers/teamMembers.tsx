@@ -57,20 +57,18 @@ export default function TeamMembers({
 }: TeamMembersProps): React.ReactElement {
     const { content } = useContent();
     const [selectedTeam, setSelectedTeam] = React.useState<string>('All');
-    const [filteredMembers, setFilteredMembers] = React.useState<TeamMember[]>([]);
 
     // Use members from props, CMS, or fallback to defaults
     const members = propsMembers || (content?.teamMembers as TeamMember[]) || defaultMembers;
 
     const teamTypes = ['All', 'Leadership', 'FRC', 'FTC', 'VEX'];
 
-    React.useEffect(() => {
-        if (selectedTeam === 'All') {
-            setFilteredMembers(members);
-        } else {
-            setFilteredMembers(members.filter(member => member.team === selectedTeam || member.team === 'All'));
-        }
-    }, [selectedTeam, members]);
+    const filteredMembers = React.useMemo(
+        () => (selectedTeam === 'All'
+            ? members
+            : members.filter(member => member.team === selectedTeam || member.team === 'All')),
+        [selectedTeam, members]
+    );
 
     return (
         <section className={styles.teamMembers}>
