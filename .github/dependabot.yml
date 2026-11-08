@@ -20,6 +20,11 @@ updates:
       prefix: "deps"
       prefix-development: "deps-dev"
       include: "scope"
+    ignore:
+      # typescript-eslint, used through eslint-config-next, does not support newer
+      # TypeScript majors yet. Remove this once it does.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     # Group updates to reduce PR noise
     groups:
       minor-and-patch:
