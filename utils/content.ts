@@ -1,7 +1,3 @@
-import { readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-
 // Style properties for images
 export interface ImageStyle {
   width?: string;
@@ -397,46 +393,4 @@ export interface SiteContent {
       betaNotice?: string;
     };
   };
-}
-
-// Cache for content to avoid repeated file reads
-let contentCache: SiteContent | null = null;
-let cacheTimestamp: number = 0;
-const CACHE_TTL = 1000; // Cache for 1 second (allows hot reload in dev, fast in production)
-
-// Server-side function to read content (for SSR/SSG) with caching
-export async function getServerContent(): Promise<SiteContent | null> {
-  try {
-    const now = Date.now();
-    
-    // Return cached content if it's still fresh
-    if (contentCache && (now - cacheTimestamp) < CACHE_TTL) {
-      return contentCache;
-    }
-    
-    const contentPath = path.join(process.cwd(), 'content', 'site-content.json');
-    
-    if (!existsSync(contentPath)) {
-      console.warn('Content file not found at:', contentPath);
-      return null;
-    }
-    
-    const contentData = await readFile(contentPath, 'utf-8');
-    const parsedContent = JSON.parse(contentData);
-    
-    // Update cache
-    contentCache = parsedContent;
-    cacheTimestamp = now;
-    
-    return parsedContent;
-  } catch (error) {
-    console.error('Error reading server content:', error);
-    return null;
-  }
-}
-
-// Function to clear the cache (useful after content updates)
-export function clearContentCache(): void {
-  contentCache = null;
-  cacheTimestamp = 0;
 }
