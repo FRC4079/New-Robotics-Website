@@ -10,17 +10,13 @@ interface TeamPageLayoutProps {
   title: string;
   description: string;
   bannerImage: StaticImageData;
-  bgMoveUp?: number;
-    bgShift?: number;
 }
 
 export default function TeamPageLayout({ 
   children, 
   title, 
   description, 
-  bannerImage, 
-  bgMoveUp = 70,
-  bgShift = 0
+  bannerImage
 }: TeamPageLayoutProps): React.ReactElement {
   return (
     <div className={styles.teamPage}>
@@ -29,8 +25,6 @@ export default function TeamPageLayout({
         title={title}
         description={description}
         img1={bannerImage}
-        bgMoveUp={bgMoveUp}
-        bgShift={bgShift}
       />
       <div className={styles.content}>
         {children}

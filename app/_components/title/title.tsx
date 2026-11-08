@@ -3,7 +3,6 @@ import React from "react";
 import styles from "@/app/_components/title/title.module.scss";
 import {StaticImageData} from "next/image";
 import bannerImg from "@/public/images/PlaceholderBanner.jpg";
-import {TW_900} from "@/utils/globalFonts";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 import { useContent } from "@/hooks/useContent";
@@ -15,8 +14,6 @@ type TitleProps = {
     description: string;
     img1?: StaticImageData;
     img2?: StaticImageData;
-    bgMoveUp?: number;
-    bgShift?: number;
     heroPath?: string; // Base path for editable content (e.g., "homepage.hero")
 }
 
@@ -26,12 +23,9 @@ export default function Title({
                                   description,
                                   img1 = bannerImg,
                                   img2,
-                                  bgMoveUp = 5,
-                                  bgShift = 0,
                                   heroPath = "homepage.hero"
                               }: TitleProps): React.ReactElement {
-    const [textToType, setTextToType] = React.useState<string>("");
-    const [bgParallax, setBgParallax] = React.useState<number>(0);
+    const [uploadError, setUploadError] = React.useState<string>("");
     const { content } = useContent();
     const { isEditMode, addPendingChange } = useEditMode();
     const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -57,51 +51,28 @@ export default function Title({
         }
     }
 
-    // Convert objectPosition style to backgroundPosition
-    let backgroundPosition = `center ${bgParallax * -0.5 - bgShift}px`;
-    if (bannerStyle.objectPosition) {
-        // objectPosition format: "50% 50%" or "center center"
-        // Extract just the position values without parallax for styled banners
-        backgroundPosition = bannerStyle.objectPosition;
-    } else if (!isEditMode) {
-        // Only apply parallax if no custom position is set and not in edit mode
-        backgroundPosition = `center ${bgParallax * -0.5 - bgShift}px`;
-    }
+    // Saved crop position (objectPosition) maps onto the CSS background position.
+    const backgroundPosition: string = bannerStyle.objectPosition || "center";
 
-    // Map objectFit to backgroundSize
-    let backgroundSize = "cover";
-    if (bannerStyle.objectFit) {
-        switch (bannerStyle.objectFit) {
-            case 'contain':
-                backgroundSize = 'contain';
-                break;
-            case 'fill':
-                backgroundSize = '100% 100%';
-                break;
-            case 'none':
-                backgroundSize = 'auto';
-                break;
-            case 'scale-down':
-                backgroundSize = 'contain';
-                break;
-            default:
-                backgroundSize = 'cover';
-        }
-    }
+    const backgroundSizes: Record<string, string> = {
+        contain: "contain",
+        "scale-down": "contain",
+        fill: "100% 100%",
+        none: "auto",
+    };
+    const backgroundSize: string = backgroundSizes[bannerStyle.objectFit as string] ?? "cover";
 
-    // Make a parallax effect with the background image (zoom in the background image to make it possible)
     const styleBanner: React.CSSProperties = {
-        backgroundPosition: backgroundPosition,
-        backgroundSize: backgroundSize,
         backgroundImage: `url(${bannerSrc})`,
-        backgroundAttachment: "fixed",
-        backgroundRepeat: "no-repeat",
-    }
+        backgroundPosition,
+        backgroundSize,
+    };
 
     const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        setUploadError("");
         try {
             const formData = new FormData();
             formData.append('file', file);
@@ -121,36 +92,10 @@ export default function Title({
             addPendingChange(bannerPath, { src: data.filePath });
         } catch (error) {
             console.error('Error uploading banner:', error);
-            alert('Failed to upload banner image');
+            setUploadError('Banner upload failed. Please try again.');
         }
     };
 
-    React.useEffect((): () => void => {
-        const handleScroll: () => void = (): void => {
-            setBgParallax(window.scrollY);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return (): void => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [bgMoveUp]);
-
-
-    React.useEffect((): void => {
-        let i: number = 0;
-        const text: string = description;
-        const speed: number = 75; // Lower is faster
-        const interval: NodeJS.Timeout = setInterval((): void => {
-            // setTimeout((): void => {
-                if (i < text.length) {
-                    setTextToType(text.substring(0, i + 1));
-                    i++;
-                } else {
-                    clearInterval(interval);
-                }
-            // }, 750);
-        }, speed);
-    }, [description]);
     return (
         <div className={styles.top} style={styleBanner}>
             <div className={styles.overlay}>
@@ -161,7 +106,8 @@ export default function Title({
                             type="file"
                             accept="image/*"
                             onChange={handleBannerUpload}
-                            style={{ display: 'none' }}
+                            className={styles.hiddenInput}
+                            hidden
                         />
                         <button
                             className={styles.bannerEditButton}
@@ -176,6 +122,8 @@ export default function Title({
                             <span>Change Banner</span>
                         </button>
                         
+                        {uploadError && <p className={styles.uploadError} role="alert">{uploadError}</p>}
+
                         {/* Small preview for style editing */}
                         <div className={styles.bannerPreview}>
                             <EditableImage
@@ -203,15 +151,13 @@ export default function Title({
                     value={title || "OXFORD ACADEMY ROBOTICS"}
                     path={`${heroPath}.title`}
                     as="h1"
-                    className={TW_900}
                 />
                 <EditableText
-                    value={textToType}
+                    value={description}
                     path={`${heroPath}.subtitle`}
                     as="p"
-                    className={TW_900}
                 />
-                <h2 className={TW_900}>{children}</h2>
+                {children && <div className={styles.extra}>{children}</div>}
             </div>
         </div>
     );

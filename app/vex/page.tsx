@@ -9,7 +9,7 @@ import CompetitionSchedule from "../_components/competitionSchedule/competitionS
 import { useContent } from "@/hooks/useContent";
 
 export default function VEX() {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     // Team overview data
     const teamOverviewData = content?.teams?.vex?.teamOverview || {
@@ -20,22 +20,22 @@ export default function VEX() {
         ],
         highlights: [
             {
-                icon: '🎯',
+                icon: 'target',
                 title: 'Skills Excellence',
                 description: 'State champions in programming and driver skills competitions'
             },
             {
-                icon: '🏗️',
+                icon: 'layers',
                 title: 'Advanced Engineering',
                 description: 'Innovative mechanical designs pushing the limits of VEX components'
             },
             {
-                icon: '💻',
+                icon: 'code',
                 title: 'Programming Mastery',
                 description: 'Complex autonomous routines using C++ and advanced PID control'
             },
             {
-                icon: '🌟',
+                icon: 'star',
                 title: 'Competition Success',
                 description: 'Multiple tournament wins and World Championship qualifications'
             }
@@ -72,37 +72,37 @@ export default function VEX() {
     // Team structure data
     const subteams = content?.teams?.vex?.teamStructure || [
         {
-            icon: '🔧',
+            icon: 'wrench',
             name: 'Mechanical Design',
             description: 'Engineer and fabricate robot mechanisms using VEX metal components, focusing on durability, precision, and competitive performance.',
             skills: ['Autodesk Inventor', 'Metal Fabrication', 'Mechanism Design', 'Assembly']
         },
         {
-            icon: '💻',
+            icon: 'code',
             name: 'Programming',
             description: 'Develop autonomous routines and teleop control systems using C++ and VEXcode Pro for optimal robot performance.',
             skills: ['C++', 'VEXcode Pro', 'PID Control', 'Autonomous Programming']
         },
         {
-            icon: '📊',
+            icon: 'chart',
             name: 'Skills Challenge',
             description: 'Specialize in programming and driver skills competitions, optimizing robot performance for maximum scoring potential.',
             skills: ['Skills Programming', 'Driver Training', 'Score Optimization', 'Route Planning']
         },
         {
-            icon: '⚙️',
+            icon: 'settings',
             name: 'Build Quality',
             description: 'Ensure structural integrity, reliability, and maintenance of robot systems throughout the competitive season.',
             skills: ['Quality Control', 'System Testing', 'Maintenance', 'Troubleshooting']
         },
         {
-            icon: '🎯',
+            icon: 'target',
             name: 'Strategy & Scouting',
             description: 'Analyze game mechanics, develop competitive strategies, and coordinate alliance selections for tournament success.',
             skills: ['Game Analysis', 'Match Strategy', 'Alliance Selection', 'Data Analysis']
         },
         {
-            icon: '📝',
+            icon: 'file',
             name: 'Documentation',
             description: 'Maintain engineering notebooks, document design processes, and prepare award submissions for competitions.',
             skills: ['Engineering Notebook', 'Design Documentation', 'Award Preparation', 'Process Recording']
@@ -112,57 +112,40 @@ export default function VEX() {
     // Competition schedule data
     const events = content?.teams?.vex?.schedule || [
         {
-            month: 'NOV',
-            day: '18',
-            title: 'Season Opener Tournament',
-            description: 'First tournament of the Over Under season featuring preliminary alliance competitions.',
-            location: 'Local High School, Orange County CA'
+            month: 'SEP–NOV',
+            day: 'TBA',
+            title: 'Season Opener Tournaments',
+            description: 'Early-season events with the 2026-27 Override game',
+            location: 'Orange County, CA'
         },
         {
-            month: 'DEC',
-            day: '16',
-            title: 'Holiday Tournament',
-            description: 'Mid-season tournament with refined robots and advanced autonomous programming.',
-            location: 'Oxford Academy, Cypress CA'
+            month: 'DEC–JAN',
+            day: 'TBA',
+            title: 'Skills Challenge Events',
+            description: 'Programming and driver skills competitions',
+            location: 'Southern California'
         },
         {
-            month: 'JAN',
-            day: '20',
-            title: 'Skills Challenge Championship',
-            description: 'Regional skills competition featuring programming and driver skills challenges.',
-            location: 'Skills Venue, Southern California'
+            month: 'FEB–MAR',
+            day: 'TBA',
+            title: 'Regional & State Championships',
+            description: 'Qualification events for the world championship',
+            location: 'California'
         },
         {
-            month: 'FEB',
-            day: '17',
-            title: 'Regional Championship',
-            description: 'High-stakes regional competition with top teams vying for state advancement.',
-            location: 'Regional Center, Orange County CA'
-        },
-        {
-            month: 'MAR',
-            day: '23',
-            title: 'State Championship',
-            description: 'California State VEX Championship with qualification opportunities for Worlds.',
-            location: 'State Venue, California'
-        },
-        {
-            month: 'MAY',
-            day: '8',
+            month: 'APR–MAY',
+            day: 'TBA',
             title: 'VEX World Championship',
-            description: 'Ultimate global competition featuring the world\'s best VEX teams.',
-            location: 'Dallas, Texas'
+            description: 'Global competition featuring the best VEX teams (qualification required)',
+            location: 'Location TBA'
         }
     ];
-
-    if (loading) return <div>Loading...</div>;
 
     return (
         <TeamPageLayout 
             title="VEX Robotics Competition"
             description="VEX Teams 1108A & 1108B"
             bannerImage={img1}
-            bgMoveUp={5}
         >
             <TeamOverviewSection 
                 {...teamOverviewData} 
@@ -182,7 +165,7 @@ export default function VEX() {
             />
 
             <CompetitionSchedule 
-                title="2024 Competition Season"
+                title="2026–2027 Competition Season"
                 events={events}
                 basePath="teams.vex"
             />

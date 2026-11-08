@@ -9,10 +9,11 @@ import img1 from "@/public/images/robotics/sponsors_bg.jpg";
 import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
+import EditableIcon from "@/components/icons/EditableIcon";
 import { getContentValue } from "@/utils/contentHelpers";
 
 export default function Sponsor() {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     const defaultSponsorsData = {
         hero: {
@@ -79,22 +80,22 @@ export default function Sponsor() {
             title: "How Our Sponsors Make a Difference",
             cards: [
                 {
-                    icon: "🔧",
+                    icon: "wrench",
                     title: "Equipment & Materials",
                     description: "Sponsors provide cutting-edge tools, raw materials, and manufacturing resources that enable us to build competitive robots and prototype innovative solutions."
                 },
                 {
-                    icon: "🎯",
+                    icon: "target",
                     title: "Competition Funding",
                     description: "Travel expenses, registration fees, and competition costs are covered by our generous sponsors, allowing us to compete at regional and national levels."
                 },
                 {
-                    icon: "👨‍🔬",
+                    icon: "users",
                     title: "Mentorship & Expertise",
                     description: "Industry professionals from sponsor companies provide invaluable mentorship, sharing real-world engineering experience with our students."
                 },
                 {
-                    icon: "💡",
+                    icon: "lightbulb",
                     title: "Educational Resources",
                     description: "Sponsors provide access to professional software, online learning platforms, and educational workshops that enhance our curriculum."
                 }
@@ -182,8 +183,6 @@ export default function Sponsor() {
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-
     return (
         <div className={styles.sponsors}>
             <Navbar isFixed={true}/>
@@ -191,8 +190,6 @@ export default function Sponsor() {
                 title={"Our Amazing Sponsors"} 
                 description={"Partnerships that power innovation"}
                 img1={img1}
-                bgMoveUp={30}
-                bgShift={-50}
             />
             
             {/* Hero Section */}
@@ -202,7 +199,7 @@ export default function Sponsor() {
                         <EditableText
                             value={sponsorsData.hero.title}
                             path="sponsors.hero.title"
-                            as="h1"
+                            as="h2"
                         />
                         <EditableText
                             value={sponsorsData.hero.description}
@@ -240,7 +237,7 @@ export default function Sponsor() {
                     <EditableText
                         value={sponsorsData.currentSponsors.title}
                         path="sponsors.currentSponsors.title"
-                        as="h1"
+                        as="h2"
                     />
                     <EditableText
                         value={sponsorsData.currentSponsors.intro}
@@ -257,7 +254,7 @@ export default function Sponsor() {
                                     <EditableText
                                         value={safeTier.name}
                                         path={`sponsors.currentSponsors.tiers.${tierIndex}.name`}
-                                        as="h2"
+                                        as="h3"
                                         className={styles.tierTitle}
                                     />
                                     <div className={styles.sponsorGrid}>
@@ -276,7 +273,7 @@ export default function Sponsor() {
                                                         <EditableText
                                                             value={safeSponsor.name}
                                                             path={`sponsors.currentSponsors.tiers.${tierIndex}.sponsors.${sponsorIndex}.name`}
-                                                            as="h3"
+                                                            as="h4"
                                                         />
                                                         <EditableText
                                                             value={safeSponsor.description}
@@ -302,7 +299,7 @@ export default function Sponsor() {
                     <EditableText
                         value={sponsorsData.howSponsorsHelp.title}
                         path="sponsors.howSponsorsHelp.title"
-                        as="h1"
+                        as="h2"
                     />
                     <div className={styles.helpGrid}>
                         {(sponsorsData.howSponsorsHelp.cards || []).map((card, index) => {
@@ -310,10 +307,10 @@ export default function Sponsor() {
                             return (
                                 <div key={index} className={styles.helpCard}>
                                     <div className={styles.helpIcon}>
-                                        <EditableText
+                                        <EditableIcon
                                             value={safeCard.icon}
                                             path={`sponsors.howSponsorsHelp.cards.${index}.icon`}
-                                            as="span"
+                                            size={26}
                                         />
                                     </div>
                                     <EditableText
@@ -342,7 +339,7 @@ export default function Sponsor() {
                             <EditableText
                                 value={sponsorsData.opportunities.title}
                                 path="sponsors.opportunities.title"
-                                as="h1"
+                                as="h2"
                             />
                             <EditableText
                                 value={sponsorsData.opportunities.description}
@@ -435,7 +432,7 @@ export default function Sponsor() {
                             <EditableText
                                 value={sponsorsData.contact.title}
                                 path="sponsors.contact.title"
-                                as="h1"
+                                as="h2"
                             />
                             <EditableText
                                 value={sponsorsData.contact.description}

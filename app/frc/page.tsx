@@ -17,17 +17,17 @@ export default function FRC() {
         ],
         highlights: [
             {
-                icon: '🎯',
+                icon: 'target',
                 title: 'Our Mission',
                 description: 'To inspire students to pursue STEM careers while building innovative robots and fostering gracious professionalism.'
             },
             {
-                icon: '⚙️',
+                icon: 'settings',
                 title: 'What We Do',
                 description: 'Design and build competition robots, mentor younger teams, and engage in community STEM outreach programs.'
             },
             {
-                icon: '🏆',
+                icon: 'trophy',
                 title: 'Our Values',
                 description: 'Excellence in engineering, collaborative teamwork, gracious professionalism, and continuous learning.'
             }
@@ -64,37 +64,37 @@ export default function FRC() {
     // Team structure data
     const subteams = [
         {
-            icon: '⚙️',
+            icon: 'settings',
             name: 'Mechanical Team',
             description: 'Designs and builds the physical robot structure, mechanisms, and moving parts using CAD software and manufacturing tools.',
             skills: ['SolidWorks', 'Machining', '3D Printing', 'Fabrication']
         },
         {
-            icon: '💻',
+            icon: 'code',
             name: 'Programming Team',
             description: 'Develops robot control software, autonomous routines, and driver assistance systems using Java and advanced algorithms.',
             skills: ['Java', 'Git/GitHub', 'Sensors', 'Computer Vision']
         },
         {
-            icon: '🔌',
+            icon: 'cpu',
             name: 'Electrical Team',
             description: 'Handles robot wiring, control systems, sensor integration, and ensures reliable electrical connections.',
             skills: ['Circuit Design', 'Wiring', 'Sensors', 'Troubleshooting']
         },
         {
-            icon: '📊',
+            icon: 'chart',
             name: 'Strategy & Scouting',
             description: 'Analyzes competition data, develops match strategies, and coordinates alliance selections at competitions.',
             skills: ['Data Analysis', 'Statistics', 'Strategy', 'Scouting Apps']
         },
         {
-            icon: '📢',
+            icon: 'megaphone',
             name: 'Media & Outreach',
             description: 'Manages team branding, documentation, social media, and community engagement initiatives.',
             skills: ['Photography', 'Social Media', 'Public Speaking', 'Documentation']
         },
         {
-            icon: '💰',
+            icon: 'dollar',
             name: 'Business Team',
             description: 'Handles team finances, sponsor relations, fundraising, and ensures team sustainability.',
             skills: ['Fundraising', 'Sponsorship', 'Budgeting', 'Presentations']
@@ -105,31 +105,38 @@ export default function FRC() {
     const events = [
         {
             month: 'JAN',
-            day: '06',
+            day: 'TBA',
             title: 'Kickoff & Game Release',
-            description: 'Official game reveal and 6-week build season begins',
+            description: 'Official game reveal starts the six-week build season',
             location: 'Virtual Broadcast'
         },
         {
-            month: 'FEB',
-            day: '18',
-            title: 'Stop Build Day',
-            description: 'End of build season, robot must be sealed for competition',
+            month: 'JAN–FEB',
+            day: 'TBA',
+            title: 'Build Season',
+            description: 'Design, build, and program the robot before our first event',
             location: 'Team Workshop'
         },
         {
             month: 'MAR',
-            day: '15-17',
-            title: 'Los Angeles Regional',
-            description: 'Our primary regional competition',
-            location: 'El Segundo, CA'
+            day: 'TBA',
+            title: 'FIRST California District Events',
+            description: 'Our two district events earn ranking points toward the state championship',
+            location: 'Southern California'
         },
         {
             month: 'APR',
-            day: '17-20',
+            day: 'TBA',
+            title: 'Southern State Championship',
+            description: 'District-ranked teams compete for a spot at the FIRST Championship',
+            location: 'Southern California'
+        },
+        {
+            month: 'APR',
+            day: 'TBA',
             title: 'FIRST Championship',
             description: 'World championship competition (qualification required)',
-            location: 'Houston, TX'
+            location: 'Location TBA'
         }
     ];
 
@@ -138,7 +145,6 @@ export default function FRC() {
             title="FIRST Robotics Competition"
             description="Team 4079 - Quantum Leap: Engineering Excellence Since 2012"
             bannerImage={img1}
-            bgMoveUp={70}
         >
             <TeamOverviewSection 
                 {...teamOverviewData} 
@@ -158,7 +164,7 @@ export default function FRC() {
             />
 
             <CompetitionSchedule 
-                title="2024-2025 Competition Schedule"
+                title="2027 Season Schedule"
                 events={events}
                 basePath="teams.frc"
             />

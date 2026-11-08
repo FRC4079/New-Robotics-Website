@@ -8,9 +8,10 @@ import ContactForm from "@/app/_components/contactForm/contactForm";
 import img1 from "@/public/images/robotics/contact_bg.jpg";
 import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
+import EditableIcon from "@/components/icons/EditableIcon";
 
 export default function Contact() {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     // Default fallback data
     const defaultContactData = {
@@ -22,55 +23,50 @@ export default function Contact() {
         mainDescription: "Whether you're a prospective student, interested sponsor, community member, or fellow robotics enthusiast, we'd love to hear from you. Our teams are always excited to share our passion for STEM education and competitive robotics.",
         highlights: [
             {
-                icon: "👥",
+                icon: "users",
                 title: "Join Our Teams",
                 description: "Interested students can apply to join our FRC, FTC, or VEX robotics teams"
             },
             {
-                icon: "🤝",
+                icon: "handshake",
                 title: "Partnership Opportunities",
                 description: "Explore sponsorship and mentorship opportunities with our organization"
             },
             {
-                icon: "🎓",
+                icon: "graduation",
                 title: "Educational Outreach",
                 description: "Request demonstrations and workshops for your school or organization"
             }
         ],
-        stats: [
-            { value: "150+", label: "Active Members" },
-            { value: "8", label: "Competition Teams" },
-            { value: "50+", label: "Awards Won" },
-            { value: "24/7", label: "Support Available" }
-        ],
+        stats: [] as { value: string; label?: string }[],
         contactMethods: {
             title: "How To Reach Us",
             methods: [
                 {
-                    icon: "📧",
+                    icon: "mail",
                     title: "Email Us",
                     description: "For general inquiries and information",
                     link: "contact@oarobotics.org",
                     linkType: "email"
                 },
                 {
-                    icon: "📞",
+                    icon: "phone",
                     title: "Call or Text",
                     description: "Speak directly with our coaching staff",
                     link: "(562) 860-1902",
                     linkType: "phone"
                 },
                 {
-                    icon: "📍",
+                    icon: "pin",
                     title: "Visit Our Lab",
                     description: "Located on the Oxford Academy campus",
                     address: "5172 Orange Ave\nCypress, CA 90630"
                 },
                 {
-                    icon: "💬",
+                    icon: "message",
                     title: "Social Media",
                     description: "Follow us for updates and announcements",
-                    socials: ["Instagram", "Twitter", "YouTube"]
+                    socials: ["Instagram", "YouTube"]
                 }
             ]
         },
@@ -94,16 +90,13 @@ export default function Contact() {
         formSection: content?.contact?.formSection || defaultContactData.formSection
     };
 
-    if (loading) return <div>Loading...</div>;
     return (
         <div className={styles.contact}>
             <Navbar />
             <Title 
                 title={contactData.hero.title} 
                 description={contactData.hero.subtitle}
-                bgMoveUp={30}
                 img1={img1}
-                bgShift={-50}
             />
             
             {/* Contact Hero Section */}
@@ -114,7 +107,7 @@ export default function Contact() {
                             <EditableText
                                 value={contactData.mainTitle}
                                 path="contact.mainTitle"
-                                as="h1"
+                                as="h2"
                             />
                             <EditableText
                                 value={contactData.mainDescription}
@@ -126,10 +119,10 @@ export default function Contact() {
                                 {contactData.highlights.map((highlight, index) => (
                                     <div key={index} className={styles.highlight}>
                                         <div className={styles.highlightIcon}>
-                                            <EditableText
+                                            <EditableIcon
                                                 value={highlight.icon}
                                                 path={`contact.highlights.${index}.icon`}
-                                                as="span"
+                                                size={24}
                                             />
                                         </div>
                                         <EditableText
@@ -155,11 +148,13 @@ export default function Contact() {
                                         path={`contact.stats.${index}.value`}
                                         as="h3"
                                     />
-                                    <EditableText
-                                        value={stat.label}
-                                        path={`contact.stats.${index}.label`}
-                                        as="p"
-                                    />
+                                    {stat.label && (
+                                        <EditableText
+                                            value={stat.label}
+                                            path={`contact.stats.${index}.label`}
+                                            as="p"
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -179,10 +174,10 @@ export default function Contact() {
                         {contactData.contactMethods.methods.map((method, index) => (
                             <div key={index} className={styles.methodCard}>
                                 <div className={styles.methodIcon}>
-                                    <EditableText
+                                    <EditableIcon
                                         value={method.icon}
                                         path={`contact.contactMethods.methods.${index}.icon`}
-                                        as="span"
+                                        size={24}
                                     />
                                 </div>
                                 <EditableText

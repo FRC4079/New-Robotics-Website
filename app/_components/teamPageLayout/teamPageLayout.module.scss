@@ -1,65 +1,28 @@
+@use '../../styles/mixins' as *;
+
 .teamPage {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
-  overflow-x: hidden;
-  background: #000000;
-  color: white;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--text);
+}
 
-  .content {
-    > section {
-      padding: 8vh 0;
-      position: relative;
-      
-      &:nth-child(even) {
-        background: #0a0a0a;
-        
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent 0%, red 50%, transparent 100%);
-          pointer-events: none;
-        }
-      }
-      
-      &:nth-child(odd) {
-        background: #000000;
-        
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, transparent 0%, red 50%, transparent 100%);
-          pointer-events: none;
-        }
-      }
+.content {
+  > section {
+    position: relative;
+    @include section-pad;
+
+    // Alternate surfaces give each section its own band without heavy dividers.
+    &:nth-child(even) {
+      background: var(--bg-raised);
+      border-block: 1px solid var(--border);
     }
   }
 }
 
+// Shared inner wrapper used by the team page sections.
 .container {
-  max-width: 1400px;
-  width: 90%;
-  margin: 0 auto;
-  padding: 0 2vw;
-}
-
-// Responsive design
-@media (max-width: 768px) {
-  .container {
-    width: 95%;
-    padding: 0 1vw;
-  }
-
-  .content > section {
-    padding: 6vh 0;
-  }
+  @include container;
 }

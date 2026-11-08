@@ -19,7 +19,6 @@ export default async function Team(): Promise<React.ReactElement> {
             <Title 
                 title={"Our Amazing Team"} 
                 description={"Meet the talented students who make OA Robotics possible"}
-                bgMoveUp={40}
             />
             <TeamMembers 
                 showFilter={true}

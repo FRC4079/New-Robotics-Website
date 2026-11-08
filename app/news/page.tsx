@@ -26,7 +26,6 @@ export default function News(): React.ReactElement {
             <Title 
                 title={newsData.hero.title}
                 description={newsData.hero.description}
-                bgMoveUp={30}
                 heroPath="news.hero"
             />
             <NewsSection 
