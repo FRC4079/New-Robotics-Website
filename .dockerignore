@@ -1,32 +1,42 @@
-# Ignore node_modules
+# Dependencies and build output
 node_modules
+.next
+out
+build
+dist
 
-# Ignore logs
+# Logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Ignore build output
-build
-dist
+# Local configuration and secrets
+.env*
 
-# Ignore Dockerfile and .dockerignore
-Dockerfile
-.dockerignore
+# Runtime data
+data
+.media-backups
+public/.backups
 
-# Ignore git and related files
+# Git and CI files
 .git
 .gitignore
 .gitattributes
+.github
 
-# Ignore IDE and editor files
+# Docs and docker files
+Dockerfile
+.dockerignore
+README.md
+
+# IDE and editor files
 .vscode
 .idea
 *.swp
 *.swo
 
-# Ignore operating system files
+# Operating system files
 .DS_Store
 Thumbs.db

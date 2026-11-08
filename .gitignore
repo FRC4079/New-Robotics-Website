@@ -45,3 +45,8 @@ next-env.d.ts
 .vscode/
 .idea/
 .idea
+
+# runtime data (docker volume, media backups)
+/data/
+/.media-backups/
+/public/.backups/
