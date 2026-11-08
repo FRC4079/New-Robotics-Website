@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useContent } from '@/hooks/useContent';
 import { SiteContent, ImageStyle, TextStyle } from '@/utils/content';
 import styles from './content.module.scss';
+import Icon from '@/components/icons/Icon';
 
 interface EditingField {
   section: string;
@@ -45,12 +46,12 @@ export default function ContentManager() {
   }
 
   const sections = [
-    { key: 'site', label: 'Site Settings', icon: '⚙️' },
-    { key: 'homepage', label: 'Homepage', icon: '🏠' },
-    { key: 'navigation', label: 'Navigation', icon: '🧭' },
-    { key: 'about', label: 'About Page', icon: 'ℹ️' },
-    { key: 'contact', label: 'Contact Page', icon: '📞' },
-    { key: 'teams', label: 'Teams', icon: '🤖' },
+    { key: 'site', label: 'Site Settings', icon: 'settings' },
+    { key: 'homepage', label: 'Homepage', icon: 'home' },
+    { key: 'navigation', label: 'Navigation', icon: 'compass' },
+    { key: 'about', label: 'About Page', icon: 'info' },
+    { key: 'contact', label: 'Contact Page', icon: 'phone' },
+    { key: 'teams', label: 'Teams', icon: 'bot' },
   ];
 
   const handleEdit = (section: string, path: string, value: any, type: string) => {
@@ -113,7 +114,7 @@ export default function ContentManager() {
         label: 'New Stat',
         value: '0',
         description: 'Description',
-        icon: '📊'
+        icon: 'chart'
       };
     } else if (section.includes('sections')) {
       newItem = {
@@ -239,16 +240,18 @@ export default function ContentManager() {
                 onClick={() => handleEdit(section, fullPath, value, isLongText ? 'textarea' : 'text')}
                 className={styles.editBtn}
                 title="Edit content"
+                aria-label="Edit content"
               >
-                ✏️
+                <Icon name="pencil" size={16} />
               </button>
               {isImage && (
                 <button 
                   onClick={() => handleEditImageStyle(section, parentPath, fieldName)}
                   className={styles.styleBtn}
                   title="Edit image style"
+                  aria-label="Edit image style"
                 >
-                  🎨
+                  <Icon name="palette" size={16} />
                 </button>
               )}
               {!isImage && (fieldName === 'description' || fieldName === 'content' || fieldName === 'title' || fieldName === 'subtitle') && (
@@ -256,8 +259,9 @@ export default function ContentManager() {
                   onClick={() => handleEditTextStyle(section, parentPath, fieldName)}
                   className={styles.styleBtn}
                   title="Edit text style"
+                  aria-label="Edit text style"
                 >
-                  📝
+                  <Icon name="palette" size={16} />
                 </button>
               )}
             </div>
@@ -275,8 +279,9 @@ export default function ContentManager() {
             <button 
               onClick={() => handleEdit(section, fullPath, value, typeof value)}
               className={styles.editBtn}
+              aria-label="Edit value"
             >
-              ✏️
+              <Icon name="pencil" size={16} />
             </button>
           </div>
         </div>
@@ -304,16 +309,18 @@ export default function ContentManager() {
                     <button 
                       onClick={() => handleDelete(fullPath, item.id)}
                       className={styles.deleteBtn}
+                      aria-label="Delete item"
                     >
-                      🗑️
+                      <Icon name="trash" size={16} />
                     </button>
                   )}
                   {item.name && (
                     <button 
                       onClick={() => handleDelete(fullPath, item.name)}
                       className={styles.deleteBtn}
+                      aria-label="Delete item"
                     >
-                      🗑️
+                      <Icon name="trash" size={16} />
                     </button>
                   )}
                 </div>
@@ -385,7 +392,7 @@ export default function ContentManager() {
               onClick={() => setActiveSection(section.key)}
               className={`${styles.sectionTab} ${activeSection === section.key ? styles.active : ''}`}
             >
-              <span className={styles.sectionIcon}>{section.icon}</span>
+              <span className={styles.sectionIcon}><Icon name={section.icon} size={18} /></span>
               {section.label}
             </button>
           ))}

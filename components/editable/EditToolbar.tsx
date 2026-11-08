@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useEditMode } from '@/contexts/EditModeContext';
 import { useAuth } from '@/hooks/useAuth';
 import styles from './EditToolbar.module.scss';
+import Icon from '@/components/icons/Icon';
 
 export default function EditToolbar() {
   const { isEditMode, disableEditMode, pendingChanges, savePendingChanges, clearPendingChanges } = useEditMode();
@@ -57,7 +58,7 @@ export default function EditToolbar() {
       <div className={styles.container}>
         <div className={styles.left}>
           <div className={styles.badge}>
-            ✏️ Edit Mode
+            <Icon name="pencil" size={14} /> Edit mode
           </div>
           {changeCount > 0 && (
             <div className={styles.changesCount}>
@@ -69,12 +70,12 @@ export default function EditToolbar() {
         <div className={styles.actions}>
           {saveStatus === 'success' && (
             <div className={styles.saveSuccess}>
-              ✓ Saved!
+              <Icon name="check" size={14} /> Saved
             </div>
           )}
           {saveStatus === 'error' && (
             <div className={styles.saveError}>
-              ✗ Save failed
+              <Icon name="x" size={14} /> Save failed
             </div>
           )}
 
@@ -90,7 +91,7 @@ export default function EditToolbar() {
             onClick={handleSave}
             disabled={isSaving || changeCount === 0}
           >
-            {isSaving ? 'Saving...' : `Save ${changeCount > 0 ? `(${changeCount})` : ''}`}
+            {isSaving ? 'Saving…' : `Save ${changeCount > 0 ? `(${changeCount})` : ''}`}
           </button>
 
           <button

@@ -7,6 +7,7 @@ import styles from './EditableText.module.scss';
 import StyleEditor from './StyleEditor';
 import { TextStyle } from '@/utils/content';
 import { getContentStyle, getContentValue } from '@/utils/contentHelpers';
+import Icon from '@/components/icons/Icon';
 
 interface EditableTextProps {
   value: string | any; // Can be string or {value, style} object
@@ -307,7 +308,7 @@ export default function EditableText({
             transform: 'none'     // No transform by default
           }}
         >
-          🎨
+          <Icon name="palette" size={14} />
         </button>,
         document.body
       )}

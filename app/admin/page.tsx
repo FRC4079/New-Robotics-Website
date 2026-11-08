@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './media.module.scss';
+import Icon from '@/components/icons/Icon';
 
 interface MediaFile {
   type: 'file';
@@ -226,21 +227,21 @@ export default function MediaManager() {
                   className={styles.copyBtn}
                   title="Copy path"
                 >
-                  📋
+                  <Icon name="clipboard" size={16} />
                 </button>
                 <button 
                   onClick={() => openReplaceModal(file.path, key)}
                   className={styles.replaceBtn}
                   title="Replace file"
                 >
-                  🔄
+                  <Icon name="refresh" size={16} />
                 </button>
                 <button 
                   onClick={() => handleDelete(file.path.substring(1))}
                   className={styles.deleteBtn}
                   title="Delete file"
                 >
-                  🗑️
+                  <Icon name="trash" size={16} />
                 </button>
               </div>
             </div>
@@ -319,7 +320,7 @@ export default function MediaManager() {
             id="fileInput"
           />
           <label htmlFor="fileInput" className={styles.uploadLabel}>
-            <div className={styles.uploadIcon}>📁</div>
+            <div className={styles.uploadIcon}><Icon name="upload" size={32} /></div>
             <div>Drag & drop images here or click to select</div>
             <div className={styles.uploadNote}>
               Uploading to: /{selectedCategory}{selectedSubcategory && `/${selectedSubcategory}`}
@@ -335,9 +336,9 @@ export default function MediaManager() {
             <div key={index} className={`${styles.progressItem} ${styles[item.status]}`}>
               <span>{item.fileName}</span>
               <span className={styles.status}>
-                {item.status === 'uploading' && '⏳ Uploading...'}
-                {item.status === 'success' && '✅ Success'}
-                {item.status === 'error' && '❌ Error'}
+                {item.status === 'uploading' && 'Uploading…'}
+                {item.status === 'success' && <><Icon name="check-circle" size={16} /> Uploaded</>}
+                {item.status === 'error' && <><Icon name="x-circle" size={16} /> Failed</>}
               </span>
             </div>
           ))}
