@@ -98,8 +98,6 @@ export default function Title({
         backgroundRepeat: "no-repeat",
     }
 
-    console.log('[Title] Banner style applied:', { bannerSrc, bannerStyle, styleBanner });
-
     const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;

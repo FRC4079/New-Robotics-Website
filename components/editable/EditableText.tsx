@@ -57,7 +57,6 @@ export default function EditableText({
     if (embeddedStyle && Object.keys(embeddedStyle).length > 0) {
       const styleString = JSON.stringify(embeddedStyle);
       if (styleString !== prevStyleRef.current) {
-        console.log(`[EditableText] Loading embedded style for path "${path}":`, embeddedStyle);
         setLocalStyle(embeddedStyle);
         prevStyleRef.current = styleString;
       }
@@ -89,7 +88,6 @@ export default function EditableText({
       if (style && Object.keys(style).length > 0) {
         const styleString = JSON.stringify(style);
         if (styleString !== prevStyleRef.current) {
-          console.log(`[EditableText] Loading style from content for path "${path}":`, style);
           setLocalStyle(style);
           prevStyleRef.current = styleString;
         }
