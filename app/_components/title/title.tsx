@@ -7,6 +7,7 @@ import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 import { useContent } from "@/hooks/useContent";
 import { useEditMode } from "@/contexts/EditModeContext";
+import { readContentPath } from "@/utils/contentHelpers";
 
 type TitleProps = {
     children?: React.ReactNode;
@@ -31,13 +32,13 @@ export default function Title({
     const isEditMode = editModeOn && canEdit(`${heroPath}.bannerImage`);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
+    // Overlay design image: the saved one wins over the default.
+    const savedOverlay = readContentPath(content, `${heroPath}.overlayImage`);
+    const overlaySrc = typeof savedOverlay === 'string' && savedOverlay ? savedOverlay : img2?.src;
+
     // Get the banner image from content or use default
     const bannerPath = `${heroPath}.bannerImage`;
-    const pathParts = bannerPath.split('.');
-    let bannerValue: unknown = content;
-    for (const part of pathParts) {
-        bannerValue = (bannerValue as Record<string, unknown> | null | undefined)?.[part];
-    }
+    const bannerValue = readContentPath(content, bannerPath);
     
     // Extract src and style from bannerValue
     let bannerSrc = img1.src;
@@ -143,8 +144,8 @@ export default function Title({
                 {
                     img2 !== undefined &&
                     <EditableImage
-                        src={img2.src}
-                        alt="Oxford Academy Robotics Overlay Design"
+                        src={overlaySrc ?? img2.src}
+                        alt=""
                         path={`${heroPath}.overlayImage`}
                         className={styles.overlayImage}
                     />

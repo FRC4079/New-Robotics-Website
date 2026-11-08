@@ -41,7 +41,7 @@ export default function AboutBrief({ children, img, description }: AboutBriefPro
                 </div>
                 <div className={styles.aboutImage}>
                     <EditableImage
-                        src={img.src}
+                        src={content?.homepage?.aboutBrief?.image || img.src}
                         alt="Oxford Academy Robotics team at a competition"
                         path="homepage.aboutBrief.image"
                         width={640}

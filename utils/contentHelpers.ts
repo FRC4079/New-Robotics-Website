@@ -67,3 +67,13 @@ export function getStoredStyle(
   const key = path.replace(/\[(\d+)\]/g, '.$1');
   return content?._styles?.[key];
 }
+
+// Reads the value at a dotted content path such as "teams.frc.hero.bannerImage".
+export function readContentPath(content: unknown, path: string): unknown {
+  let current: unknown = content;
+  for (const part of path.split('.')) {
+    if (current === null || typeof current !== 'object') return undefined;
+    current = (current as Record<string, unknown>)[part];
+  }
+  return current;
+}

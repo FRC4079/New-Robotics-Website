@@ -19,7 +19,7 @@
     "aboutBrief": {
       "title": "About Us",
       "description": "Oxford Academy Robotics is a student-run organization that competes in the FIRST Robotics Competition (FRC), FIRST Tech Challenge (FTC), and VEX Robotics Competition. Our mission is to inspire students to pursue careers in STEM fields by providing them with the opportunity to learn, compete, and thrive in a supportive environment.",
-      "image": "/images/638764193529945765_Screenshot2025-02-26112950.png"
+      "image": "/images/comp/BB2024_2.jpg"
     },
     "stats": {
       "title": "Our Impact by the Numbers",
@@ -510,7 +510,7 @@
             "location": "Virtual Broadcast"
           },
           {
-            "month": "JAN–FEB",
+            "month": "JAN\u2013FEB",
             "day": "TBA",
             "title": "Build Season",
             "description": "Design, build, and program the robot before our first event",
@@ -689,7 +689,7 @@
         ]
       },
       "schedule": {
-        "title": "2026–2027 Season Schedule",
+        "title": "2026\u20132027 Season Schedule",
         "events": [
           {
             "month": "SEP",
@@ -699,14 +699,14 @@
             "location": "Kickoff Broadcast"
           },
           {
-            "month": "NOV–JAN",
+            "month": "NOV\u2013JAN",
             "day": "TBA",
             "title": "League Meets & Qualifiers",
             "description": "Both teams compete for ranking points and advancement",
             "location": "Southern California"
           },
           {
-            "month": "FEB–MAR",
+            "month": "FEB\u2013MAR",
             "day": "TBA",
             "title": "Regional Championship",
             "description": "Top teams from the region compete for advancement",
@@ -871,31 +871,31 @@
         ]
       },
       "schedule": {
-        "title": "2026–2027 Competition Season",
+        "title": "2026\u20132027 Competition Season",
         "events": [
           {
-            "month": "SEP–NOV",
+            "month": "SEP\u2013NOV",
             "day": "TBA",
             "title": "Season Opener Tournaments",
             "description": "Early-season events with the 2026-27 Override game",
             "location": "Orange County, CA"
           },
           {
-            "month": "DEC–JAN",
+            "month": "DEC\u2013JAN",
             "day": "TBA",
             "title": "Skills Challenge Events",
             "description": "Programming and driver skills competitions",
             "location": "Southern California"
           },
           {
-            "month": "FEB–MAR",
+            "month": "FEB\u2013MAR",
             "day": "TBA",
             "title": "Regional & State Championships",
             "description": "Qualification events for the world championship",
             "location": "California"
           },
           {
-            "month": "APR–MAY",
+            "month": "APR\u2013MAY",
             "day": "TBA",
             "title": "VEX World Championship",
             "description": "Global competition featuring the best VEX teams (qualification required)",
@@ -911,7 +911,7 @@
       "logo": "/logos/FRCLogo.png",
       "name": "FRC Team 4079",
       "description": "Our FRC team competes in the FIRST Robotics Competition, building robots of up to 125 pounds to play challenging games in intense competitions.",
-      "founded": " 2012",
+      "founded": "\u00a02012",
       "link": "/frc"
     },
     {
@@ -919,7 +919,7 @@
       "logo": "/logos/FTCLogo.png",
       "name": "FTC Teams 19812 & 23796",
       "description": "Our FTC teams design, build, and program smaller robots while learning valuable engineering and teamwork skills.",
-      "founded": " 2021",
+      "founded": "\u00a02021",
       "link": "/ftc"
     },
     {
@@ -927,7 +927,7 @@
       "logo": "/logos/VEXLogo.png",
       "name": "VEX Robotics",
       "description": "VEX teams focus on rapid prototyping and strategic gameplay with standardized robot kits.",
-      "founded": " 2009",
+      "founded": "\u00a02009",
       "link": "/vex"
     }
   ],
@@ -1105,7 +1105,7 @@
       }
     ],
     "legal": {
-      "copyright": "© 2026 OA Robotics. All rights reserved.",
+      "copyright": "\u00a9 2026 OA Robotics. All rights reserved.",
       "websiteDeveloper": "Website by Erick Tran",
       "betaNotice": "Oxford Academy"
     },
@@ -1129,7 +1129,7 @@
         }
       ],
       "title": "Building the Future Together",
-      "description": "Our sponsors are more than funders—they are partners in our mission to inspire the next generation of innovators, engineers, and problem-solvers. Through their generous support, we can provide world-class robotics education and compete at the highest levels."
+      "description": "Our sponsors are more than funders\u2014they are partners in our mission to inspire the next generation of innovators, engineers, and problem-solvers. Through their generous support, we can provide world-class robotics education and compete at the highest levels."
     },
     "currentSponsors": {
       "title": "Our Sponsors",
