@@ -1,172 +1,147 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, readdir, mkdir, unlink } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
+import { mkdir, readdir, stat, unlink, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { requireAdmin } from '@/utils/auth';
+import {
+  MAX_UPLOAD_BYTES,
+  MEDIA_EXTENSIONS,
+  PUBLIC_DIR,
+  backupFile,
+  isAllowedUpload,
+  resolveInPublic,
+  sanitizeFolder,
+  sanitizeName,
+  toPublicUrl,
+} from '@/utils/media';
+
+type MediaFile = { type: 'file'; path: string; size: number };
+type MediaStructure = { [name: string]: MediaFile | MediaStructure };
+
+function fail(error: string, status: number) {
+  return NextResponse.json({ success: false, error }, { status });
+}
 
 // Get all media files
 export async function GET() {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
-    const publicDir = path.join(process.cwd(), 'public');
-    const mediaStructure = await getMediaStructure(publicDir);
-    
-    return NextResponse.json({ 
-      success: true, 
-      media: mediaStructure 
-    });
+    const media = await getMediaStructure(PUBLIC_DIR);
+    return NextResponse.json({ success: true, media });
   } catch (error) {
     console.error('Error fetching media:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch media files' },
-      { status: 500 }
-    );
+    return fail('Failed to fetch media files', 500);
   }
 }
 
 // Upload new media file
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const category = formData.get('category') as string || 'images';
-    const subcategory = formData.get('subcategory') as string || '';
-    
-    if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'No file provided' },
-        { status: 400 }
-      );
+    const file = formData.get('file');
+    const category = sanitizeFolder(String(formData.get('category') || 'images'));
+    const subcategory = sanitizeFolder(String(formData.get('subcategory') || ''));
+
+    if (!(file instanceof File)) {
+      return fail('No file provided', 400);
+    }
+    if (!isAllowedUpload(file)) {
+      return fail('Invalid file type. Only images are allowed.', 400);
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return fail(`File is too large. The limit is ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`, 413);
     }
 
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid file type. Only images are allowed.' },
-        { status: 400 }
-      );
+    const fileName = sanitizeName(file.name);
+    if (!fileName || !category || subcategory === null) {
+      return fail('Invalid file name or folder', 400);
+    }
+    const uploadDir = resolveInPublic([category, subcategory].filter(Boolean).join('/'));
+    if (!uploadDir) {
+      return fail('Invalid file name or folder', 400);
     }
 
-    // Create upload directory path
-    const uploadDir = path.join(process.cwd(), 'public', category, subcategory);
-    
-    // Ensure directory exists
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-
-    // Use original filename, replace if exists
-    const originalName = file.name;
-    const fileName = originalName;
-    
+    await mkdir(uploadDir, { recursive: true });
     const filePath = path.join(uploadDir, fileName);
-    
-    // Create backup if file already exists
-    if (existsSync(filePath)) {
-      const backupDir = path.join(process.cwd(), 'public', '.backups');
-      if (!existsSync(backupDir)) {
-        await mkdir(backupDir, { recursive: true });
-      }
-      
-      const timestamp = Date.now();
-      const backupPath = path.join(backupDir, `${timestamp}-${fileName}`);
-      
-      try {
-        await require('fs/promises').copyFile(filePath, backupPath);
-        console.log(`Backup created: ${backupPath}`);
-      } catch (backupError) {
-        console.warn('Could not create backup:', backupError);
-      }
+
+    // Uploading a name that already exists replaces it, so keep the old copy.
+    try {
+      await backupFile(filePath);
+    } catch {
+      // Nothing to back up when the file is new.
     }
-    
-    // Convert file to buffer and save
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    
-    await writeFile(filePath, buffer);
-    
-    // Return the public URL path
-    const publicPath = `/${category}${subcategory ? `/${subcategory}` : ''}/${fileName}`;
-    
+
+    await writeFile(filePath, Buffer.from(await file.arrayBuffer()));
+
     return NextResponse.json({
       success: true,
       message: 'File uploaded successfully',
-      filePath: publicPath,
-      fileName: fileName
+      filePath: toPublicUrl(filePath),
+      fileName,
     });
-    
   } catch (error) {
     console.error('Error uploading file:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to upload file' },
-      { status: 500 }
-    );
+    return fail('Failed to upload file', 500);
   }
 }
 
 // Delete media file
 export async function DELETE(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
-    const { searchParams } = new URL(request.url);
-    const filePath = searchParams.get('path');
-    
+    const filePath = new URL(request.url).searchParams.get('path');
     if (!filePath) {
-      return NextResponse.json(
-        { success: false, error: 'No file path provided' },
-        { status: 400 }
-      );
+      return fail('No file path provided', 400);
     }
 
-    const fullPath = path.join(process.cwd(), 'public', filePath);
-    
-    if (!existsSync(fullPath)) {
-      return NextResponse.json(
-        { success: false, error: 'File not found' },
-        { status: 404 }
-      );
+    const fullPath = resolveInPublic(filePath);
+    if (!fullPath || !MEDIA_EXTENSIONS.has(path.extname(fullPath).toLowerCase())) {
+      return fail('Invalid file path', 400);
     }
 
+    const info = await stat(fullPath).catch(() => null);
+    if (!info?.isFile()) {
+      return fail('File not found', 404);
+    }
+
+    await backupFile(fullPath);
     await unlink(fullPath);
-    
+
     return NextResponse.json({
       success: true,
-      message: 'File deleted successfully'
+      message: 'File deleted successfully',
     });
-    
   } catch (error) {
     console.error('Error deleting file:', error);
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete file' },
-      { status: 500 }
-    );
+    return fail('Failed to delete file', 500);
   }
 }
 
-// Helper function to recursively get media structure
-async function getMediaStructure(dir: string, relativePath = ''): Promise<any> {
-  const items = await readdir(dir, { withFileTypes: true });
-  const structure: any = {};
-  
-  for (const item of items) {
+// Recursively lists the media files under a folder
+async function getMediaStructure(dir: string): Promise<MediaStructure> {
+  const structure: MediaStructure = {};
+
+  for (const item of await readdir(dir, { withFileTypes: true })) {
+    // Skip hidden entries and folders that are not media.
+    if (item.name.startsWith('.')) continue;
     const itemPath = path.join(dir, item.name);
-    const relativeItemPath = path.join(relativePath, item.name);
-    
+
     if (item.isDirectory()) {
-      // Skip node_modules and other non-media directories
-      if (!['node_modules', '.next', '.git'].includes(item.name)) {
-        structure[item.name] = await getMediaStructure(itemPath, relativeItemPath);
-      }
-    } else {
-      // Only include image and media files
-      const ext = path.extname(item.name).toLowerCase();
-      if (['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.mov', '.avi'].includes(ext)) {
-        structure[item.name] = {
-          type: 'file',
-          path: '/' + relativeItemPath.replace(/\\/g, '/'),
-          size: (await readdir(dir, { withFileTypes: true })).find(f => f.name === item.name)
-        };
-      }
+      structure[item.name] = await getMediaStructure(itemPath);
+    } else if (MEDIA_EXTENSIONS.has(path.extname(item.name).toLowerCase())) {
+      structure[item.name] = {
+        type: 'file',
+        path: toPublicUrl(itemPath),
+        size: (await stat(itemPath)).size,
+      };
     }
   }
-  
+
   return structure;
 }
