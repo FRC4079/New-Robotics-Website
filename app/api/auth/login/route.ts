@@ -4,8 +4,8 @@ import {
   SESSION_COOKIE,
   SESSION_MAX_AGE_SECONDS,
   createSessionToken,
-  safeEqual,
 } from '@/utils/auth';
+import { authenticate } from '@/utils/users';
 import { createFailureLimiter } from '@/utils/rateLimit';
 
 const MAX_FAILURES_PER_CLIENT = 5;
@@ -45,9 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const adminUsername = process.env.ADMIN_USERNAME;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (!adminUsername || !adminPassword) {
+    if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD) {
       console.error('ADMIN_USERNAME and ADMIN_PASSWORD must be set');
       return NextResponse.json(
         { success: false, error: 'Server configuration error' },
@@ -55,10 +53,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Evaluate both comparisons so timing does not reveal which one failed.
-    const usernameMatches = safeEqual(username, adminUsername);
-    const passwordMatches = safeEqual(password, adminPassword);
-    if (!usernameMatches || !passwordMatches) {
+    const user = await authenticate(username, password);
+    if (!user) {
       clientLimiter.recordFailure(clientKey);
       globalLimiter.recordFailure(GLOBAL_KEY);
       return NextResponse.json(
@@ -67,7 +63,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sessionToken = createSessionToken(username);
+    const sessionToken = createSessionToken(user.username, user.role);
     if (!sessionToken) {
       console.error('SESSION_SECRET must be set to a string of at least 32 characters');
       return NextResponse.json(
@@ -90,6 +86,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Login successful',
+      user: { username: user.username, displayName: user.displayName, role: user.role },
     });
   } catch (error) {
     console.error('Login error:', error);

@@ -31,7 +31,7 @@ const DEFAULT_LINKS: DynamicLink[] = [
 
 export default function Navbar({ children, isFixed = true }: NavbarProps): React.ReactElement {
     const { content } = useContent();
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, canEditAny, user, logout } = useAuth();
     const { isEditMode, enableEditMode } = useEditMode();
     const pathname = usePathname();
 
@@ -103,7 +103,10 @@ export default function Navbar({ children, isFixed = true }: NavbarProps): React
 
                     {isAuthenticated && (
                         <div className={styles.adminActions}>
-                            {!isEditMode && (
+                            <Link href="/admin" className={styles.adminLink}>
+                                {user?.displayName ?? "Admin"}
+                            </Link>
+                            {canEditAny && !isEditMode && (
                                 <button type="button" className={styles.editModeButton} onClick={enableEditMode}>
                                     <Icon name="pencil" size={16} /> Edit mode
                                 </button>

@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 
 interface EditModeContextType {
   isEditMode: boolean;
+  /** Whether the signed-in account may edit this content path. */
+  canEdit: (path: string) => boolean;
   enableEditMode: () => void;
   disableEditMode: () => void;
   toggleEditMode: () => void;
@@ -16,10 +18,10 @@ interface EditModeContextType {
 const EditModeContext = createContext<EditModeContextType | undefined>(undefined);
 
 export function EditModeProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, canEditAny, canEdit } = useAuth();
   const [editRequested, setIsEditMode] = useState(false);
   // Editing is only possible while signed in, so logging out also ends edit mode.
-  const isEditMode = editRequested && isAuthenticated;
+  const isEditMode = editRequested && isAuthenticated && canEditAny;
   const [pendingChanges, setPendingChanges] = useState<Map<string, any>>(new Map());
 
   const enableEditMode = useCallback(() => {
@@ -87,6 +89,7 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
     <EditModeContext.Provider
       value={{
         isEditMode,
+        canEdit,
         enableEditMode,
         disableEditMode,
         toggleEditMode,

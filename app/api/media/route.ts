@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { mkdir, readdir, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { requireAdmin } from '@/utils/auth';
+import { requireEditor, requireSuperAdmin } from '@/utils/auth';
 import {
   MAX_UPLOAD_BYTES,
   MEDIA_EXTENSIONS,
@@ -27,8 +27,8 @@ function fail(error: string, status: number) {
 
 // Get all media files: the site's own assets, plus everything uploaded through the CMS
 export async function GET() {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  const access = await requireEditor();
+  if ('denied' in access) return access.denied;
 
   try {
     const media: MediaStructure = await getMediaStructure(PUBLIC_DIR, toPublicUrl);
@@ -42,8 +42,8 @@ export async function GET() {
 
 // Upload new media file
 export async function POST(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  const access = await requireEditor();
+  if ('denied' in access) return access.denied;
 
   try {
     const formData = await request.formData();
@@ -96,8 +96,8 @@ export async function POST(request: NextRequest) {
 
 // Delete media file
 export async function DELETE(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  const access = await requireSuperAdmin();
+  if ('denied' in access) return access.denied;
 
   try {
     const filePath = new URL(request.url).searchParams.get('path');

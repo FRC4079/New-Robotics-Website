@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { requireAdmin } from '@/utils/auth';
+import { requireSuperAdmin } from '@/utils/auth';
 import {
   MAX_UPLOAD_BYTES,
   MEDIA_EXTENSIONS,
@@ -17,8 +17,8 @@ function fail(error: string, status: number) {
 
 // Replace existing media file
 export async function POST(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
+  const access = await requireSuperAdmin();
+  if ('denied' in access) return access.denied;
 
   try {
     const formData = await request.formData();

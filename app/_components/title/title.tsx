@@ -27,7 +27,8 @@ export default function Title({
                               }: TitleProps): React.ReactElement {
     const [uploadError, setUploadError] = React.useState<string>("");
     const { content } = useContent();
-    const { isEditMode, addPendingChange } = useEditMode();
+    const { isEditMode: editModeOn, canEdit, addPendingChange } = useEditMode();
+    const isEditMode = editModeOn && canEdit(`${heroPath}.bannerImage`);
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     // Get the banner image from content or use default

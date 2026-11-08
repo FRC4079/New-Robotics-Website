@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/utils/auth';
+import { requireEditAccess } from '@/utils/auth';
 import { ContentPathError, applyContentChange, updateContent } from '@/utils/contentStore';
 
 export async function POST(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
   try {
     const body: unknown = await request.json().catch(() => null);
     const changes = (body as { changes?: unknown } | null)?.changes;
@@ -16,6 +13,10 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Every path must be inside an area this account may edit, or nothing is saved.
+    const access = await requireEditAccess(Object.keys(changes));
+    if ('denied' in access) return access.denied;
 
     // All changes are applied together: if one path is invalid, none are saved.
     let changesApplied = 0;

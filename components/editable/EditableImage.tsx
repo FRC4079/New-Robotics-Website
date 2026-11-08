@@ -39,7 +39,8 @@ export default function EditableImage({
   style: initialStyle,
   onStyleChange,
 }: EditableImageProps) {
-  const { isEditMode, addPendingChange, pendingChanges } = useEditMode();
+  const { isEditMode: editModeOn, canEdit, addPendingChange, pendingChanges } = useEditMode();
+  const isEditMode = editModeOn && canEdit(path);
   const { content } = useContent();
   const [localSrc, setLocalSrc] = useState(src);
   const [isHovered, setIsHovered] = useState(false);

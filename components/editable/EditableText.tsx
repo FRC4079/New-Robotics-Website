@@ -32,7 +32,8 @@ export default function EditableText({
   style: initialStyle,
   onStyleChange,
 }: EditableTextProps) {
-  const { isEditMode, addPendingChange, pendingChanges } = useEditMode();
+  const { isEditMode: editModeOn, canEdit, addPendingChange, pendingChanges } = useEditMode();
+  const isEditMode = editModeOn && canEdit(path);
   const { content } = useContent();
   
   // Normalize the value - handle both string and {value, style} formats

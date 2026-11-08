@@ -15,7 +15,8 @@ type EditableIconProps = {
 // Renders an icon; while editing, adds a picker so the icon can be swapped
 // without typing names by hand.
 export default function EditableIcon({ value, path, size = 24, className }: EditableIconProps): React.ReactElement | null {
-    const { isEditMode, addPendingChange, pendingChanges } = useEditMode();
+    const { isEditMode: editModeOn, canEdit, addPendingChange, pendingChanges } = useEditMode();
+    const isEditMode = editModeOn && canEdit(path);
     const pending = pendingChanges.get(path);
     const current: string = typeof pending === "string" ? pending : String(getContentValue(value) ?? "");
 

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAdmin } from '@/utils/auth';
+import { requireEditAccess, requireSuperAdmin } from '@/utils/auth';
 import {
   ContentPathError,
   addAtPath,
@@ -33,15 +33,16 @@ export async function GET() {
 
 // Update site content
 export async function POST(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
   try {
     const { section, data } = await readBody(request);
 
     if (typeof section !== 'string' || section === '' || data === undefined) {
       return badRequest('Section and data are required');
     }
+
+    // Replacing the whole file is a super admin action; sections follow permissions.
+    const access = section === 'full' ? await requireSuperAdmin() : await requireEditAccess([section]);
+    if ('denied' in access) return access.denied;
 
     await updateContent((content) => {
       if (section === 'full') {
@@ -70,15 +71,15 @@ export async function POST(request: NextRequest) {
 
 // Add new navigation item or content section
 export async function PUT(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
   try {
     const { section, item } = await readBody(request);
 
     if (typeof section !== 'string' || section === '' || !item) {
       return badRequest('Section and item are required');
     }
+
+    const access = await requireEditAccess([section]);
+    if ('denied' in access) return access.denied;
 
     await updateContent((content) => {
       addAtPath(content, parseContentPath(section), item);
@@ -101,9 +102,6 @@ export async function PUT(request: NextRequest) {
 
 // Delete content section or item
 export async function DELETE(request: NextRequest) {
-  const denied = await requireAdmin();
-  if (denied) return denied;
-
   try {
     const { searchParams } = new URL(request.url);
     const section = searchParams.get('section');
@@ -112,6 +110,9 @@ export async function DELETE(request: NextRequest) {
     if (!section) {
       return badRequest('Section is required');
     }
+
+    const access = await requireEditAccess([section]);
+    if ('denied' in access) return access.denied;
 
     let found = false;
     await updateContent((content) => {
