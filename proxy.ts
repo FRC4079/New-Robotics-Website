@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SESSION_COOKIE, verifySessionToken } from '@/utils/auth';
 
 export function proxy(req: NextRequest) {
-  // Only run for /admin routes (but not /admin/login)
-  if (req.nextUrl.pathname.startsWith('/admin')) {
-    // Allow access to login page without authentication
-    if (req.nextUrl.pathname === '/admin/login') {
-      return NextResponse.next();
-    }
-    
-    // Check for admin session cookie
-    const hasSession = req.cookies.get('admin_session');
-    
-    if (!hasSession) {
-      // Redirect to login page if not authenticated
-      return NextResponse.redirect(new URL('/admin/login', req.url));
-    }
+  const { pathname } = req.nextUrl;
+
+  // The login page must stay reachable without a session.
+  if (pathname === '/admin/login') {
+    return NextResponse.next();
   }
-  
+
+  // Everything else under /admin needs a validly signed, unexpired session.
+  if (!verifySessionToken(req.cookies.get(SESSION_COOKIE)?.value)) {
+    return NextResponse.redirect(new URL('/admin/login', req.url));
+  }
+
   return NextResponse.next();
 }
 

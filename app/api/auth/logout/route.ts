@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { SESSION_COOKIE } from '@/utils/auth';
 
 export async function POST() {
   try {
-    // Clear the session cookie
     const cookieStore = await cookies();
-    cookieStore.delete('admin_session');
+    cookieStore.delete(SESSION_COOKIE);
 
     return NextResponse.json({
       success: true,
