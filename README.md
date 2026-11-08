@@ -171,13 +171,26 @@ npm start
 
 ## Content Management
 
-### Accessing Edit Mode
+### Accounts
 
-1. Navigate to `/admin/login`
-2. Authenticate with admin credentials
-3. Click "Enable Edit Mode" in the toolbar
-4. Edit content directly on any page
-5. Changes are saved to the content file (`content/site-content.json` by default, or `CONTENT_FILE`)
+There are two kinds of account:
+
+- **Super admin**: the `ADMIN_USERNAME` / `ADMIN_PASSWORD` login. Can edit everything, manage accounts and delete uploads.
+- **Editors**: created by the super admin under **Accounts** (`/admin/users`). Each editor is given only the areas they need (for example News, or one team page). Permissions are checked on the server for every save and upload, and take effect on the next request. Accounts can be edited, disabled or deleted at any time, which also ends their open sessions.
+
+Editors can change their own password under **My password**. Account data is kept in `USERS_FILE`, so keep it on the same volume as the content.
+
+### Editing pages
+
+1. Sign in at `/admin/login`
+2. Choose **Edit pages** on the dashboard (or **Edit mode** in the navbar)
+3. Click any highlighted text, image or icon on the page and change it
+4. Review the list of unsaved changes in the bar at the bottom, then **Save** (or press Ctrl/Cmd+S). **Discard** drops everything not yet saved
+5. Changes are stored in the content file (`content/site-content.json` by default, or `CONTENT_FILE`)
+
+### News and newsletters
+
+**News** in the admin sidebar is a form for articles: title, type (including Newsletter), date, summary, text, cover image and an optional external link such as a hosted newsletter PDF. Articles can be saved as drafts, which stay hidden from visitors until published.
 
 ### Editing Content
 
@@ -262,9 +275,10 @@ Set these in `.env.local` for development, or on the container in production.
 
 | Variable | Required | Description |
 | --- | --- | --- |
-| `ADMIN_USERNAME` | Yes | Username for `/admin/login` |
-| `ADMIN_PASSWORD` | Yes | Password for `/admin/login` |
+| `ADMIN_USERNAME` | Yes | Username of the super admin, who signs in at `/admin/login` |
+| `ADMIN_PASSWORD` | Yes | Password of the super admin. It is never stored on disk; change it by changing this variable |
 | `SESSION_SECRET` | Yes | Signs admin sessions. Use at least 32 random characters, for example `openssl rand -hex 32`. Changing it signs everyone out |
+| `USERS_FILE` | No | Where team accounts are stored (passwords are hashed). Defaults to `data/users.json`; the Docker image uses `/app/data/users.json` |
 | `CONTENT_FILE` | No | Where the edited content is stored. Defaults to `content/site-content.json`; the Docker image uses `/app/data/site-content.json` |
 | `UPLOAD_DIR` | No | Where uploaded images are stored and served from at `/uploads`. Defaults to `data/uploads` |
 | `MEDIA_BACKUP_DIR` | No | Where replaced and deleted uploads are copied. Defaults to `data/media-backups` |

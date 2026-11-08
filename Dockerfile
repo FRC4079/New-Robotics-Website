@@ -31,6 +31,7 @@ ENV NODE_ENV=production \
     CONTENT_FILE=/app/data/site-content.json \
     UPLOAD_DIR=/app/data/uploads \
     CONTACT_FILE=/app/data/contact-messages.jsonl \
+    USERS_FILE=/app/data/users.json \
     MEDIA_BACKUP_DIR=/app/data/media-backups
 
 RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs \
