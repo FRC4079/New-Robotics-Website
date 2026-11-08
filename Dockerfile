@@ -26,10 +26,11 @@ FROM base AS runner
 ENV NODE_ENV=production \
     PORT=3000 \
     HOSTNAME=0.0.0.0 \
-    # Edited content, uploaded images and their backups live in /app/data.
-    # Mount a volume there so they survive redeploys.
+    # Edited content, uploaded images, contact messages and backups live in
+    # /app/data. Mount a volume there so they survive redeploys.
     CONTENT_FILE=/app/data/site-content.json \
     UPLOAD_DIR=/app/data/uploads \
+    CONTACT_FILE=/app/data/contact-messages.jsonl \
     MEDIA_BACKUP_DIR=/app/data/media-backups
 
 RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs \
