@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useCallback } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface EditModeContextType {
   isEditMode: boolean;
@@ -15,7 +16,10 @@ interface EditModeContextType {
 const EditModeContext = createContext<EditModeContextType | undefined>(undefined);
 
 export function EditModeProvider({ children }: { children: React.ReactNode }) {
-  const [isEditMode, setIsEditMode] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [editRequested, setIsEditMode] = useState(false);
+  // Editing is only possible while signed in, so logging out also ends edit mode.
+  const isEditMode = editRequested && isAuthenticated;
   const [pendingChanges, setPendingChanges] = useState<Map<string, any>>(new Map());
 
   const enableEditMode = useCallback(() => {
