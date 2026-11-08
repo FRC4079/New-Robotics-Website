@@ -1,39 +1,38 @@
-import {NextFont} from "next/dist/compiled/@next/font";
-import {Montserrat, Titillium_Web} from "next/font/google";
+import { Montserrat, Titillium_Web } from "next/font/google";
 
 // Titillium Web
-const Titillium_Web_300: NextFont = Titillium_Web({
+const Titillium_Web_300 = Titillium_Web({
     weight: "300",
     style: 'normal',
     subsets: ['latin'],
 });
 
-const Titillium_Web_600: NextFont = Titillium_Web({
+const Titillium_Web_600 = Titillium_Web({
     weight: "600",
     style: 'normal',
     subsets: ['latin'],
 });
 
-const Titillium_Web_700: NextFont = Titillium_Web({
-    weight: "600",
+const Titillium_Web_700 = Titillium_Web({
+    weight: "700",
     style: 'normal',
     subsets: ['latin'],
 });
 
-const Titillium_Web_900: NextFont = Titillium_Web({
+const Titillium_Web_900 = Titillium_Web({
     weight: "900",
     style: 'normal',
     subsets: ['latin'],
 });
 
 // Montserrat
-const Montserrat_300: NextFont = Montserrat({
+const Montserrat_300 = Montserrat({
     weight: "300",
     style: 'normal',
     subsets: ['latin'],
 });
 
-const Montserrat_500: NextFont = Montserrat({
+const Montserrat_500 = Montserrat({
     weight: "500",
     style: 'normal',
     subsets: ['latin'],
