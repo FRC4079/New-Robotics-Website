@@ -1,9 +1,9 @@
 "use client";
 import React from 'react';
 import styles from './newsSection.module.scss';
-import { TW_600, TW_900 } from '@/utils/globalFonts';
 import EditableArticle, { NewsArticle } from './editableArticle';
 import { useEditMode } from '@/contexts/EditModeContext';
+import Icon from '@/components/icons/Icon';
 
 type NewsSectionProps = {
     children?: React.ReactNode;
@@ -74,10 +74,10 @@ export default function NewsSection({
     };
 
     return (
-        <section className={`${styles.newsSection} ${TW_600}`}>
+        <section className={styles.newsSection}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h1 className={`${styles.title} ${TW_900}`}>{title}</h1>
+                    <h2 className={styles.title}>{title}</h2>
                     
                     <div className={styles.headerActions}>
                         {showAll && (
@@ -86,6 +86,7 @@ export default function NewsSection({
                                     <button
                                         key={category}
                                         className={`${styles.filterTab} ${selectedCategory === category ? styles.active : ''}`}
+                                        aria-pressed={selectedCategory === category}
                                         onClick={() => setSelectedCategory(category)}
                                     >
                                         {category}
@@ -100,7 +101,7 @@ export default function NewsSection({
                                 onClick={handleAddArticle}
                                 title="Add new article"
                             >
-                                ➕ Add Article
+                                <Icon name="plus" size={16} /> Add article
                             </button>
                         )}
                     </div>
@@ -114,7 +115,7 @@ export default function NewsSection({
                                 className={styles.addFirstButton}
                                 onClick={handleAddArticle}
                             >
-                                ➕ Add Your First Article
+                                <Icon name="plus" size={16} /> Add your first article
                             </button>
                         )}
                     </div>

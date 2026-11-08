@@ -4,7 +4,8 @@ import EditableText from '@/components/editable/EditableText';
 import EditableImage from '@/components/editable/EditableImage';
 import { useEditMode } from '@/contexts/EditModeContext';
 import styles from './editableArticle.module.scss';
-import { TW_900 } from '@/utils/globalFonts';
+import Link from 'next/link';
+import Icon from '@/components/icons/Icon';
 
 export type NewsArticle = {
     id: string;
@@ -38,32 +39,11 @@ export default function EditableArticle({
     const { isEditMode } = useEditMode();
     const [showFullContent, setShowFullContent] = useState(false);
 
-    const handleCardClick = (e: React.MouseEvent) => {
-        // Don't navigate if in edit mode or clicking on editable elements
-        if (isEditMode) return;
-        
-        const target = e.target as HTMLElement;
-        if (target.closest('a') || target.closest('button')) return;
-        
-        window.location.href = `/news/${article.id}`;
-    };
-
-    const getCategoryColor = (category: string): string => {
-        switch (category) {
-            case 'Competition': return '#4285f4';
-            case 'Achievement': return '#ff6b35';
-            case 'Event': return '#9c27b0';
-            case 'General': return '#ff5722';
-            default: return '#666';
-        }
-    };
-
     const articlePath = `${basePath}[${index}]`;
 
     return (
         <article 
             className={`${styles.articleCard} ${isFeatured ? styles.featured : ''} ${!isEditMode ? styles.clickable : ''}`}
-            onClick={handleCardClick}
         >
             {isEditMode && (
                 <button
@@ -71,7 +51,7 @@ export default function EditableArticle({
                     onClick={onDelete}
                     title="Delete article"
                 >
-                    🗑️
+                    <Icon name="trash" size={16} />
                 </button>
             )}
             
@@ -96,9 +76,9 @@ export default function EditableArticle({
                     )
                 )}
                 <div className={styles.imageOverlay}>
-                    <span 
+                    <span
                         className={styles.categoryBadge}
-                        style={{ backgroundColor: getCategoryColor(article.category) }}
+                        data-category={article.category}
                     >
                         <EditableText
                             value={article.category}
@@ -128,12 +108,18 @@ export default function EditableArticle({
                     </span>
                 </div>
                 
-                <h2 className={TW_900}>
-                    <EditableText
-                        value={article.title}
-                        path={`${articlePath}.title`}
-                        as="span"
-                    />
+                <h2>
+                    {isEditMode ? (
+                        <EditableText
+                            value={article.title}
+                            path={`${articlePath}.title`}
+                            as="span"
+                        />
+                    ) : (
+                        <Link href={`/news/${article.id}`} className={styles.titleLink}>
+                            {article.title}
+                        </Link>
+                    )}
                 </h2>
                 
                 <div className={styles.excerpt}>
@@ -151,7 +137,7 @@ export default function EditableArticle({
                             className={styles.toggleContent}
                             onClick={() => setShowFullContent(!showFullContent)}
                         >
-                            {showFullContent ? '📝 Hide Full Content' : '📝 Edit Full Content'}
+                            {showFullContent ? 'Hide full content' : 'Edit full content'}
                         </button>
                         
                         {showFullContent && (

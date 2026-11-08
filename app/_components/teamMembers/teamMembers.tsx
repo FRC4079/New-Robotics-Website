@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import styles from './teamMembers.module.scss';
-import { TW_600, TW_900 } from '@/utils/globalFonts';
 import { useContent } from '@/hooks/useContent';
 
 type TeamMember = {
@@ -74,9 +73,9 @@ export default function TeamMembers({
     }, [selectedTeam, members]);
 
     return (
-        <section className={`${styles.teamMembers} ${TW_600}`}>
+        <section className={styles.teamMembers}>
             <div className={styles.container}>
-                <h1 className={`${styles.title} ${TW_900}`}>{title}</h1>
+                <h2 className={styles.title}>{title}</h2>
                 
                 {showFilter && (
                     <div className={styles.filterTabs}>
@@ -84,6 +83,7 @@ export default function TeamMembers({
                             <button
                                 key={team}
                                 className={`${styles.filterTab} ${selectedTeam === team ? styles.active : ''}`}
+                                aria-pressed={selectedTeam === team}
                                 onClick={() => setSelectedTeam(team)}
                             >
                                 {team}
@@ -110,7 +110,7 @@ export default function TeamMembers({
                             
                             <div className={styles.memberContent}>
                                 <div className={styles.memberHeader}>
-                                    <h3 className={TW_900}>{member.name}</h3>
+                                    <h3>{member.name}</h3>
                                     <span className={styles.memberGrade}>{member.grade}</span>
                                 </div>
                                 

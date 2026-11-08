@@ -6,7 +6,6 @@ import Navbar from '@/app/_components/navbar/navbar';
 import Footer from '@/app/_components/footer/footer';
 import { useContent } from '@/hooks/useContent';
 import styles from './articlePage.module.scss';
-import { TW_900, TW_600 } from '@/utils/globalFonts';
 import EditableText from '@/components/editable/EditableText';
 import EditableImage from '@/components/editable/EditableImage';
 import RichContentEditor from '@/components/editable/RichContentEditor';
@@ -30,7 +29,7 @@ export default function ArticlePage() {
                 <div className={styles.notFound}>
                     <h1>Article Not Found</h1>
                     <p>The article you&apos;re looking for doesn&apos;t exist.</p>
-                    <Link href="/news">← Back to News</Link>
+                    <Link href="/news">Back to news</Link>
                 </div>
                 <Footer />
             </div>
@@ -44,16 +43,6 @@ export default function ArticlePage() {
             month: 'long', 
             day: 'numeric' 
         });
-    };
-
-    const getCategoryColor = (category: string): string => {
-        switch (category) {
-            case 'Competition': return '#4285f4';
-            case 'Achievement': return '#ff6b35';
-            case 'Event': return '#9c27b0';
-            case 'General': return '#ff5722';
-            default: return '#666';
-        }
     };
 
     const articlePath = `news.articles[${articleIndex}]`;
@@ -131,12 +120,12 @@ export default function ArticlePage() {
                 <div className={styles.articleHeader}>
                     <div className={styles.headerContent}>
                         <div className={styles.breadcrumb}>
-                            <Link href="/news">← Back to News</Link>
+                            <Link href="/news">Back to news</Link>
                         </div>
                         
                         <div 
                             className={styles.categoryBadge}
-                            style={{ backgroundColor: getCategoryColor(article?.category) }}
+                            data-category={getContentValue(article?.category) || 'General'}
                         >
                             <EditableText
                                 value={getContentValue(article?.category) || 'General'}
@@ -145,7 +134,7 @@ export default function ArticlePage() {
                             />
                         </div>
 
-                        <h1 className={TW_900}>
+                        <h1>
                             <EditableText
                                 value={getContentValue(article?.title) || 'Untitled Article'}
                                 path={`${articlePath}.title`}
@@ -178,13 +167,12 @@ export default function ArticlePage() {
                         <RichContentEditor
                             content={getContentValue(article?.content) || 'No content available. Click to edit in Edit Mode.'}
                             path={`${articlePath}.content`}
-                            className={TW_600}
                         />
                     </div>
 
                     {article?.tags && article.tags.length > 0 && (
                         <div className={styles.tags}>
-                            <h3>Tags:</h3>
+                            <h3>Tags</h3>
                             <div className={styles.tagList}>
                                 {article.tags.map((tag: string, index: number) => (
                                     <span key={index} className={styles.tag}>
@@ -207,7 +195,7 @@ export default function ArticlePage() {
                                 rel="noopener noreferrer"
                                 className={styles.linkButton}
                             >
-                                {article.linkText || 'Read Original Article'} →
+                                {article.linkText || 'Read original article'}
                             </a>
                         </div>
                     )}

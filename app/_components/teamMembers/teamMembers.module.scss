@@ -1,272 +1,169 @@
+@use '../../styles/mixins' as *;
+
 .teamMembers {
-    width: 100%;
-    padding: 8vh 0;
-    background-color: #000000;
-    color: white;
-    min-height: 80vh;
-
-    .container {
-        max-width: 1400px;
-        width: 90%;
-        margin: 0 auto;
-        padding: 0 2vw;
-    }
-
-    .title {
-        font-size: 4rem;
-        text-align: center;
-        color: red;
-        margin-bottom: 4vh;
-        letter-spacing: 0.1rem;
-    }
-
-    .filterTabs {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 6vh;
-        flex-wrap: wrap;
-
-        .filterTab {
-            padding: 1rem 2rem;
-            background: transparent;
-            color: white;
-            border: 2px solid #333;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            letter-spacing: 0.05rem;
-
-            &:hover {
-                border-color: red;
-                color: red;
-            }
-
-            &.active {
-                background-color: red;
-                border-color: red;
-                color: white;
-            }
-        }
-    }
-
-    .membersGrid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 3rem;
-        margin-top: 4vh;
-    }
-
-    .memberCard {
-        background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-        border: 1px solid #333;
-        border-radius: 15px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-        &:hover {
-            transform: translateY(-8px);
-            border-color: red;
-            box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
-        }
-
-        .memberImage {
-            position: relative;
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.3s ease;
-            }
-
-            .placeholder {
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #333, #555);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                span {
-                    font-size: 4rem;
-                    color: white;
-                    font-weight: bold;
-                }
-            }
-
-            .memberOverlay {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-                color: white;
-                padding: 2rem;
-                transform: translateY(100%);
-                transition: transform 0.3s ease;
-
-                .memberRole {
-                    font-size: 1.2rem;
-                    font-weight: 600;
-                    color: red;
-                }
-            }
-
-            &:hover {
-                img {
-                    transform: scale(1.05);
-                }
-
-                .memberOverlay {
-                    transform: translateY(0);
-                }
-            }
-        }
-
-        .memberContent {
-            padding: 2rem;
-
-            .memberHeader {
-                margin-bottom: 1rem;
-
-                h3 {
-                    font-size: 1.8rem;
-                    color: white;
-                    margin: 0 0 0.5rem 0;
-                    line-height: 1.2;
-                }
-
-                .memberGrade {
-                    color: #ccc;
-                    font-size: 1rem;
-                    font-weight: 500;
-                }
-            }
-
-            .memberBio {
-                color: #ddd;
-                font-size: 1rem;
-                line-height: 1.5;
-                margin-bottom: 1.5rem;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-
-            .memberSkills {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-                margin-bottom: 1.5rem;
-
-                .skill {
-                    background: #333;
-                    color: white;
-                    padding: 0.3rem 0.8rem;
-                    border-radius: 15px;
-                    font-size: 0.9rem;
-                    border: 1px solid #555;
-                }
-
-                .skillCount {
-                    color: #999;
-                    font-size: 0.9rem;
-                    font-style: italic;
-                    align-self: center;
-                }
-            }
-
-            .memberTeam {
-                .teamBadge {
-                    padding: 0.5rem 1rem;
-                    border-radius: 20px;
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.05rem;
-
-                    &.frc {
-                        background: linear-gradient(45deg, #ff6b35, #f7931e);
-                        color: white;
-                    }
-
-                    &.ftc {
-                        background: linear-gradient(45deg, #4285f4, #0f9d58);
-                        color: white;
-                    }
-
-                    &.vex {
-                        background: linear-gradient(45deg, #9c27b0, #673ab7);
-                        color: white;
-                    }
-
-                    &.student_leadership {
-                        background: linear-gradient(45deg, #696969, #919191);
-                        color: white;
-                    }
-
-                    &.mentors {
-                        background: linear-gradient(45deg, #ff5722, #e91e63);
-                        color: white;
-                    }
-
-                    &.advisor {
-                        background: linear-gradient(45deg, #4caf50, #2e7d32);
-                        color: white;
-                    }
-
-                    &.all {
-                        background: linear-gradient(45deg, #ff5722, #e91e63);
-                        color: white;
-                    }
-                }
-            }
-        }
-    }
+  @include section-pad;
 }
 
-@media (max-width: 768px) {
-    .teamMembers {
-        padding: 6vh 0;
+.container {
+  @include container;
+}
 
-        .title {
-            font-size: 3rem;
-        }
+.title {
+  @include section-title;
+  margin-bottom: var(--space-5);
+}
 
-        .filterTabs {
-            gap: 0.5rem;
+.filterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
 
-            .filterTab {
-                padding: 0.8rem 1.5rem;
-                font-size: 1rem;
-            }
-        }
+.filterTab {
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
 
-        .membersGrid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
+  &:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+  }
 
-        .memberCard {
-            .memberImage {
-                height: 200px;
-            }
+  &.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+}
 
-            .memberContent {
-                padding: 1.5rem;
+.membersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: var(--space-5);
+}
 
-                .memberHeader h3 {
-                    font-size: 1.6rem;
-                }
-            }
-        }
-    }
+.memberCard {
+  @include card(0);
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.memberImage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--surface-2);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  color: var(--text-subtle);
+}
+
+.memberOverlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--space-6) var(--space-4) var(--space-3);
+  background: linear-gradient(180deg, transparent, rgba(7, 8, 15, 0.9));
+}
+
+.memberRole {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.memberContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.memberHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  h3 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--text);
+  }
+}
+
+.memberGrade {
+  font-size: var(--text-xs);
+  color: var(--text-subtle);
+  white-space: nowrap;
+}
+
+.memberBio {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.memberSkills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.skill,
+.skillCount {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.skillCount {
+  border-style: dashed;
+  color: var(--text-subtle);
+}
+
+.memberTeam {
+  margin-top: auto;
+}
+
+.teamBadge {
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-text);
 }
