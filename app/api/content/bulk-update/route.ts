@@ -1,20 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { requireAdmin } from '@/utils/auth';
 import { ContentPathError, applyContentChange, updateContent } from '@/utils/contentStore';
 
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
-    // Check authentication
-    const cookieStore = await cookies();
-    const session = cookieStore.get('admin_session');
-
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
     const body: unknown = await request.json().catch(() => null);
     const changes = (body as { changes?: unknown } | null)?.changes;
 
