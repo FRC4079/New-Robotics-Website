@@ -12,7 +12,7 @@
 .scheduleGrid {
   display: grid;
   gap: var(--space-4);
-  max-width: 52rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
 }
 
 .eventCard {

@@ -20,7 +20,7 @@ $menu-breakpoint: 960px;
 }
 
 .container {
-  @include container(1320px);
+  @include container;
   position: relative;
   display: flex;
   align-items: center;
