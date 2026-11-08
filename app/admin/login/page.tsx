@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './login.module.scss';
+import { useAuth } from '@/contexts/AuthContext';
 import logo from '@/public/logos/OARoboticsLogo_24-25.webp';
 
 export default function AdminLogin() {
   const router = useRouter();
+  const { checkAuth } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,8 +33,8 @@ export default function AdminLogin() {
       const data = await response.json();
 
       if (data.success) {
-        // Redirect to homepage - Edit Mode button will now be visible
-        router.push('/');
+        await checkAuth();
+        router.replace('/admin');
         router.refresh();
       } else {
         setError(data.error || 'Login failed');
@@ -50,13 +52,13 @@ export default function AdminLogin() {
         <div className={styles.logoSection}>
           <Image 
             src={logo} 
-            alt="Oxford Academy Robotics Logo" 
+            alt="" 
             width={80} 
             height={80}
             className={styles.logo}
           />
-          <h1>Admin Panel</h1>
-          <p>Oxford Academy Robotics</p>
+          <h1>Sign in</h1>
+          <p>OA Robotics website editor</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -67,8 +69,7 @@ export default function AdminLogin() {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
-              required
+                            required
               autoComplete="username"
               disabled={loading}
             />
@@ -81,15 +82,14 @@ export default function AdminLogin() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              required
+                            required
               autoComplete="current-password"
               disabled={loading}
             />
           </div>
 
           {error && (
-            <div className={styles.error}>
+            <div className={styles.error} role="alert">
               {error}
             </div>
           )}
@@ -99,13 +99,13 @@ export default function AdminLogin() {
             className={styles.loginBtn}
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
 
         <div className={styles.footer}>
           <Link href="/" className={styles.backLink}>
-            ← Back to Website
+            Back to website
           </Link>
         </div>
       </div>

@@ -1,0 +1,32 @@
+@use '../styles/mixins' as *;
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-4);
+}
+
+.tile {
+  @include card(var(--space-5));
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--text);
+  text-decoration: none;
+
+  svg {
+    color: var(--accent-text);
+  }
+
+  strong {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+  }
+
+  span {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+}

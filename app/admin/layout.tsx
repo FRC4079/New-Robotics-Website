@@ -1,113 +1,79 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import Icon from '@/components/icons/Icon';
+import { useAuth } from '@/contexts/AuthContext';
+import logo from '@/public/logos/OARoboticsLogo_24-25.webp';
 import styles from './layout.module.scss';
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+type NavItem = { href: string; label: string; icon: string; show: boolean };
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading, isSuperAdmin, canEdit, logout } = useAuth();
+
+  const isLogin = pathname === '/admin/login';
 
   useEffect(() => {
-    const checkAuth = async () => {
-      // Allow access to login page
-      if (pathname === '/admin/login') {
-        setIsAuthenticated(true);
-        setLoading(false);
-        return;
-      }
+    if (!isLogin && !isLoading && !user) router.replace('/admin/login');
+  }, [isLogin, isLoading, user, router]);
 
-      // Redirect from old admin pages to homepage
-      // The new inline editing system replaces these pages
-      if (pathname === '/admin' || pathname === '/admin/content') {
-        router.push('/');
-        return;
-      }
+  if (isLogin) return <>{children}</>;
 
-      // For any other /admin/* routes, check authentication
-      try {
-        const response = await fetch('/api/auth/session');
-        const data = await response.json();
-        
-        if (!data.authenticated) {
-          router.push('/admin/login');
-          return;
-        }
-        
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/admin/login');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router, pathname]);
-
-  const handleLogout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      router.push('/admin/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  // Show loading state while checking authentication
-  if (loading) {
-    return (
-      <div className={styles.adminContainer}>
-        <div className={styles.loadingScreen}>
-          <div className={styles.spinner}></div>
-          <p>Checking authentication...</p>
-        </div>
-      </div>
-    );
+  if (isLoading || !user) {
+    return <div className={styles.loading}>Loading…</div>;
   }
 
-  // Don't render protected content if not authenticated
-  if (!isAuthenticated && pathname !== '/admin/login') {
-    return null;
-  }
-
-  // Don't show navbar for login page
-  if (pathname === '/admin/login') {
-    return <>{children}</>;
-  }
+  const items: NavItem[] = [
+    { href: '/admin', label: 'Dashboard', icon: 'home', show: true },
+    { href: '/admin/news', label: 'News', icon: 'megaphone', show: canEdit('news') },
+    { href: '/admin/users', label: 'Accounts', icon: 'users', show: isSuperAdmin },
+    { href: '/admin/account', label: 'My password', icon: 'settings', show: !isSuperAdmin },
+    { href: '/', label: 'View website', icon: 'compass', show: true },
+  ];
 
   return (
-    <div className={styles.adminContainer}>
-      <nav className={styles.adminNav}>
-        <div className={styles.navContent}>
-          <Link href="/" className={styles.homeLink}>
-            ← Back to Website
-          </Link>
-          <h2>Admin Panel</h2>
-          <div className={styles.navLinks}>
-            <Link href="/admin" className={styles.navLink}>
-              Media Manager
-            </Link>
-            <Link href="/admin/content" className={styles.navLink}>
-              Content Manager
-            </Link>
-            <button onClick={handleLogout} className={styles.logoutBtn}>
-              Logout
-            </button>
-          </div>
+    <div className={styles.shell}>
+      <aside className={styles.sidebar}>
+        <Link href="/admin" className={styles.brand}>
+          <Image src={logo} alt="" width={36} height={36} />
+          <span>OA Robotics</span>
+        </Link>
+
+        <nav className={styles.nav} aria-label="Admin">
+          {items
+            .filter((item) => item.show)
+            .map((item) => {
+              const active = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href) && item.href !== '/';
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`${styles.navLink} ${active ? styles.navLinkActive : ''}`}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  <Icon name={item.icon} size={18} />
+                  {item.label}
+                </Link>
+              );
+            })}
+        </nav>
+
+        <div className={styles.account}>
+          <p>
+            <strong>{user.displayName}</strong>
+            {isSuperAdmin ? 'Super admin' : 'Editor'}
+          </p>
+          <button type="button" className={styles.signOut} onClick={() => void logout()}>
+            Sign out
+          </button>
         </div>
-      </nav>
-      <main className={styles.adminMain}>
-        {children}
-      </main>
+      </aside>
+      <main className={styles.main}>{children}</main>
     </div>
   );
 }

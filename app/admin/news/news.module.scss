@@ -1,0 +1,10 @@
+.preview {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin-bottom: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+}
