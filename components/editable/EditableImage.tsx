@@ -8,6 +8,7 @@ import Image from 'next/image';
 import StyleEditor from './StyleEditor';
 import { ImageStyle } from '@/utils/content';
 import { getContentImageStyle } from '@/utils/contentHelpers';
+import Icon from '@/components/icons/Icon';
 
 interface EditableImageProps {
   src: string;
@@ -232,9 +233,11 @@ export default function EditableImage({
     ${hasChanges ? styles.hasChanges : ''}
   `.trim();
 
+  // Sizes only become inline styles when an editor explicitly set them;
+  // otherwise CSS decides, so images stay responsive.
   const imageStyle = {
-    width: localStyle.width || (width ? `${width}px` : 'auto'),
-    height: localStyle.height || (height ? `${height}px` : 'auto'),
+    width: localStyle.width,
+    height: localStyle.height,
     borderRadius: localStyle.borderRadius,
     objectFit: localStyle.objectFit || objectFit,
     objectPosition: localStyle.objectPosition,
@@ -281,6 +284,10 @@ export default function EditableImage({
           <img
             src={localSrc}
             alt={alt}
+            width={width}
+            height={height}
+            loading="lazy"
+            decoding="async"
             className={className}
             style={imageStyle as any}
           />
@@ -293,7 +300,8 @@ export default function EditableImage({
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              style={{ display: 'none' }}
+              className={styles.hiddenInput}
+              hidden
             />
             
             {(isHovered || isUploading) && (
@@ -305,12 +313,12 @@ export default function EditableImage({
                 >
                   {isUploading ? (
                     <>
-                      <span className={styles.spinner}>⏳</span>
+                      <span className={styles.spinner} aria-hidden="true" />
                       Uploading...
                     </>
                   ) : (
                     <>
-                      🖼️ Replace Image
+                      <Icon name="image" size={16} /> Replace Image
                     </>
                   )}
                 </button>
@@ -319,7 +327,7 @@ export default function EditableImage({
                   onClick={handleStyleButtonClick}
                   title="Edit styles"
                 >
-                  🎨 Style
+                  <Icon name="palette" size={16} /> Style
                 </button>
               </div>
             )}
