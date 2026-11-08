@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import styles from '@/app/_components/aboutbrief/aboutbrief.module.scss';
 import {StaticImageData} from "next/image";
-import {TW_300, TW_600} from "@/utils/globalFonts";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
+import Icon from "@/components/icons/Icon";
+import { useContent } from "@/hooks/useContent";
 
 type AboutBriefProps = {
     children?: React.ReactNode;
@@ -13,41 +15,37 @@ type AboutBriefProps = {
 }
 
 export default function AboutBrief({ children, img, description }: AboutBriefProps): React.ReactElement {
-    const aboutButtonRef: React.RefObject<HTMLButtonElement | null> | null = React.useRef<HTMLButtonElement | null>(null);
-
-    React.useEffect((): void => {
-        if (aboutButtonRef !== null) {
-            if (aboutButtonRef.current !== null) {
-                aboutButtonRef.current.addEventListener('click', (): void => {
-                    window.location.href = "/about";
-                });
-            }
-        }
-    }, []);
+    const { content } = useContent();
+    const title: string = content?.homepage?.aboutBrief?.title || "About Us";
 
     return (
-        <section className={`${styles.about} ${TW_300}`}>
+        <section className={styles.about}>
             <div className={styles.container}>
                 <div className={styles.aboutContent}>
                     <EditableText
-                        value="About Us"
+                        value={title}
                         path="homepage.aboutBrief.title"
-                        as="h1"
-                        className={`${styles.aboutTitle} ${TW_600}`}
+                        as="h2"
+                        className={styles.aboutTitle}
                     />
                     <EditableText
                         value={description}
                         path="homepage.aboutBrief.description"
                         as="p"
                         multiline={true}
+                        className={styles.aboutText}
                     />
-                    <button className={`${styles.aboutButton} ${TW_600}`} ref={aboutButtonRef}>Learn More</button>
+                    <Link href="/about" className={styles.aboutButton}>
+                        Learn more <Icon name="arrow-right" size={18} />
+                    </Link>
                 </div>
                 <div className={styles.aboutImage}>
                     <EditableImage
                         src={img.src}
-                        alt="Oxford Academy Robotics"
+                        alt="Oxford Academy Robotics team at a competition"
                         path="homepage.aboutBrief.image"
+                        width={640}
+                        height={420}
                     />
                 </div>
             </div>

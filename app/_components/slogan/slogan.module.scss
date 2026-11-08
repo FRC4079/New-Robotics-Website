@@ -1,83 +1,98 @@
+@use '../../styles/mixins' as *;
+
 .slogan {
+  @include section-pad;
+  background: var(--bg-raised);
+  border-block: 1px solid var(--border);
+}
+
+.containerHeader {
+  @include container;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-align: center;
-  align-items: center;
-  background-color: rgb(0, 0, 0);
-  width: 100%;
-    height: 70%;
-  padding: 15vh 0 10vh 0;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-7);
+}
 
-  .containerHeader {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: left;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 255) 100%);
-    width: 70%;
+.headTitle {
+  @include section-title;
+  margin: 0;
+}
+
+.headDescription {
+  @include lead;
+  margin: 0;
+}
+
+.container {
+  @include container;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+
+  @include bp-down(820px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sloganContent {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+
+  // The editable wrapper div around the image fills the card.
+  > div,
+  .sloganImage {
+    width: 100%;
     height: 100%;
-
-    .headTitle {
-      color: white;
-    }
-
-    .headDescription {
-      color: white;
-      font-size: 1.5rem;
-    }
   }
 
-  .container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 255) 100%);
-    width: 70%;
-    height: 100%;
+  .sloganImage {
+    object-fit: cover;
+    transition: transform 0.6s var(--ease);
+  }
 
-    .sloganContent {
-      color: white;
-      font-size: 1.5rem;
-      width: 100%;
-      height: 75%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      background-color: black;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent 45%, rgba(7, 8, 15, 0.88) 100%);
+  }
 
-      .sloganImage,
-      > div img {
-        width: 90%;
-        height: auto;
-        border-radius: 25px;
-      }
-      
-      // Make EditableImage wrapper fit the layout
-      > div:has(img) {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-      }
+  &:hover .sloganImage {
+    transform: scale(1.04);
+  }
 
-      .sloganTitle {
-        font-size: 2rem;
-        margin-top: -3vh;
-        font-weight: 200;
-        color: white;
-        background-color: black;
-        border: 1px solid red;
-        padding: 1.5vh 3vw;
-        width: min-content;
-        margin-left: 0.9vw;
-        letter-spacing: 0.1rem;
-        z-index: 10;
-      }
-    }
+  figcaption {
+    position: absolute;
+    left: var(--space-5);
+    right: var(--space-5);
+    bottom: var(--space-4);
+    z-index: 1;
+  }
+}
+
+.sloganTitle {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+
+  &::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 3px;
+    margin-bottom: var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
   }
 }

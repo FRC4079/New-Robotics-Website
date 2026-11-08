@@ -1,10 +1,10 @@
 "use client";
 import React from 'react';
 import styles from './stats.module.scss';
-import { TW_900 } from '@/utils/globalFonts';
 import { useContent } from '@/hooks/useContent';
 import { getContentValue, getContentStyle } from '@/utils/contentHelpers';
 import EditableText from '@/components/editable/EditableText';
+import EditableIcon from '@/components/icons/EditableIcon';
 
 type Stat = {
     id: string;
@@ -20,91 +20,33 @@ type StatsProps = {
     title?: string;
 }
 
-export default function Stats({ 
-    children, 
-    stats, 
-    title 
-}: StatsProps): React.ReactElement {
+export default function Stats({ children, stats, title }: StatsProps): React.ReactElement | null {
     const { content } = useContent();
-    const [animatedStats, setAnimatedStats] = React.useState<boolean>(false);
-    
-    // Use content from CMS or fallback to props or default values
-    const displayStats = stats || content?.homepage?.stats?.items || [
-        {
-            id: '1',
-            label: 'Years Active',
-            value: '12+',
-            description: 'Since 2012',
-            icon: '🏆'
-        },
-        {
-            id: '2',
-            label: 'Team Members',
-            value: '60+',
-            description: 'Active students',
-            icon: '👥'
-        },
-        {
-            id: '3',
-            label: 'Competitions',
-            value: '30+',
-            description: 'Participated in',
-            icon: '🤖'
-        },
-        {
-            id: '4',
-            label: 'Awards Won',
-            value: '10+',
-            description: 'Regional, On-season & Off-season',
-            icon: '🥇'
-        }
-    ];
+
+    const displayStats: Stat[] = stats || content?.homepage?.stats?.items || [];
     const displayTitle = title || content?.homepage?.stats?.title || "Our Impact by the Numbers";
 
-    React.useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setAnimatedStats(true);
-                    }
-                });
-            },
-            { threshold: 0.3 }
-        );
-
-        const element = document.getElementById('stats-section');
-        if (element) {
-            observer.observe(element);
-        }
-
-        return () => observer.disconnect();
-    }, []);
+    if (displayStats.length === 0) return null;
 
     return (
-        <section id="stats-section" className={`${styles.stats} ${TW_900}`}>
+        <section id="stats-section" className={styles.stats}>
             <div className={styles.container}>
                 <EditableText
                     value={displayTitle}
                     path="homepage.stats.title"
-                    as="h1"
+                    as="h2"
                     className={styles.title}
                 />
-                
+
                 <div className={styles.statsGrid}>
                     {displayStats.map((stat, index) => (
-                        <div 
-                            key={stat.id} 
-                            className={`${styles.statCard} ${animatedStats ? styles.animate : ''}`}
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                        >
+                        <div key={stat.id} className={styles.statCard}>
                             {stat.icon && (
                                 <div className={styles.statIcon}>
-                                    <EditableText
-                                        value={getContentValue(stat.icon)}
+                                    <EditableIcon
+                                        value={stat.icon}
                                         path={`homepage.stats.items.${index}.icon`}
-                                        as="span"
-                                        style={getContentStyle(stat.icon)}
+                                        size={26}
                                     />
                                 </div>
                             )}

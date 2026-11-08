@@ -1,67 +1,57 @@
+@use '../../styles/mixins' as *;
+
 .about {
+  @include section-pad;
+}
+
+.container {
+  @include container;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+
+  @include bp-down(860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aboutContent {
   display: flex;
-  flex-direction: row;
-  width: 100vw;
-  height: max-content;
-  padding-top: 12vh;
-  justify-content: center;
-  background-color: black;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
 
-  .container {
-    display: flex;
-    flex-direction: inherit;
-    align-items: center;
-    width: 80vw;
-    justify-content: space-around;
+.aboutTitle {
+  @include section-title;
+  margin: 0;
+}
 
-    .aboutContent {
-      color: white;
-      font-size: 1.5rem;
-    }
+.aboutText {
+  @include lead;
+  margin: 0;
+}
 
-    .aboutButton {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 20%;
-      height: 100%;
-      padding: 0.5vw;
-      background-color: transparent;
-      font-size: 1vw;
-      color: white;
-      border: 1px solid red;
-      transition: all 0.3s ease-in-out;
-      letter-spacing: 0.1rem;
-      cursor: pointer;
+.aboutButton {
+  @include button-outline;
+  margin-top: var(--space-2);
+}
 
-      &:hover {
-        background-color: red;
-        border: 1px solid red;
-      }
-    }
+.aboutImage {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+
+  img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
   }
 
-  .aboutImage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 0 2vw;
-    justify-content: center;
-    margin-right: 2vw;
-
-    img,
-    > div img {
-      width: 100%;
-      height: 100%;
-      border-radius: 25px;
-    }
-    
-    // Make EditableImage wrapper fit
-    > div {
-      width: 100%;
-      height: 100%;
-    }
+  @include bp-down(860px) {
+    order: -1;
   }
 }
