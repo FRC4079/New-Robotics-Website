@@ -1,649 +1,194 @@
+@use '../styles/mixins' as *;
+
 .contact {
   position: relative;
-  width: 100%;
-  min-height: 100vh;
-  font-family: 'Roboto', sans-serif;
-  overflow-x: hidden;
-  background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
-  color: white;
-  padding-top: 7vh; // Account for fixed navbar
-
-  .container {
-    max-width: 1400px;
-    width: 90%;
-    margin: 0 auto;
-    padding: 0 2vw;
-  }
-
-  // Contact Hero Section
-  .contactHero {
-    padding: 8vh 0;
-    background: #000000;
-    position: relative;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 100px;
-      pointer-events: none;
-    }
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 100px;
-      background: linear-gradient(to top, transparent 0%, rgba(26, 26, 26, 0.3) 100%);
-      pointer-events: none;
-    }
-
-    .heroContent {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 5rem;
-      align-items: start;
-    }
-
-    .heroText {
-      h1 {
-        font-size: 3.8rem;
-        color: red;
-        margin-bottom: 3rem;
-        letter-spacing: 0.1rem;
-        font-weight: 900;
-        line-height: 1.2;
-      }
-
-      p {
-        font-size: 1.4rem;
-        color: #ccc;
-        line-height: 1.7;
-        margin-bottom: 4rem;
-      }
-
-      .contactHighlights {
-        display: flex;
-        flex-direction: column;
-        gap: 2.5rem;
-
-        .highlight {
-          display: flex;
-          align-items: flex-start;
-          gap: 2rem;
-          padding: 2rem;
-          background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-          border: 1px solid #333;
-          border-radius: 15px;
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: red;
-            transform: translateX(10px);
-          }
-
-          .highlightIcon {
-            font-size: 3rem;
-            min-width: 4rem;
-          }
-
-          div {
-            flex: 1;
-
-            h3 {
-              color: red;
-              font-size: 1.6rem;
-              margin-bottom: 0.8rem;
-              font-weight: 600;
-            }
-
-            p {
-              color: #ccc;
-              font-size: 1.2rem;
-              line-height: 1.5;
-              margin: 0;
-            }
-          }
-        }
-      }
-    }
-
-    .heroStats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2rem;
-
-      .statCard {
-        background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-        border: 2px solid #333;
-        border-radius: 15px;
-        padding: 2.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-        &:hover {
-          transform: translateY(-8px);
-          border-color: red;
-          box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
-        }
-
-        h3 {
-          font-size: 3rem;
-          color: red;
-          margin-bottom: 1rem;
-          font-weight: 900;
-        }
-
-        p {
-          color: #ccc;
-          font-size: 1.1rem;
-          margin: 0;
-          font-weight: 500;
-        }
-      }
-    }
-  }
-
-  // Contact Methods Section
-  .contactMethods {
-    padding: 8vh 0;
-    background: #000000;
-
-    h2 {
-      font-size: 3.5rem;
-      text-align: center;
-      color: red;
-      margin-bottom: 5vh;
-      letter-spacing: 0.1rem;
-      font-weight: 900;
-    }
-
-    .methodsGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 3rem;
-      margin-top: 4vh;
-    }
-
-    .methodCard {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border: 2px solid #333;
-      border-radius: 15px;
-      padding: 3rem;
-      text-align: center;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-      &:hover {
-        transform: translateY(-8px);
-        border-color: red;
-        box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
-      }
-
-      .methodIcon {
-        font-size: 4rem;
-        margin-bottom: 2rem;
-        display: block;
-      }
-
-      h3 {
-        font-size: 1.8rem;
-        color: red;
-        margin-bottom: 1rem;
-        font-weight: 600;
-      }
-
-      p {
-        color: #ccc;
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem;
-        line-height: 1.5;
-      }
-
-      .methodLink {
-        color: white;
-        font-size: 1.2rem;
-        font-weight: 500;
-        text-decoration: none;
-        display: block;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: red;
-        }
-      }
-
-      .socialLinks {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-
-        .socialLink {
-          color: white;
-          text-decoration: none;
-          padding: 0.5rem 1rem;
-          border: 1px solid #555;
-          border-radius: 25px;
-          font-size: 0.9rem;
-          transition: all 0.3s ease;
-
-          &:hover {
-            color: red;
-            border-color: red;
-          }
-        }
-      }
-    }
-  }
-
-  // Contact Form Section
-  .formSection {
-    padding: 8vh 0;
-    background: #000000;
-
-    .formWrapper {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .formHeader {
-      text-align: center;
-      margin-bottom: 4rem;
-
-      h2 {
-        font-size: 3.5rem;
-        color: red;
-        margin-bottom: 2rem;
-        font-weight: 900;
-      }
-
-      p {
-        font-size: 1.3rem;
-        color: #ccc;
-        line-height: 1.6;
-      }
-    }
-  }
-
-  // Team-Specific Contacts
-  .teamContacts {
-    padding: 8vh 0;
-    background: #000000;
-
-    h2 {
-      font-size: 3.5rem;
-      text-align: center;
-      color: red;
-      margin-bottom: 5vh;
-      letter-spacing: 0.1rem;
-      font-weight: 900;
-    }
-
-    .teamGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 3rem;
-      margin-top: 4vh;
-    }
-
-    .teamCard {
-      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-      border: 2px solid #333;
-      border-radius: 15px;
-      padding: 3rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-      &:hover {
-        transform: translateY(-8px);
-        border-color: red;
-        box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
-      }
-
-      .teamHeader {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        margin-bottom: 2rem;
-
-        .teamLogo {
-          width: 60px;
-          height: 60px;
-          object-fit: contain;
-          border-radius: 8px;
-        }
-
-        h3 {
-          font-size: 1.8rem;
-          color: red;
-          margin: 0;
-          font-weight: 600;
-        }
-
-        p {
-          color: #ccc;
-          font-size: 1rem;
-          margin: 0.5rem 0 0 0;
-        }
-      }
-
-      .teamInfo {
-        p {
-          color: #ccc;
-          font-size: 1.1rem;
-          line-height: 1.5;
-          margin-bottom: 1.5rem;
-        }
-
-        .teamEmail {
-          color: red;
-          text-decoration: none;
-          font-size: 1.2rem;
-          font-weight: 500;
-          display: block;
-          margin-bottom: 2rem;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: #ff4444;
-          }
-        }
-
-        .teamDetails {
-          display: flex;
-          flex-direction: column;
-          gap: 0.8rem;
-
-          span {
-            color: #aaa;
-            font-size: 0.95rem;
-            padding: 0.5rem;
-            background: #333;
-            border-radius: 8px;
-          }
-        }
-      }
-    }
-  }
-
-  // Visit Us Section
-  .visitUs {
-    padding: 8vh 0;
-    background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-
-    .visitContent {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .visitText {
-      h2 {
-        font-size: 3.5rem;
-        color: red;
-        margin-bottom: 2rem;
-        font-weight: 900;
-      }
-
-      p {
-        font-size: 1.3rem;
-        color: #ccc;
-        line-height: 1.6;
-        margin-bottom: 3rem;
-      }
-
-      .visitDetails {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-
-        .visitItem {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-
-          strong {
-            color: red;
-            font-size: 1.1rem;
-          }
-
-          span {
-            color: #ccc;
-            font-size: 1rem;
-          }
-        }
-      }
-
-      .visitActions {
-        display: flex;
-        gap: 2rem;
-        align-items: center;
-
-        .scheduleButton {
-          background: linear-gradient(45deg, red, #cc0000);
-          color: white;
-          border: none;
-          padding: 1rem 2rem;
-          border-radius: 25px;
-          font-size: 1.1rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
-
-          &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
-          }
-        }
-
-        .directionsLink {
-          color: white;
-          text-decoration: none;
-          font-size: 1.1rem;
-          border: 1px solid #555;
-          padding: 1rem 2rem;
-          border-radius: 25px;
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: red;
-            color: red;
-          }
-        }
-      }
-    }
-
-    .visitMap {
-      .mapPlaceholder {
-        background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-        border: 2px solid #333;
-        border-radius: 15px;
-        padding: 4rem 2rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover {
-          border-color: red;
-        }
-
-        .mapIcon {
-          font-size: 4rem;
-          margin-bottom: 1rem;
-        }
-
-        p {
-          color: white;
-          font-size: 1.3rem;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-        }
-
-        span {
-          color: #ccc;
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-
-  // Support Section
-  .supportSection {
-    padding: 8vh 0;
-    background: #000000;
-
-    .supportContent {
-      text-align: center;
-
-      h2 {
-        font-size: 3.5rem;
-        color: red;
-        margin-bottom: 2rem;
-        font-weight: 900;
-      }
-
-      p {
-        font-size: 1.3rem;
-        color: #ccc;
-        line-height: 1.6;
-        margin-bottom: 4rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .supportOptions {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 3rem;
-        margin-top: 4vh;
-      }
-
-      .supportCard {
-        background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-        border: 2px solid #333;
-        border-radius: 15px;
-        padding: 3rem;
-        text-align: center;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-
-        &:hover {
-          transform: translateY(-8px);
-          border-color: red;
-          box-shadow: 0 12px 30px rgba(255, 0, 0, 0.2);
-        }
-
-        h3 {
-          font-size: 1.8rem;
-          color: red;
-          margin-bottom: 1.5rem;
-          font-weight: 600;
-        }
-
-        p {
-          color: #ccc;
-          font-size: 1.1rem;
-          line-height: 1.5;
-          margin-bottom: 2rem;
-        }
-
-        .supportLink {
-          color: white;
-          text-decoration: none;
-          font-weight: 500;
-          padding: 0.8rem 2rem;
-          border: 1px solid #555;
-          border-radius: 25px;
-          display: inline-block;
-          transition: all 0.3s ease;
-
-          &:hover {
-            border-color: red;
-            color: red;
-          }
-        }
-      }
-    }
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: var(--bg);
+}
+
+.container {
+  @include container;
+}
+
+.contactHero,
+.contactMethods,
+.formSection {
+  @include section-pad;
+}
+
+.contactMethods {
+  background: var(--bg-raised);
+  border-block: 1px solid var(--border);
+
+  h2 {
+    @include section-title;
+    margin-bottom: var(--space-7);
   }
 }
 
-// Responsive Design
-@media (max-width: 1200px) {
-  .contact {
-    .contactHero .heroContent,
-    .visitUs .visitContent {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
+// ---- Intro + stats ------------------------------------------------------
+.heroContent {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  align-items: start;
+  gap: clamp(2rem, 5vw, 4rem);
 
-    .contactHero .heroStats {
-      order: -1;
-    }
+  @include bp-down(900px) {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
-  .contact {
-    .contactHero,
-    .contactMethods,
-    .formSection,
-    .teamContacts,
-    .visitUs,
-    .supportSection {
-      padding: 6vh 0;
+.heroText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 
-      h1, h2 {
-        font-size: 2.5rem;
-      }
-    }
+  h2 {
+    @include section-title;
+    margin: 0;
+  }
 
-    .contactHero {
-      .heroText {
-        h1 {
-          font-size: 2.8rem;
-        }
+  > p {
+    @include lead;
+    margin: 0;
+  }
+}
 
-        p {
-          font-size: 1.2rem;
-        }
+.contactHighlights {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
 
-        .contactHighlights .highlight {
-          flex-direction: column;
-          text-align: center;
-          gap: 1rem;
-        }
-      }
+.highlight {
+  @include card(var(--space-4) var(--space-5));
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-4);
+  row-gap: var(--space-1);
+  align-items: center;
 
-      .heroStats {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-    }
+  h3 {
+    margin: 0;
+    font-size: var(--text-lg);
+    color: var(--text);
+  }
 
-    .contactMethods .methodsGrid,
-    .teamContacts .teamGrid,
-    .supportSection .supportOptions {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+  p {
+    grid-column: 2;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+}
 
-    .visitUs .visitText .visitActions {
-      flex-direction: column;
-      gap: 1rem;
+.highlightIcon {
+  @include icon-tile(2.75rem);
+  grid-row: 1 / span 2;
+}
 
-      .scheduleButton,
-      .directionsLink {
-        width: 100%;
-        text-align: center;
-      }
-    }
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.statCard {
+  @include card(var(--space-5) var(--space-4));
+  text-align: center;
+
+  h3 {
+    margin: 0;
+    font-size: var(--text-3xl);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  p {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+}
+
+// ---- Ways to reach us ---------------------------------------------------
+.methodsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-5);
+}
+
+.methodCard {
+  @include card;
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+
+  h3 {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-xl);
+    color: var(--text);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+}
+
+.methodIcon {
+  @include icon-tile(3rem);
+}
+
+.methodLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-top: auto;
+  font-weight: 700;
+  color: var(--accent-text);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    color: var(--accent-hover);
+  }
+}
+
+.methodAddress {
+  margin-top: auto;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: pre-line;
+  color: var(--text);
+}
+
+// ---- Form ---------------------------------------------------------------
+.formWrapper {
+  @include card(clamp(1.25rem, 4vw, 3rem));
+  max-width: 50rem;
+  margin-inline: auto;
+}
+
+.formHeader {
+  margin-bottom: var(--space-6);
+
+  h2 {
+    @include section-title;
+    font-size: var(--text-2xl);
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
   }
 }

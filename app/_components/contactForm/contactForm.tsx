@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import styles from './contactForm.module.scss';
-import { TW_600, TW_900 } from '@/utils/globalFonts';
+import Icon from '@/components/icons/Icon';
 
 type ContactFormProps = {
     children?: React.ReactNode;
@@ -90,11 +90,11 @@ export default function ContactForm({
 
     if (isSubmitted) {
         return (
-            <section className={`${styles.contactForm} ${TW_600}`}>
+            <section className={styles.contactForm}>
                 <div className={styles.container}>
-                    <div className={styles.successMessage}>
-                        <div className={styles.successIcon}>✓</div>
-                        <h2 className={TW_900}>Thank You!</h2>
+                    <div className={styles.successMessage} role="status">
+                        <div className={styles.successIcon}><Icon name="check" size={28} /></div>
+                        <h2>Thank you!</h2>
                         <p>Your message has been sent successfully. We&apos;ll get back to you soon!</p>
                     </div>
                 </div>
@@ -104,12 +104,14 @@ export default function ContactForm({
     }
 
     return (
-        <section className={`${styles.contactForm} ${TW_600}`}>
+        <section className={styles.contactForm}>
             <div className={styles.container}>
-                <div className={styles.formHeader}>
-                    <h1 className={`${styles.title} ${TW_900}`}>{title}</h1>
-                    <p className={styles.subtitle}>{subtitle}</p>
-                </div>
+                {(title || subtitle) && (
+                    <div className={styles.formHeader}>
+                        {title && <h2 className={styles.title}>{title}</h2>}
+                        {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+                    </div>
+                )}
 
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <div className={styles.formGrid}>
@@ -119,10 +121,11 @@ export default function ContactForm({
                                 type="text"
                                 id="name"
                                 name="name"
+                                autoComplete="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
                                 required
-                                placeholder="Enter your full name"
+                                placeholder="Your full name"
                             />
                         </div>
 
@@ -132,10 +135,12 @@ export default function ContactForm({
                                 type="email"
                                 id="email"
                                 name="email"
+                                autoComplete="email"
+                                inputMode="email"
                                 value={formData.email}
                                 onChange={handleInputChange}
                                 required
-                                placeholder="Enter your email address"
+                                placeholder="you@example.com"
                             />
                         </div>
 
@@ -162,10 +167,11 @@ export default function ContactForm({
                                 type="text"
                                 id="subject"
                                 name="subject"
+                                autoComplete="off"
                                 value={formData.subject}
                                 onChange={handleInputChange}
                                 required
-                                placeholder="Enter the subject of your message"
+                                placeholder="What is this about?"
                             />
                         </div>
                     </div>
@@ -179,7 +185,7 @@ export default function ContactForm({
                             onChange={handleInputChange}
                             required
                             rows={6}
-                            placeholder="Tell us more about your inquiry..."
+                            placeholder="Tell us a little more…"
                         ></textarea>
                     </div>
 
@@ -208,11 +214,11 @@ export default function ContactForm({
                         >
                             {isSubmitting ? (
                                 <>
-                                    <span className={styles.spinner}></span>
-                                    Sending...
+                                    <span className={styles.spinner} aria-hidden="true" />
+                                    Sending…
                                 </>
                             ) : (
-                                'Send Message'
+                                <>Send message <Icon name="arrow-right" size={18} /></>
                             )}
                         </button>
                     </div>

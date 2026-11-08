@@ -6,110 +6,27 @@ import Footer from "@/app/_components/footer/footer";
 import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
+import EditableIcon from "@/components/icons/EditableIcon";
+import Link from "next/link";
 
 export default function About() {
     const { content } = useContent();
     
-    const aboutData = content?.about || {
-        hero: {
-            title: "Oxford Academy Robotics",
-            subtitle: "Inspiring the Next Generation of Innovators",
-            description: "Since 2009, we've been empowering students through competitive robotics, building not just robots, but future engineers, innovators, and leaders who will shape tomorrow's world.",
-            stats: [
-                { number: "15+", label: "Years Strong" },
-                { number: "500+", label: "Students Impacted" },
-                { number: "3", label: "Competition Leagues" }
-            ]
-        },
-        mission: {
-            sectionTitle: "Our Mission & Vision",
-            cards: [
-                {
-                    icon: "🎯",
-                    title: "Mission",
-                    description: "To inspire and prepare students for careers in STEM through competitive robotics, fostering innovation, teamwork, and technical excellence."
-                },
-                {
-                    icon: "🚀",
-                    title: "Vision",
-                    description: "To be a leading robotics program that empowers students to become the next generation of engineers and innovators who will shape the future."
-                },
-                {
-                    icon: "⚡",
-                    title: "Values",
-                    description: "Excellence, Innovation, Collaboration, Integrity, and Continuous Learning drive everything we do as we build both robots and character."
-                }
-            ]
-        },
-        programs: {
-            sectionTitle: "Our Programs",
-            programList: [
-                {
-                    logo: "/logos/FRCLogo.png",
-                    title: "FIRST Robotics Competition",
-                    description: "Our flagship program where students design, build, and compete with 120-pound robots.",
-                    features: ["Team 4079", "120lb Robots", "6-Week Build Season"]
-                },
-                {
-                    logo: "/logos/FTCLogo.png",
-                    title: "FIRST Tech Challenge",
-                    description: "Students design, build, and program robots to compete in an alliance format against other teams.",
-                    features: ["Multiple Teams", "Android Programming", "Strategic Alliances"]
-                },
-                {
-                    logo: "/logos/VEXLogo.png",
-                    title: "VEX Robotics Competition",
-                    description: "Where our journey began! Students work in teams to design and build a robot.",
-                    features: ["Our Origins", "Metal Construction", "Programming Skills"]
-                }
-            ]
-        },
-        impact: {
-            sectionTitle: "Our Impact",
-            cards: [
-                {
-                    icon: "🎓",
-                    title: "Student Success",
-                    description: "100% of our alumni go on to pursue higher education, with 85% entering STEM fields."
-                },
-                {
-                    icon: "🏆",
-                    title: "Competition Excellence",
-                    description: "Over 50 awards earned across all competition levels and multiple championship appearances."
-                },
-                {
-                    icon: "🤝",
-                    title: "Community Outreach",
-                    description: "Mentoring younger teams and promoting STEM education throughout our local community."
-                },
-                {
-                    icon: "💡",
-                    title: "Innovation Hub",
-                    description: "Students develop real-world engineering skills and innovative solutions to complex challenges."
-                }
-            ]
-        },
-        join: {
-            title: "Ready to Join the Future?",
-            description: "Whether you're interested in mechanical engineering, programming, business, or design, there's a place for you on our team.",
-            primaryButton: "Get Involved",
-            secondaryButton: "Support Us"
-        }
-    };
+    const aboutData = content?.about;
 
     // Ensure nested properties exist with fallbacks
-    const heroStats = aboutData.hero?.stats || [];
-    const missionCards = aboutData.mission?.cards || [];
-    const programList = aboutData.programs?.programList || [];
-    const impactCards = aboutData.impact?.cards || [];
+    const heroStats = aboutData?.hero?.stats || [];
+    const missionCards = aboutData?.mission?.cards || [];
+    const programList = aboutData?.programs?.programList || [];
+    const impactCards = aboutData?.impact?.cards || [];
     
-    const missionSectionTitle = aboutData.mission?.sectionTitle || "Our Mission & Vision";
-    const programsSectionTitle = aboutData.programs?.sectionTitle || "Our Programs";
-    const impactSectionTitle = aboutData.impact?.sectionTitle || "Our Impact";
-    const joinTitle = aboutData.join?.title || "Join Our Team";
-    const joinDescription = aboutData.join?.description || "Ready to be part of something extraordinary?";
-    const joinPrimaryButton = aboutData.join?.primaryButton || "Get Started";
-    const joinSecondaryButton = aboutData.join?.secondaryButton || "Learn More";
+    const missionSectionTitle = aboutData?.mission?.sectionTitle || "Our Mission & Vision";
+    const programsSectionTitle = aboutData?.programs?.sectionTitle || "Our Programs";
+    const impactSectionTitle = aboutData?.impact?.sectionTitle || "Our Impact";
+    const joinTitle = aboutData?.join?.title || "Join Our Team";
+    const joinDescription = aboutData?.join?.description || "Ready to be part of something extraordinary?";
+    const joinPrimaryButton = aboutData?.join?.primaryButton || "Get Started";
+    const joinSecondaryButton = aboutData?.join?.secondaryButton || "Learn More";
     
     return (
         <div className={styles.about}>
@@ -120,18 +37,18 @@ export default function About() {
                 <div className={styles.container}>
                     <div className={styles.heroContent}>
                         <EditableText
-                            value={aboutData.hero?.title || "Oxford Academy Robotics"}
+                            value={aboutData?.hero?.title || "Oxford Academy Robotics"}
                             path="about.hero.title"
                             as="h1"
                         />
                         <EditableText
-                            value={aboutData.hero?.subtitle || "Inspiring the Next Generation"}
+                            value={aboutData?.hero?.subtitle || "Inspiring the Next Generation"}
                             path="about.hero.subtitle"
                             as="div"
                             className={styles.heroSubtitle}
                         />
                         <EditableText
-                            value={aboutData.hero?.description || "Building the future through innovation"}
+                            value={aboutData?.hero?.description || "Building the future through innovation"}
                             path="about.hero.description"
                             as="div"
                             className={styles.heroDescription}
@@ -171,10 +88,10 @@ export default function About() {
                         {missionCards.map((card: { icon: string; title: string; description: string }, index: number) => (
                             <div key={index} className={styles.missionCard}>
                                 <div className={styles.cardIcon}>
-                                    <EditableText
+                                    <EditableIcon
                                         value={card.icon}
                                         path={`about.mission.cards.${index}.icon`}
-                                        as="span"
+                                        size={26}
                                     />
                                 </div>
                                 <EditableText
@@ -211,8 +128,8 @@ export default function About() {
                                         alt={`${program.title} Logo`}
                                         path={`about.programs.programList.${index}.logo`}
                                         className={styles.programLogo}
-                                        width={80}
-                                        height={80}
+                                        width={72}
+                                        height={72}
                                         objectFit="contain"
                                     />
                                     <EditableText
@@ -256,10 +173,10 @@ export default function About() {
                         {impactCards.map((card: { icon: string; title: string; description: string }, index: number) => (
                             <div key={index} className={styles.impactCard}>
                                 <div className={styles.impactIcon}>
-                                    <EditableText
+                                    <EditableIcon
                                         value={card.icon}
                                         path={`about.impact.cards.${index}.icon`}
-                                        as="span"
+                                        size={26}
                                     />
                                 </div>
                                 <EditableText
@@ -295,20 +212,20 @@ export default function About() {
                             multiline
                         />
                         <div className={styles.joinButtons}>
-                            <a href="/contact" className={styles.primaryButton}>
+                            <Link href="/contact" className={styles.primaryButton}>
                                 <EditableText
                                     value={joinPrimaryButton}
                                     path="about.join.primaryButton"
                                     as="span"
                                 />
-                            </a>
-                            <a href="/sponsors" className={styles.secondaryButton}>
+                            </Link>
+                            <Link href="/sponsors" className={styles.secondaryButton}>
                                 <EditableText
                                     value={joinSecondaryButton}
                                     path="about.join.secondaryButton"
                                     as="span"
                                 />
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
