@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "ncu": "npx npm-check-updates -u && npm install --force"
   },
   "dependencies": {
@@ -16,12 +16,14 @@
     "sass": "^1.107.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^10",
     "eslint-config-next": "16.4.3",
-    "typescript": "^7"
+    "typescript": "~5.9.3"
+  },
+  "overrides": {
+    "eslint": "$eslint"
   }
 }
