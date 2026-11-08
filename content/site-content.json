@@ -18,39 +18,39 @@
     },
     "aboutBrief": {
       "title": "About Us",
-      "description": "Oxford Academy Robotics is a student-run organization that competes in the FIRST Robotics Competition (FRC), FIRST Tech Challenge (FTC), and VEX Robotics Competition. Our mission is to inspire students to pursue careers in STEM fields by providing them with the opportunity to learn, compete, and thrive in a supportive environm",
+      "description": "Oxford Academy Robotics is a student-run organization that competes in the FIRST Robotics Competition (FRC), FIRST Tech Challenge (FTC), and VEX Robotics Competition. Our mission is to inspire students to pursue careers in STEM fields by providing them with the opportunity to learn, compete, and thrive in a supportive environment.",
       "image": "/images/638764193529945765_Screenshot2025-02-26112950.png"
     },
     "stats": {
-      "title": "Our Impact by the Numers",
+      "title": "Our Impact by the Numbers",
       "items": [
         {
           "id": "1",
           "label": "Years Active",
-          "value": "16+",
+          "value": "17+",
           "description": "Since 2009",
-          "icon": "🏆"
+          "icon": "trophy"
         },
         {
           "id": "2",
           "label": "Team Members",
           "value": "60+",
           "description": "Active students",
-          "icon": "👥"
+          "icon": "users"
         },
         {
           "id": "3",
           "label": "Competitions",
           "value": "30+",
           "description": "Participated in",
-          "icon": "🤖"
+          "icon": "bot"
         },
         {
           "id": "4",
           "label": "Awards Won",
           "value": "10+",
           "description": "Regional, On-season & Off-season",
-          "icon": "🥇"
+          "icon": "award"
         }
       ]
     },
@@ -132,11 +132,11 @@
     "hero": {
       "title": "Oxford Academy Robotics",
       "subtitle": "Inspiring the Next Generation of Innovators",
-      "description": "Since 2012, we've been empowering students through competitive robotics, building not just robots, but future engineers, innovators, and leaders who will shape tomorrow's world.",
+      "description": "Since 2009, we've been empowering students through competitive robotics, building not just robots, but future engineers, innovators, and leaders who will shape tomorrow's world.",
       "backgroundImage": "/images/AboutBanner.jpg",
       "stats": [
         {
-          "number": "16+",
+          "number": "17+",
           "label": "Years Strong"
         },
         {
@@ -153,17 +153,17 @@
       "sectionTitle": "Our Mission & Vision",
       "cards": [
         {
-          "icon": "🎯",
+          "icon": "target",
           "title": "Mission",
           "description": "To inspire and prepare students for careers in STEM through competitive robotics, fostering innovation, teamwork, and technical excellence."
         },
         {
-          "icon": "🚀",
+          "icon": "rocket",
           "title": "Vision",
           "description": "To be a leading robotics program that empowers students to become the next generation of engineers and innovators who will shape the future."
         },
         {
-          "icon": "⚡",
+          "icon": "zap",
           "title": "Values",
           "description": "Excellence, Innovation, Collaboration, Integrity, and Continuous Learning drive everything we do as we build both robots and character."
         }
@@ -175,10 +175,10 @@
         {
           "logo": "/logos/FRCLogo.png",
           "title": "FIRST Robotics Competition",
-          "description": "Our flagship program where students design, build, and compete with 120-pound robots in an international competition that combines the excitement of sport with the rigors of science and technology.",
+          "description": "Our flagship program where students design, build, and compete with robots weighing up to 125 pounds in an international competition that combines the excitement of sport with the rigors of science and technology.",
           "features": [
             "Team 4079",
-            "120lb Robots",
+            "125 lb Robots",
             "6-Week Build Season"
           ]
         },
@@ -208,22 +208,22 @@
       "sectionTitle": "Our Impact",
       "cards": [
         {
-          "icon": "🎓",
+          "icon": "graduation",
           "title": "Student Success",
-          "description": "100% of our alumni go on to pursue higher education, with 85% entering STEM fields."
+          "description": "Our alumni go on to pursue higher education, with many entering STEM fields."
         },
         {
-          "icon": "🏆",
+          "icon": "trophy",
           "title": "Competition Excellence",
-          "description": "Over 50 awards earned across all competition levels and multiple championship appearances."
+          "description": "Awards earned across all three programs, from regional events to championship appearances."
         },
         {
-          "icon": "🤝",
+          "icon": "handshake",
           "title": "Community Outreach",
           "description": "Mentoring younger teams and promoting STEM education throughout our local community."
         },
         {
-          "icon": "💡",
+          "icon": "lightbulb",
           "title": "Innovation Hub",
           "description": "Students develop real-world engineering skills and innovative solutions to complex challenges."
         }
@@ -284,29 +284,33 @@
     },
     "stats": [
       {
-        "value": "50+"
+        "value": "60+",
+        "label": "Active Members"
       },
       {
-        "value": "5"
+        "value": "5",
+        "label": "Competition Teams"
       },
       {
-        "value": "10+"
+        "value": "10+",
+        "label": "Awards Won"
       },
       {
-        "value": "Daily"
+        "value": "2",
+        "label": "Meetings Per Week"
       }
     ]
   },
   "teams": {
     "frc": {
-      "title": "2025-2026 Competition Schedule",
-      "subtitle": "Team 4079 - The Nuclear Knights",
-      "description": "Our FRC team competes in the most challenging high school robotics competition, building 120+ pound robots to compete in dynamic games.",
+      "title": "2027 Season Schedule",
+      "subtitle": "Team 4079 - Quantum Leap",
+      "description": "Our FRC team competes in the most challenging high school robotics competition, building robots of up to 125 pounds to compete in dynamic games.",
       "backgroundImage": "/images/FRCBanner.jpg",
       "stats": {
         "teamNumber": "4079",
         "founded": "2012",
-        "robotWeight": "120+ lbs",
+        "robotWeight": "125 lbs max",
         "buildSeason": "6 weeks"
       },
       "robots": [
@@ -319,12 +323,12 @@
       ]
     },
     "ftc": {
-      "title": "2025 Season Schedule",
+      "title": "2026–2027 Season Schedule",
       "subtitle": "Building Innovation Together",
       "description": "Our FTC teams focus on designing, building, and programming robots to compete in alliance-based competitions.",
       "backgroundImage": "/images/FTCBanner.jpg",
       "stats": {
-        "teams": "3",
+        "teams": "2",
         "robotWeight": "42 lbs max",
         "programmingLanguage": "Java/Blocks",
         "teamSize": "15 max"
@@ -348,7 +352,7 @@
       "id": "frc",
       "logo": "/logos/FRCLogo.png",
       "name": "FRC Team 4079",
-      "description": "Our FRC team competes in the FIRST Robotics Competition, building 120+ pound robots to play challenging games in intense competitions.",
+      "description": "Our FRC team competes in the FIRST Robotics Competition, building robots of up to 125 pounds to play challenging games in intense competitions.",
       "founded": " 2012",
       "link": "/frc"
     },
@@ -382,7 +386,7 @@
         "Public Speaking",
         "Project Management"
       ],
-      "team": "Student Leadership",
+      "team": "Leadership",
       "image": "/images/robotics/group.jpeg"
     },
     {
@@ -543,7 +547,7 @@
       }
     ],
     "legal": {
-      "copyright": "© 2025 OA Robotics. All rights reserved.",
+      "copyright": "© 2026 OA Robotics. All rights reserved.",
       "websiteDeveloper": "Website by Erick Tran",
       "betaNotice": "Oxford Academy"
     }
@@ -566,13 +570,8 @@
       ]
     },
     "currentSponsors": {
-      "title": {
-        "style": {
-          "fontSize": "100px"
-        },
-        "value": "Our Sponsors"
-      },
-      "intro": "We're grateful to partner with these incredible organizations who share our    commitment to STEM education and innovation.                                                 "
+      "title": "Our Sponsors",
+      "intro": "We're grateful to partner with these incredible organizations who share our commitment to STEM education and innovation."
     }
   }
 }
