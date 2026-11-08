@@ -18,27 +18,27 @@ type DynamicLink = {
     href: string;
 }
 
+const styleFixed: React.CSSProperties = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+};
+
+const styleNotFixed: React.CSSProperties = {
+    position: "relative",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+};
+
 export default function Navbar({ children, isFixed = true }: NavbarProps): React.ReactElement {
     const { content } = useContent();
     const { isAuthenticated, logout } = useAuth();
     const { isEditMode, enableEditMode } = useEditMode();
     
-    const styleFixed: object = {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-    }
-
-    const styleNotFixed: object = {
-        position: "relative",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 1000,
-    }
-
     // Use branding from CMS or fallback to defaults
     const branding = content?.site || {
         logo: "/logos/OARoboticsLogo_24-25.webp",
@@ -81,12 +81,12 @@ export default function Navbar({ children, isFixed = true }: NavbarProps): React
 
     return (
         <>
-            <nav className={`${styles.navbar}`} style={isFixed ? styleFixed : {styleNotFixed}}>
+            <nav className={`${styles.navbar}`} style={isFixed ? styleFixed : styleNotFixed}>
                 <div className={styles.container}>
-                    <div className={styles.left} onClick={(): string => window.location.href = "/"}>
+                    <Link href="/" className={styles.left}>
                         <Image src={branding.logo} alt={branding.logoAlt} width={50} height={50}/>
                         <h1 className={M_500}>{branding.organizationName}</h1>
-                    </div>
+                    </Link>
                     {children}
                     <div className={`${styles.right} ${M_300}`}>
                         {
