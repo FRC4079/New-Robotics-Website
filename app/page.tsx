@@ -8,7 +8,7 @@ import AboutBrief from "@/app/_components/aboutbrief/aboutbrief";
 import Slogan from "@/app/_components/slogan/slogan";
 import Stats from "@/app/_components/stats/stats";
 import TeamsOverview from "@/app/_components/teamsOverview/teamsOverview";
-import { getServerContent } from "@/utils/content";
+import { getServerContent } from "@/utils/contentStore";
 
 export async function generateMetadata(): Promise<Metadata> {
     const content = await getServerContent();
