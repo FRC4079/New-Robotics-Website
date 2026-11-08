@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   // Only run for /admin routes (but not /admin/login)
   if (req.nextUrl.pathname.startsWith('/admin')) {
     // Allow access to login page without authentication

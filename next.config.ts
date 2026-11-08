@@ -1,21 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     unoptimized: true,
   },
-  // Enable experimental optimizations
-  experimental: {
-    optimizePackageImports: ['@/utils', '@/hooks'],
-  },
-  // Optimize production builds
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
-  // Ignore ESLint during builds (can be removed after fixing all lint errors)
-  eslint: {
-    ignoreDuringBuilds: true,
+    // Strip debug logging from production bundles, but keep errors and
+    // warnings so failures in API routes still show up in the server logs.
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? { exclude: ['error', 'warn'] }
+        : false,
   },
 };
 
