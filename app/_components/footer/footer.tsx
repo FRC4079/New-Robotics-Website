@@ -87,8 +87,8 @@ export default function Footer({children}: FooterProps) {
 
                     <nav className={styles.footerLinks} aria-label="Footer">
                         <EditableText
-                            value="Quick Links"
-                            path="footer.quickLinks.title"
+                            value={footerData.quickLinksTitle || "Quick Links"}
+                            path="footer.quickLinksTitle"
                             as="h2"
                         />
                         {footerData.quickLinks.map((link: { href: string; name: string }, index: number) => (
@@ -104,8 +104,8 @@ export default function Footer({children}: FooterProps) {
 
                     <div className={styles.footerLinks}>
                         <EditableText
-                            value="Our Socials"
-                            path="footer.social.title"
+                            value={footerData.socialTitle || "Our Socials"}
+                            path="footer.socialTitle"
                             as="h2"
                         />
                         {footerData.social.map((social: { url: string; platform: string; icon?: string }, index: number) => (

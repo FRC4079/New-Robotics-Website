@@ -25,7 +25,7 @@ export default function News(): React.ReactElement {
             <Navbar />
             <Title 
                 title={newsData.hero.title}
-                description={newsData.hero.description}
+                description={newsData.hero.subtitle ?? newsData.hero.description}
                 heroPath="news.hero"
             />
             <NewsSection 

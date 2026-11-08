@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Navbar from '@/app/_components/navbar/navbar';
 import Footer from '@/app/_components/footer/footer';
 import { useContent } from '@/hooks/useContent';
+import { formatArticleDate } from '@/utils/formatDate';
 import styles from './articlePage.module.scss';
 import EditableText from '@/components/editable/EditableText';
 import EditableImage from '@/components/editable/EditableImage';
@@ -35,15 +36,6 @@ export default function ArticlePage() {
             </div>
         );
     }
-
-    const formatDate = (dateString: string): string => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-    };
 
     const articlePath = `news.articles[${articleIndex}]`;
     
@@ -154,7 +146,7 @@ export default function ArticlePage() {
                             <span className={styles.separator}>•</span>
                             <span className={styles.date}>
                                 <EditableText
-                                    value={article?.publishDate ? formatDate(article.publishDate) : 'No date'}
+                                    value={isEditMode ? article?.publishDate ?? '' : formatArticleDate(article?.publishDate) || 'No date'}
                                     path={`${articlePath}.publishDate`}
                                     as="span"
                                 />

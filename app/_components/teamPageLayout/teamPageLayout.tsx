@@ -10,13 +10,16 @@ interface TeamPageLayoutProps {
   title: string;
   description: string;
   bannerImage: StaticImageData;
+  /** Content path of the hero text and banner, for example "teams.frc.hero". */
+  heroPath?: string;
 }
 
 export default function TeamPageLayout({ 
   children, 
   title, 
   description, 
-  bannerImage
+  bannerImage,
+  heroPath
 }: TeamPageLayoutProps): React.ReactElement {
   return (
     <div className={styles.teamPage}>
@@ -25,6 +28,7 @@ export default function TeamPageLayout({
         title={title}
         description={description}
         img1={bannerImage}
+        heroPath={heroPath}
       />
       <div className={styles.content}>
         {children}

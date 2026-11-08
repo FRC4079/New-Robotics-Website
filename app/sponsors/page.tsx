@@ -187,9 +187,10 @@ export default function Sponsor() {
         <div className={styles.sponsors}>
             <Navbar isFixed={true}/>
             <Title 
-                title={"Our Amazing Sponsors"} 
-                description={"Partnerships that power innovation"}
+                title={content?.sponsors?.banner?.title ?? "Our Amazing Sponsors"}
+                description={content?.sponsors?.banner?.subtitle ?? "Partnerships that power innovation"}
                 img1={img1}
+                heroPath="sponsors.banner"
             />
             
             {/* Hero Section */}

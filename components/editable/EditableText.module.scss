@@ -44,11 +44,6 @@
   pointer-events: none;
 }
 
-.editableTextWrapper {
-  position: relative;
-  display: inline-block;
-}
-
 .styleButton {
   position: fixed; // rendered through a portal
   width: 2.75rem;

@@ -41,6 +41,7 @@ let cache: { mtimeMs: number; size: number; content: SiteContent } | null = null
 export async function getServerContent(): Promise<SiteContent | null> {
   try {
     const file = await ensureContentFile();
+    await addMissingSeedContent();
     const info = await stat(file);
     if (cache && cache.mtimeMs === info.mtimeMs && cache.size === info.size) {
       return cache.content;
@@ -51,6 +52,44 @@ export async function getServerContent(): Promise<SiteContent | null> {
   } catch (error) {
     console.error('Error reading server content:', error);
     return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Upgrading older content files
+// ---------------------------------------------------------------------------
+
+/** Adds keys from `seed` that `live` does not have. Existing values, and lists, are left alone. */
+function fillMissing(live: unknown, seed: unknown): unknown {
+  if (Array.isArray(live) || Array.isArray(seed)) return live ?? seed;
+  if (live && typeof live === 'object' && seed && typeof seed === 'object') {
+    const target = live as Record<string, unknown>;
+    for (const [key, value] of Object.entries(seed as Record<string, unknown>)) {
+      target[key] = key in target ? fillMissing(target[key], value) : value;
+    }
+    return target;
+  }
+  return live ?? seed;
+}
+
+let seedChecked = false;
+
+/**
+ * A content file kept on a volume was created by an older version and may lack
+ * sections that newer pages edit. Copy any missing sections from the bundled
+ * content, once per start, without touching anything that was edited.
+ */
+async function addMissingSeedContent(): Promise<void> {
+  if (seedChecked) return;
+  seedChecked = true;
+  if (getContentFilePath() === SEED_FILE) return;
+  try {
+    const seed = JSON.parse(await readFile(SEED_FILE, 'utf-8')) as ContentDocument;
+    await updateContent((content) => {
+      fillMissing(content, seed);
+    });
+  } catch (error) {
+    console.error('Could not add missing content sections:', error);
   }
 }
 
@@ -245,6 +284,27 @@ export function removeAtPath(root: ContentDocument, segments: string[], itemId?:
  */
 export function applyContentChange(root: ContentDocument, jsonPath: string, value: unknown): boolean {
   const segments = parseContentPath(jsonPath);
+
+  // A style for a field that holds a plain value (a string, say) is kept in a
+  // separate `_styles` map, so the field itself keeps its shape.
+  if (segments.length >= 2 && segments[segments.length - 1] === 'style') {
+    const ownerPath = segments.slice(0, -1);
+    try {
+      const ownerParent = walkToParent(root, ownerPath);
+      const owner = readChild(ownerParent, ownerPath[ownerPath.length - 1]);
+      if (!isContainer(owner)) {
+        const styles = (isContainer(root._styles) ? root._styles : (root._styles = {})) as Record<string, unknown>;
+        const key = ownerPath.join('.');
+        const isEmpty = value === null || value === undefined || (typeof value === 'object' && Object.keys(value as object).length === 0);
+        if (isEmpty) delete styles[key];
+        else styles[key] = value;
+        return true;
+      }
+    } catch (error) {
+      if (!(error instanceof ContentPathError)) throw error;
+    }
+  }
+
   let parent: Container;
   try {
     parent = walkToParent(root, segments);

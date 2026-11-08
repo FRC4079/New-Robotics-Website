@@ -7,7 +7,7 @@ import styles from './EditableImage.module.scss';
 import Image from 'next/image';
 import StyleEditor from './StyleEditor';
 import { ImageStyle } from '@/utils/content';
-import { getContentImageStyle } from '@/utils/contentHelpers';
+import { getContentImageStyle, getStoredStyle } from '@/utils/contentHelpers';
 import Icon from '@/components/icons/Icon';
 
 interface EditableImageProps {
@@ -56,6 +56,9 @@ export default function EditableImage({
   // The style stored with this image in the content, unless one is passed in.
   const incomingStyle = useMemo<ImageStyle | null>(() => {
     if (initialStyle || !content || !path) return initialStyle ?? null;
+
+    const separate = getStoredStyle(content, path);
+    if (separate && Object.keys(separate).length > 0) return separate;
 
     const keys = path.split('.').flatMap((key) => {
       const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/);

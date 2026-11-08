@@ -45,8 +45,8 @@ export default function TeamsOverview() {
       <div className={styles.inner}>
         <EditableText
           className={styles.sectionTitle}
-          value="Meet Our Teams"
-          path="teamsOverview.sectionTitle"
+          value={content?.teamsOverviewTitle || "Meet Our Teams"}
+          path="teamsOverviewTitle"
           as="h2"
         />
         <div className={styles.teamsGrid}>

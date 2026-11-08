@@ -6,7 +6,7 @@ import { useContent } from '@/hooks/useContent';
 import styles from './EditableText.module.scss';
 import StyleEditor from './StyleEditor';
 import { TextStyle } from '@/utils/content';
-import { getContentStyle, getContentValue } from '@/utils/contentHelpers';
+import { getContentStyle, getContentValue, getStoredStyle } from '@/utils/contentHelpers';
 import Icon from '@/components/icons/Icon';
 
 interface EditableTextProps {
@@ -40,6 +40,8 @@ export default function EditableText({
   const value = getContentValue(rawValue);
   
   const [isEditing, setIsEditing] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const leaveTimer = useRef<number | null>(null);
   const [localValue, setLocalValue] = useState(value);
   const [showStyleEditor, setShowStyleEditor] = useState(false);
   const [styleEditorPosition, setStyleEditorPosition] = useState({ x: 0, y: 0 });
@@ -49,6 +51,18 @@ export default function EditableText({
   const editRef = useRef<HTMLDivElement>(null);
   const isFirstFocusRef = useRef(false);
 
+  // The style button belongs to whichever text is hovered or being edited, so only one shows at a time.
+  const showHover = () => {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    setHovered(true);
+  };
+  const hideHover = () => {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    leaveTimer.current = window.setTimeout(() => setHovered(false), 250);
+  };
+  const buttonActive = hovered || isEditing || showStyleEditor;
+
+
   // The style that comes from props or the stored content. Local edits made in
   // the style editor stay in place until this changes.
   const incomingStyle = useMemo<TextStyle | null>(() => {
@@ -56,6 +70,9 @@ export default function EditableText({
     if (embedded && Object.keys(embedded).length > 0) return embedded;
     if (initialStyle) return initialStyle;
     if (!content || !path) return null;
+
+    const separate = getStoredStyle(content, path);
+    if (separate && Object.keys(separate).length > 0) return separate;
 
     const keys = path.split('.').flatMap((key) => {
       const arrayMatch = key.match(/^([^[]+)\[(\d+)\]$/);
@@ -92,7 +109,7 @@ export default function EditableText({
 
   // Update button position when in edit mode and not editing
   useEffect(() => {
-    if (isEditMode && !isEditing && editRef.current) {
+    if (isEditMode && buttonActive && editRef.current) {
       let rafId: number | null = null;
       
       const updateButtonPosition = () => {
@@ -104,9 +121,14 @@ export default function EditableText({
           if (editRef.current) {
             const rect = editRef.current.getBoundingClientRect();
             // Position button to the right and below the element to never overlap
+            // Beside the text, but kept on screen and clear of the edit bar at the bottom.
+            const maxY = window.innerHeight - 7.5 * 16;
+            const aboveY = rect.top - 2.75 * 16 - 4;
+            const belowY = rect.bottom + 4;
+            const y = belowY <= maxY ? belowY : Math.max(8, Math.min(aboveY, maxY));
             setButtonPosition({
-              x: rect.right + 8,  // 8px spacing to the right
-              y: rect.bottom + 4  // 4px below the element (changed from top)
+              x: Math.max(8, Math.min(rect.right + 8, window.innerWidth - 2.75 * 16 - 8)),
+              y,
             });
           }
         });
@@ -126,7 +148,7 @@ export default function EditableText({
         window.removeEventListener('resize', updateButtonPosition);
       };
     }
-  }, [isEditMode, isEditing]);
+  }, [isEditMode, buttonActive]);
 
   const handleClick = () => {
     if (isEditMode && !isEditing) {
@@ -236,8 +258,7 @@ export default function EditableText({
 
   return (
     <>
-      <div className={styles.editableTextWrapper} style={{ position: 'relative', display: 'inline-block' }}>
-        <Component
+      <Component
           ref={editRef as React.Ref<HTMLDivElement & HTMLHeadingElement & HTMLParagraphElement & HTMLSpanElement>}
           className={combinedClassName}
           contentEditable={isEditMode && isEditing}
@@ -250,15 +271,19 @@ export default function EditableText({
           data-editable="text"
           data-placeholder={!localValue && isEditMode ? placeholder : undefined}
           style={inlineStyle}
+          onMouseEnter={isEditMode ? showHover : undefined}
+          onMouseLeave={isEditMode ? hideHover : undefined}
         >
           {localValue}
         </Component>
-      </div>
 
-      {mounted && isEditMode && !isEditing && createPortal(
+      {mounted && isEditMode && buttonActive && createPortal(
         <button
           className={styles.styleButton}
           onClick={handleStyleButtonClick}
+          onMouseEnter={showHover}
+          onMouseLeave={hideHover}
+          onMouseDown={(e) => e.preventDefault()}
           title="Edit styles"
           aria-label="Edit text styles"
           style={{

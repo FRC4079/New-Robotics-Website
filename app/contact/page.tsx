@@ -97,6 +97,7 @@ export default function Contact() {
                 title={contactData.hero.title} 
                 description={contactData.hero.subtitle}
                 img1={img1}
+                heroPath="contact.hero"
             />
             
             {/* Contact Hero Section */}

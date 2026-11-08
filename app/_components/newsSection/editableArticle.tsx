@@ -1,4 +1,5 @@
 "use client";
+import { formatArticleDate } from '@/utils/formatDate';
 import React, { useState } from 'react';
 import EditableText from '@/components/editable/EditableText';
 import EditableImage from '@/components/editable/EditableImage';
@@ -100,7 +101,7 @@ export default function EditableArticle({
                     </span>
                     <span className={styles.date}>
                         <EditableText
-                            value={article.publishDate}
+                            value={isEditMode ? article.publishDate : formatArticleDate(article.publishDate)}
                             path={`${articlePath}.publishDate`}
                             as="span"
                             placeholder="YYYY-MM-DD"

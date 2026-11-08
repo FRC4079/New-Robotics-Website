@@ -299,51 +299,609 @@
         "value": "2",
         "label": "Meetings Per Week"
       }
-    ]
-  },
-  "teams": {
-    "frc": {
-      "title": "2027 Season Schedule",
-      "subtitle": "Team 4079 - Quantum Leap",
-      "description": "Our FRC team competes in the most challenging high school robotics competition, building robots of up to 125 pounds to compete in dynamic games.",
-      "backgroundImage": "/images/FRCBanner.jpg",
-      "stats": {
-        "teamNumber": "4079",
-        "founded": "2012",
-        "robotWeight": "125 lbs max",
-        "buildSeason": "6 weeks"
+    ],
+    "mainTitle": "Connect With Oxford Academy Robotics",
+    "mainDescription": "Whether you're a prospective student, interested sponsor, community member, or fellow robotics enthusiast, we'd love to hear from you. Our teams are always excited to share our passion for STEM education and competitive robotics.",
+    "highlights": [
+      {
+        "icon": "users",
+        "title": "Join Our Teams",
+        "description": "Interested students can apply to join our FRC, FTC, or VEX robotics teams"
       },
-      "robots": [
+      {
+        "icon": "handshake",
+        "title": "Partnership Opportunities",
+        "description": "Explore sponsorship and mentorship opportunities with our organization"
+      },
+      {
+        "icon": "graduation",
+        "title": "Educational Outreach",
+        "description": "Request demonstrations and workshops for your school or organization"
+      }
+    ],
+    "contactMethods": {
+      "title": "How To Reach Us",
+      "methods": [
         {
-          "name": "Crescendo"
+          "icon": "mail",
+          "title": "Email Us",
+          "description": "For general inquiries and information",
+          "link": "contact@oarobotics.org",
+          "linkType": "email"
         },
         {
-          "name": "Charged Up"
+          "icon": "phone",
+          "title": "Call or Text",
+          "description": "Speak directly with our coaching staff",
+          "link": "(562) 860-1902",
+          "linkType": "phone"
+        },
+        {
+          "icon": "pin",
+          "title": "Visit Our Lab",
+          "description": "Located on the Oxford Academy campus",
+          "address": "5172 Orange Ave\nCypress, CA 90630"
+        },
+        {
+          "icon": "message",
+          "title": "Social Media",
+          "description": "Follow us for updates and announcements",
+          "socials": [
+            "Instagram",
+            "YouTube"
+          ]
         }
       ]
     },
+    "formSection": {
+      "title": "Send Us A Message",
+      "description": "Have a specific question or inquiry? Fill out the form below and we'll get back to you within 24 hours."
+    }
+  },
+  "teams": {
+    "frc": {
+      "hero": {
+        "title": "FIRST Robotics Competition",
+        "subtitle": "Team 4079 - Quantum Leap: Engineering Excellence Since 2012"
+      },
+      "overview": {
+        "teamName": "About Team 4079 \"Quantum Leap\"",
+        "teamDescription": [
+          "Team 4079, also known as \"Quantum Leap\", represents Oxford Academy's flagship robotics program in the FIRST Robotics Competition. Founded in 2012, our team has grown from a small group of passionate students into one of Southern California's most respected FRC teams.",
+          "We compete annually in the FIRST Robotics Competition, where teams have six weeks to design, build, and program industrial-sized robots weighing up to 125 pounds. Our robots must complete complex tasks in a fast-paced alliance-based competition format."
+        ],
+        "highlights": [
+          {
+            "icon": "target",
+            "title": "Our Mission",
+            "description": "To inspire students to pursue STEM careers while building innovative robots and fostering gracious professionalism."
+          },
+          {
+            "icon": "settings",
+            "title": "What We Do",
+            "description": "Design and build competition robots, mentor younger teams, and engage in community STEM outreach programs."
+          },
+          {
+            "icon": "trophy",
+            "title": "Our Values",
+            "description": "Excellence in engineering, collaborative teamwork, gracious professionalism, and continuous learning."
+          }
+        ],
+        "image": "/images/robotics/robotics_working.jpg",
+        "imageCaption": "Team 4079 members working on our 2024 competition robot"
+      },
+      "gallery": {
+        "title": "Our Competition Robots",
+        "robots": [
+          {
+            "name": "Quantum Surge",
+            "year": "2024",
+            "description": "Featured innovative climbing mechanism and precision note shooting for the CRESCENDO game.",
+            "image": "/images/comp/FRC_1.jpg",
+            "specs": [
+              "Weight: 120 lbs",
+              "Height: 4'8\"",
+              "Programming: Java"
+            ]
+          },
+          {
+            "name": "Charge Forward",
+            "year": "2023",
+            "description": "Designed for CHARGED UP with advanced autonomous balancing and cone/cube manipulation.",
+            "image": "/images/robotics/competition_working.jpg",
+            "specs": [
+              "Weight: 118 lbs",
+              "Height: 4'6\"",
+              "Programming: Java"
+            ]
+          },
+          {
+            "name": "Rapid React",
+            "year": "2022",
+            "description": "Built for RAPID REACT with high-speed ball shooting and climbing capabilities.",
+            "image": "/images/robotics/marketing_working.jpg",
+            "specs": [
+              "Weight: 115 lbs",
+              "Height: 4'10\"",
+              "Programming: Java"
+            ]
+          }
+        ]
+      },
+      "structure": {
+        "title": "Team Structure & Subteams",
+        "subteams": [
+          {
+            "icon": "settings",
+            "name": "Mechanical Team",
+            "description": "Designs and builds the physical robot structure, mechanisms, and moving parts using CAD software and manufacturing tools.",
+            "skills": [
+              "SolidWorks",
+              "Machining",
+              "3D Printing",
+              "Fabrication"
+            ]
+          },
+          {
+            "icon": "code",
+            "name": "Programming Team",
+            "description": "Develops robot control software, autonomous routines, and driver assistance systems using Java and advanced algorithms.",
+            "skills": [
+              "Java",
+              "Git/GitHub",
+              "Sensors",
+              "Computer Vision"
+            ]
+          },
+          {
+            "icon": "cpu",
+            "name": "Electrical Team",
+            "description": "Handles robot wiring, control systems, sensor integration, and ensures reliable electrical connections.",
+            "skills": [
+              "Circuit Design",
+              "Wiring",
+              "Sensors",
+              "Troubleshooting"
+            ]
+          },
+          {
+            "icon": "chart",
+            "name": "Strategy & Scouting",
+            "description": "Analyzes competition data, develops match strategies, and coordinates alliance selections at competitions.",
+            "skills": [
+              "Data Analysis",
+              "Statistics",
+              "Strategy",
+              "Scouting Apps"
+            ]
+          },
+          {
+            "icon": "megaphone",
+            "name": "Media & Outreach",
+            "description": "Manages team branding, documentation, social media, and community engagement initiatives.",
+            "skills": [
+              "Photography",
+              "Social Media",
+              "Public Speaking",
+              "Documentation"
+            ]
+          },
+          {
+            "icon": "dollar",
+            "name": "Business Team",
+            "description": "Handles team finances, sponsor relations, fundraising, and ensures team sustainability.",
+            "skills": [
+              "Fundraising",
+              "Sponsorship",
+              "Budgeting",
+              "Presentations"
+            ]
+          }
+        ]
+      },
+      "schedule": {
+        "title": "2027 Season Schedule",
+        "events": [
+          {
+            "month": "JAN",
+            "day": "TBA",
+            "title": "Kickoff & Game Release",
+            "description": "Official game reveal starts the six-week build season",
+            "location": "Virtual Broadcast"
+          },
+          {
+            "month": "JAN–FEB",
+            "day": "TBA",
+            "title": "Build Season",
+            "description": "Design, build, and program the robot before our first event",
+            "location": "Team Workshop"
+          },
+          {
+            "month": "MAR",
+            "day": "TBA",
+            "title": "FIRST California District Events",
+            "description": "Our two district events earn ranking points toward the state championship",
+            "location": "Southern California"
+          },
+          {
+            "month": "APR",
+            "day": "TBA",
+            "title": "Southern State Championship",
+            "description": "District-ranked teams compete for a spot at the FIRST Championship",
+            "location": "Southern California"
+          },
+          {
+            "month": "APR",
+            "day": "TBA",
+            "title": "FIRST Championship",
+            "description": "World championship competition (qualification required)",
+            "location": "Location TBA"
+          }
+        ]
+      }
+    },
     "ftc": {
-      "title": "2026–2027 Season Schedule",
-      "subtitle": "Building Innovation Together",
-      "description": "Our FTC teams focus on designing, building, and programming robots to compete in alliance-based competitions.",
-      "backgroundImage": "/images/FTCBanner.jpg",
-      "stats": {
-        "teams": "2",
-        "robotWeight": "42 lbs max",
-        "programmingLanguage": "Java/Blocks",
-        "teamSize": "15 max"
+      "hero": {
+        "title": "FIRST Tech Challenge",
+        "subtitle": "FTC Teams 19812 & 23796"
+      },
+      "overview": {
+        "teamName": "Oxford Academy FTC Teams",
+        "teamDescription": [
+          "Our FIRST Tech Challenge teams, 19812 and 23796, represent the pinnacle of middle school robotics excellence. These teams compete with robots built entirely by students using the Android-based control system and FIRST-approved materials.",
+          "FTC challenges students to design, build, program, and operate robots to compete in a head-to-head challenge in an alliance format. Our teams have consistently demonstrated innovation, teamwork, and gracious professionalism throughout their competitive seasons."
+        ],
+        "highlights": [
+          {
+            "icon": "trophy",
+            "title": "Competition Excellence",
+            "description": "Multiple regional championships and state-level competition appearances"
+          },
+          {
+            "icon": "wrench",
+            "title": "Engineering Innovation",
+            "description": "Award-winning robot designs featuring creative solutions to game challenges"
+          },
+          {
+            "icon": "handshake",
+            "title": "Gracious Professionalism",
+            "description": "Commitment to helping other teams and fostering a collaborative environment"
+          },
+          {
+            "icon": "book",
+            "title": "STEM Education",
+            "description": "Hands-on learning in engineering, programming, project management, and teamwork"
+          }
+        ],
+        "image": "/images/robotics/competition_working.jpg",
+        "imageCaption": "FTC teams collaborating during competition"
+      },
+      "gallery": {
+        "title": "Robot Showcase",
+        "robots": [
+          {
+            "name": "CENTERSTAGE Robot",
+            "year": "2023-24",
+            "description": "Advanced pixel placement system with precise autonomous capabilities. Features innovative intake mechanism and reliable climbing system for endgame points.",
+            "image": "/images/comp/FRC_1.jpg",
+            "specs": [
+              "Pixel Placement",
+              "Autonomous Scoring",
+              "Climbing System",
+              "Vision Processing"
+            ]
+          },
+          {
+            "name": "POWERPLAY Robot",
+            "year": "2022-23",
+            "description": "Cone stacking specialist with four-bar lift system. Dominated regional competitions with consistent high-scoring autonomous routines.",
+            "image": "/images/robotics/robotics_working.jpg",
+            "specs": [
+              "Cone Stacking",
+              "Four-Bar Lift",
+              "Ground Junction",
+              "Terminal Cycles"
+            ]
+          },
+          {
+            "name": "FREIGHT FRENZY Robot",
+            "year": "2021-22",
+            "description": "Carousel spinner and freight transport system. First robot to achieve consistent autonomous cycles in our team history.",
+            "image": "/images/robotics/marketing_working.jpg",
+            "specs": [
+              "Carousel Spinner",
+              "Freight Transport",
+              "Shipping Hub",
+              "Duck Delivery"
+            ]
+          }
+        ]
+      },
+      "structure": {
+        "title": "Team Organization",
+        "subteams": [
+          {
+            "icon": "wrench",
+            "name": "Mechanical Engineering",
+            "description": "Design and build the robot chassis, drive train, and game-specific mechanisms using CAD software and precision manufacturing techniques.",
+            "skills": [
+              "SolidWorks",
+              "3D Printing",
+              "Aluminum Fabrication",
+              "Assembly"
+            ]
+          },
+          {
+            "icon": "code",
+            "name": "Programming",
+            "description": "Develop autonomous routines, teleop controls, and sensor integration using Java and the FTC SDK for Android-based robot control.",
+            "skills": [
+              "Java",
+              "Android Studio",
+              "OpenCV",
+              "PID Control"
+            ]
+          },
+          {
+            "icon": "zap",
+            "name": "Electrical Systems",
+            "description": "Handle wiring, sensor placement, and electrical troubleshooting to ensure reliable robot operation throughout competitions.",
+            "skills": [
+              "REV Hardware",
+              "Sensor Integration",
+              "Wiring Management",
+              "Troubleshooting"
+            ]
+          },
+          {
+            "icon": "chart",
+            "name": "Strategy & Scouting",
+            "description": "Analyze game strategy, scout other teams, and coordinate alliance selections to maximize competitive performance.",
+            "skills": [
+              "Data Analysis",
+              "Alliance Strategy",
+              "Match Scouting",
+              "Competition Planning"
+            ]
+          },
+          {
+            "icon": "palette",
+            "name": "Marketing & Outreach",
+            "description": "Promote the team, create presentation materials, and engage with the community to spread STEM awareness.",
+            "skills": [
+              "Social Media",
+              "Presentations",
+              "Community Events",
+              "Team Branding"
+            ]
+          },
+          {
+            "icon": "file",
+            "name": "Engineering Notebook",
+            "description": "Document the engineering design process, team progress, and competition experiences for awards consideration.",
+            "skills": [
+              "Technical Writing",
+              "Design Documentation",
+              "Photo Documentation",
+              "Awards Submission"
+            ]
+          }
+        ]
+      },
+      "schedule": {
+        "title": "2026–2027 Season Schedule",
+        "events": [
+          {
+            "month": "SEP",
+            "day": "12",
+            "title": "Kickoff: BIOBUZZ",
+            "description": "The 2026-27 FIRST CANOPY season and the BIOBUZZ game are revealed",
+            "location": "Kickoff Broadcast"
+          },
+          {
+            "month": "NOV–JAN",
+            "day": "TBA",
+            "title": "League Meets & Qualifiers",
+            "description": "Both teams compete for ranking points and advancement",
+            "location": "Southern California"
+          },
+          {
+            "month": "FEB–MAR",
+            "day": "TBA",
+            "title": "Regional Championship",
+            "description": "Top teams from the region compete for advancement",
+            "location": "Southern California"
+          },
+          {
+            "month": "APR",
+            "day": "TBA",
+            "title": "FIRST Championship",
+            "description": "Global competition for the top FTC teams (qualification required)",
+            "location": "Location TBA"
+          }
+        ]
       }
     },
     "vex": {
-      "title": "VEX Robotics Competition",
-      "subtitle": "Precision Engineering",
-      "description": "VEX Robotics allows students to design and build robots using the VEX platform, emphasizing mechanical design and programming skills.",
-      "backgroundImage": "/images/PlaceholderBanner.jpg",
-      "stats": {
-        "teams": "2",
-        "platform": "VEX V5",
-        "maxSize": "18x18x18 inches",
-        "programmingLanguage": "C++/Python"
+      "hero": {
+        "title": "VEX Robotics Competition",
+        "subtitle": "VEX Teams 1108A & 1108B"
+      },
+      "overview": {
+        "teamName": "Oxford Academy VEX Teams",
+        "teamDescription": [
+          "Our VEX Robotics Competition teams, 1108A and 1108B, represent the cutting edge of high school robotics engineering. These teams design and build robots using the VEX platform to compete in challenging game scenarios that test autonomous programming, precise control, and strategic thinking.",
+          "VEX teams work with metal construction systems and advanced programming environments to create sophisticated robots capable of complex tasks. Our teams have consistently excelled in both robot skills challenges and alliance-based tournament competitions."
+        ],
+        "highlights": [
+          {
+            "icon": "target",
+            "title": "Skills Excellence",
+            "description": "State champions in programming and driver skills competitions"
+          },
+          {
+            "icon": "layers",
+            "title": "Advanced Engineering",
+            "description": "Innovative mechanical designs pushing the limits of VEX components"
+          },
+          {
+            "icon": "code",
+            "title": "Programming Mastery",
+            "description": "Complex autonomous routines using C++ and advanced PID control"
+          },
+          {
+            "icon": "star",
+            "title": "Competition Success",
+            "description": "Multiple tournament wins and World Championship qualifications"
+          }
+        ],
+        "image": "/images/robotics/group.jpeg",
+        "imageCaption": "VEX teams collaborating on robot design"
+      },
+      "gallery": {
+        "title": "Robot Evolution",
+        "robots": [
+          {
+            "name": "Over Under Robot",
+            "year": "2023-24",
+            "description": "Advanced catapult system with precise trajectory control for triball scoring. Features innovative intake mechanism and reliable elevation system.",
+            "image": "/images/comp/FRC_1.jpg",
+            "specs": [
+              "Catapult Launch",
+              "Triball Intake",
+              "Elevation System",
+              "Autonomous Scoring"
+            ]
+          },
+          {
+            "name": "Spin Up Robot",
+            "year": "2022-23",
+            "description": "Dual flywheel system optimized for disc launching with variable velocity control. Championship-winning design with exceptional accuracy and speed.",
+            "image": "/images/robotics/robotics_working.jpg",
+            "specs": [
+              "Dual Flywheel",
+              "Disc Launcher",
+              "Roller Spinner",
+              "Expansion Wings"
+            ]
+          },
+          {
+            "name": "Tipping Point Robot",
+            "year": "2021-22",
+            "description": "Mobile goal specialist with four-bar lift system and ring scoring capabilities. First design to achieve consistent autonomous goal navigation.",
+            "image": "/images/robotics/marketing_working.jpg",
+            "specs": [
+              "Mobile Goal Lift",
+              "Ring Scoring",
+              "Four-Bar System",
+              "Platform Balance"
+            ]
+          }
+        ]
+      },
+      "structure": {
+        "title": "Team Specializations",
+        "subteams": [
+          {
+            "icon": "wrench",
+            "name": "Mechanical Design",
+            "description": "Engineer and fabricate robot mechanisms using VEX metal components, focusing on durability, precision, and competitive performance.",
+            "skills": [
+              "Autodesk Inventor",
+              "Metal Fabrication",
+              "Mechanism Design",
+              "Assembly"
+            ]
+          },
+          {
+            "icon": "code",
+            "name": "Programming",
+            "description": "Develop autonomous routines and teleop control systems using C++ and VEXcode Pro for optimal robot performance.",
+            "skills": [
+              "C++",
+              "VEXcode Pro",
+              "PID Control",
+              "Autonomous Programming"
+            ]
+          },
+          {
+            "icon": "chart",
+            "name": "Skills Challenge",
+            "description": "Specialize in programming and driver skills competitions, optimizing robot performance for maximum scoring potential.",
+            "skills": [
+              "Skills Programming",
+              "Driver Training",
+              "Score Optimization",
+              "Route Planning"
+            ]
+          },
+          {
+            "icon": "settings",
+            "name": "Build Quality",
+            "description": "Ensure structural integrity, reliability, and maintenance of robot systems throughout the competitive season.",
+            "skills": [
+              "Quality Control",
+              "System Testing",
+              "Maintenance",
+              "Troubleshooting"
+            ]
+          },
+          {
+            "icon": "target",
+            "name": "Strategy & Scouting",
+            "description": "Analyze game mechanics, develop competitive strategies, and coordinate alliance selections for tournament success.",
+            "skills": [
+              "Game Analysis",
+              "Match Strategy",
+              "Alliance Selection",
+              "Data Analysis"
+            ]
+          },
+          {
+            "icon": "file",
+            "name": "Documentation",
+            "description": "Maintain engineering notebooks, document design processes, and prepare award submissions for competitions.",
+            "skills": [
+              "Engineering Notebook",
+              "Design Documentation",
+              "Award Preparation",
+              "Process Recording"
+            ]
+          }
+        ]
+      },
+      "schedule": {
+        "title": "2026–2027 Competition Season",
+        "events": [
+          {
+            "month": "SEP–NOV",
+            "day": "TBA",
+            "title": "Season Opener Tournaments",
+            "description": "Early-season events with the 2026-27 Override game",
+            "location": "Orange County, CA"
+          },
+          {
+            "month": "DEC–JAN",
+            "day": "TBA",
+            "title": "Skills Challenge Events",
+            "description": "Programming and driver skills competitions",
+            "location": "Southern California"
+          },
+          {
+            "month": "FEB–MAR",
+            "day": "TBA",
+            "title": "Regional & State Championships",
+            "description": "Qualification events for the world championship",
+            "location": "California"
+          },
+          {
+            "month": "APR–MAY",
+            "day": "TBA",
+            "title": "VEX World Championship",
+            "description": "Global competition featuring the best VEX teams (qualification required)",
+            "location": "Location TBA"
+          }
+        ]
       }
     }
   },
@@ -550,7 +1108,9 @@
       "copyright": "© 2026 OA Robotics. All rights reserved.",
       "websiteDeveloper": "Website by Erick Tran",
       "betaNotice": "Oxford Academy"
-    }
+    },
+    "quickLinksTitle": "Quick Links",
+    "socialTitle": "Our Socials"
   },
   "sponsors": {
     "hero": {
@@ -567,11 +1127,157 @@
           "value": "500+",
           "label": "Students Impacted"
         }
-      ]
+      ],
+      "title": "Building the Future Together",
+      "description": "Our sponsors are more than funders—they are partners in our mission to inspire the next generation of innovators, engineers, and problem-solvers. Through their generous support, we can provide world-class robotics education and compete at the highest levels."
     },
     "currentSponsors": {
       "title": "Our Sponsors",
-      "intro": "We're grateful to partner with these incredible organizations who share our commitment to STEM education and innovation."
+      "intro": "We're grateful to partner with these incredible organizations who share our commitment to STEM education and innovation.",
+      "tiers": [
+        {
+          "name": "Title Sponsors",
+          "sponsors": [
+            {
+              "name": "Gene Haas Foundation",
+              "logo": "/logos/sponsors/gene-haas-foundation.png",
+              "description": "Leading supporter of STEM education and workforce development"
+            }
+          ]
+        },
+        {
+          "name": "Gold Sponsors",
+          "sponsors": [
+            {
+              "name": "NASA",
+              "logo": "/logos/sponsors/nasa.png",
+              "description": "Inspiring space exploration and STEM innovation"
+            },
+            {
+              "name": "Disney",
+              "logo": "/logos/sponsors/disney.png",
+              "description": "Creating magical learning experiences"
+            }
+          ]
+        },
+        {
+          "name": "Silver Sponsors",
+          "sponsors": [
+            {
+              "name": "SolidWorks",
+              "logo": "/logos/sponsors/solidworks.png",
+              "description": "Professional CAD software for design innovation"
+            },
+            {
+              "name": "JPL",
+              "logo": "/logos/sponsors/jpl.png",
+              "description": "Advancing space exploration and technology"
+            },
+            {
+              "name": "Emerson",
+              "logo": "/logos/sponsors/emerson.png",
+              "description": "Engineering solutions for a better world"
+            }
+          ]
+        }
+      ]
+    },
+    "banner": {
+      "title": "Our Amazing Sponsors",
+      "subtitle": "Partnerships that power innovation"
+    },
+    "howSponsorsHelp": {
+      "title": "How Our Sponsors Make a Difference",
+      "cards": [
+        {
+          "icon": "wrench",
+          "title": "Equipment & Materials",
+          "description": "Sponsors provide cutting-edge tools, raw materials, and manufacturing resources that enable us to build competitive robots and prototype innovative solutions."
+        },
+        {
+          "icon": "target",
+          "title": "Competition Funding",
+          "description": "Travel expenses, registration fees, and competition costs are covered by our generous sponsors, allowing us to compete at regional and national levels."
+        },
+        {
+          "icon": "users",
+          "title": "Mentorship & Expertise",
+          "description": "Industry professionals from sponsor companies provide invaluable mentorship, sharing real-world engineering experience with our students."
+        },
+        {
+          "icon": "lightbulb",
+          "title": "Educational Resources",
+          "description": "Sponsors provide access to professional software, online learning platforms, and educational workshops that enhance our curriculum."
+        }
+      ]
+    },
+    "opportunities": {
+      "title": "Partner With Us",
+      "description": "Join our mission to inspire the next generation of innovators. Your support directly impacts student learning and helps build tomorrow's engineering workforce.",
+      "benefits": {
+        "title": "Partnership Benefits:",
+        "items": [
+          "Brand visibility at competitions and events",
+          "Access to talented student interns",
+          "Corporate social responsibility impact",
+          "Networking with other industry leaders",
+          "Tax-deductible charitable contribution"
+        ]
+      },
+      "tiers": {
+        "title": "Sponsorship Levels:",
+        "levels": [
+          {
+            "amount": "$10,000+",
+            "level": "Title Sponsor"
+          },
+          {
+            "amount": "$5,000+",
+            "level": "Gold Sponsor"
+          },
+          {
+            "amount": "$2,500+",
+            "level": "Silver Sponsor"
+          },
+          {
+            "amount": "$1,000+",
+            "level": "Bronze Sponsor"
+          }
+        ]
+      },
+      "image": {
+        "src": "/images/robotics/group.jpeg",
+        "alt": "Team collaboration",
+        "caption": {
+          "title": "Your support in action",
+          "description": "See how sponsorship directly impacts student learning and competition success"
+        }
+      }
+    },
+    "contact": {
+      "title": "Ready to Partner?",
+      "description": "Contact us to discuss sponsorship opportunities and learn more about how your organization can support our mission.",
+      "details": [
+        {
+          "label": "Email:",
+          "value": "sponsors@oarobotics.com"
+        },
+        {
+          "label": "Phone:",
+          "value": "(714) 220-4055"
+        },
+        {
+          "label": "Address:",
+          "value": "5172 Orange Ave, Cypress, CA 90630"
+        }
+      ]
     }
-  }
+  },
+  "team": {
+    "hero": {
+      "title": "Our Amazing Team",
+      "subtitle": "Meet the talented students who make OA Robotics possible"
+    }
+  },
+  "teamsOverviewTitle": "Meet Our Teams"
 }

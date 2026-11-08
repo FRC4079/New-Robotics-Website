@@ -5,6 +5,14 @@ import { ImageStyle, TextStyle } from '@/utils/content';
 
 type AnyStyle = TextStyle & ImageStyle;
 
+// The native color input only accepts #rrggbb, so expand #rgb and fall back to black.
+function toPickerColor(color: string | undefined): string {
+  if (!color) return '#000000';
+  if (/^#[0-9a-f]{6}$/i.test(color)) return color;
+  const short = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(color);
+  return short ? `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}` : '#000000';
+}
+
 interface StyleEditorProps {
   type: 'text' | 'image';
   currentStyles: AnyStyle;
@@ -115,7 +123,7 @@ export default function StyleEditor({
                 />
                 <input
                   type="color"
-                  value={(localStyles as TextStyle).color?.startsWith('#') ? (localStyles as TextStyle).color : '#000000'}
+                  value={toPickerColor((localStyles as TextStyle).color)}
                   onChange={(e) => handleChange('color', e.target.value)}
                   style={{ width: '40px', marginLeft: '5px' }}
                 />

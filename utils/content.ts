@@ -18,6 +18,8 @@ export interface TextStyle {
 }
 
 export interface SiteContent {
+  /** Text and image styles for fields stored as plain values, keyed by dotted path. */
+  _styles?: Record<string, TextStyle & ImageStyle>;
   site: {
     title: string;
     tagline: string;  
@@ -181,83 +183,11 @@ export interface SiteContent {
       meetingTimes: string;
     };
   };
-  teams: {
-    frc: {
-      title: string;
-      subtitle: string;
-      description: string;
-      backgroundImage: string;
-      stats: Array<{
-        id: string;
-        label: string;
-        value: string;
-        description: string;
-        icon: string;
-      }>;
-      achievements?: Array<{
-        id: string;
-        title: string;
-        description: string;
-        year: string;
-        type: string;
-        award: string;
-        image?: string;
-      }>;
-      news?: Array<{
-        id: string;
-        title: string;
-        excerpt: string;
-        content: string;
-        author: string;
-        publishDate: string;
-        category: string;
-        image?: string;
-        tags: string[];
-      }>;
-      teamOverview?: TeamSlot;
-      robots?: TeamSlot[];
-      teamStructure?: TeamSlot;
-      schedule?: TeamSlot[];
-    };
-    ftc: {
-      title: string;
-      subtitle: string;
-      description: string;
-      backgroundImage: string;
-      stats: Array<{
-        id: string;
-        label: string;
-        value: string;
-        description?: string;
-        icon?: string;
-      }>;
-      achievements?: TeamSlot[];
-      news?: TeamSlot[];
-      teamOverview?: TeamSlot;
-      robots?: TeamSlot[];
-      teamStructure?: TeamSlot;
-      schedule?: TeamSlot[];
-    };
-    vex: {
-      title: string;
-      subtitle: string;
-      description: string;
-      backgroundImage: string;
-      stats: Array<{
-        id: string;
-        label: string;
-        value: string;
-        description?: string;
-        icon?: string;
-      }>;
-      achievements?: TeamSlot[];
-      news?: TeamSlot[];
-      teamOverview?: TeamSlot;
-      robots?: TeamSlot[];
-      teamStructure?: TeamSlot;
-      schedule?: TeamSlot[];
-    };
-  };
+  /** Competition team pages, keyed by team ("frc", "ftc", "vex"). */
+  teams: Record<'frc' | 'ftc' | 'vex', TeamContent>;
+  teamsOverviewTitle?: string;
+  /** Hero text of the team members page. */
+  team?: { hero: { title: string; subtitle: string } };
   teamsOverview: Array<{
     id: string;
     logo: string;
@@ -284,6 +214,8 @@ export interface SiteContent {
     bioStyle?: TextStyle;
   }>;
   sponsors: {
+    /** Text over the page banner. */
+    banner?: { title: string; subtitle: string };
     hero: {
       title: string;
       description: string;
@@ -369,6 +301,8 @@ export interface SiteContent {
     }>;
   };
   footer: {
+    quickLinksTitle?: string;
+    socialTitle?: string;
     branding: {
       logo: string;
       logoAlt: string;
@@ -401,3 +335,11 @@ export interface SiteContent {
 // defines for itself, so the content layer keeps them loose on purpose.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type TeamSlot = any;
+
+export interface TeamContent {
+  hero: { title: string; subtitle: string };
+  overview?: TeamSlot;
+  gallery?: { title: string; robots?: TeamSlot[] };
+  structure?: { title: string; subteams?: TeamSlot[] };
+  schedule?: { title: string; events?: TeamSlot[] };
+}

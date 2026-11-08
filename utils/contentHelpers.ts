@@ -58,3 +58,12 @@ export function getContentImageStyle(value: unknown): ImageStyle | undefined {
   }
   return undefined;
 }
+
+// Style saved separately for a field that holds a plain value ("_styles" map).
+export function getStoredStyle(
+  content: { _styles?: Record<string, TextStyle & ImageStyle> } | null | undefined,
+  path: string
+): (TextStyle & ImageStyle) | undefined {
+  const key = path.replace(/\[(\d+)\]/g, '.$1');
+  return content?._styles?.[key];
+}
