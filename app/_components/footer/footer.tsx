@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import styles from "@/app/_components/footer/footer.module.scss";
-import {TW_600} from "@/utils/globalFonts";
+import Link from "next/link";
+import Icon from "@/components/icons/Icon";
 import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
@@ -29,16 +30,20 @@ export default function Footer({children}: FooterProps) {
         quickLinks: [],
         social: [],
         legal: {
-            copyright: "© 2025 OA Robotics. All rights reserved."
+            copyright: "© OA Robotics. All rights reserved."
         }
     };
+
+    // Keep the copyright year current without editing content every January.
+    const currentYear: string = String(new Date().getFullYear());
+    const copyright: string = String(footerData.legal.copyright).replace(/\b(?:19|20)\d{2}\b/, currentYear);
 
     return (
         <footer className={styles.footer}>
             <div className={styles.footerContent}>
                 <div className={styles.footerTop}>
                     <div className={styles.footerDetails}>
-                        <div className={`${styles.orgDetails} ${TW_600}`}>
+                        <div className={styles.orgDetails}>
                             <h2>
                                 <EditableImage
                                     src={footerData.branding.logo}
@@ -78,35 +83,34 @@ export default function Footer({children}: FooterProps) {
                             )}
                         </div>
 
-                        <div className={styles.footerSocials}>
-                        </div>
                     </div>
 
-                    <div className={`${styles.footerLinks} ${TW_600}`}>
+                    <nav className={styles.footerLinks} aria-label="Footer">
                         <EditableText
                             value="Quick Links"
                             path="footer.quickLinks.title"
-                            as="h1"
+                            as="h2"
                         />
                         {footerData.quickLinks.map((link: { href: string; name: string }, index: number) => (
-                            <a key={index} href={link.href}>
+                            <Link key={index} href={link.href}>
                                 <EditableText
                                     value={link.name}
                                     path={`footer.quickLinks.${index}.name`}
                                     as="span"
                                 />
-                            </a>
+                            </Link>
                         ))}
-                    </div>
+                    </nav>
 
-                    <div className={`${styles.footerLinks} ${TW_600}`}>
+                    <div className={styles.footerLinks}>
                         <EditableText
                             value="Our Socials"
                             path="footer.social.title"
-                            as="h1"
+                            as="h2"
                         />
-                        {footerData.social.map((social: { url: string; platform: string }, index: number) => (
+                        {footerData.social.map((social: { url: string; platform: string; icon?: string }, index: number) => (
                             <a key={index} href={social.url} target="_blank" rel="noopener noreferrer">
+                                <Icon name={social.icon || social.platform.toLowerCase()} size={18} />
                                 <EditableText
                                     value={social.platform}
                                     path={`footer.social.${index}.platform`}
@@ -118,9 +122,9 @@ export default function Footer({children}: FooterProps) {
                 </div>
 
                 <div className={styles.footerBottom}>
-                    <div className={`${styles.footerBottomLinks} ${TW_600}`}>
+                    <div className={styles.footerBottomLinks}>
                         <EditableText
-                            value={footerData.legal.copyright}
+                            value={copyright}
                             path="footer.legal.copyright"
                             as="p"
                         />

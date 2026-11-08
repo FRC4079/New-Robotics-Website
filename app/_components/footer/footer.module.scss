@@ -1,122 +1,119 @@
+@use '../../styles/mixins' as *;
+
 .footer {
-    background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, #090C24 5%, #090c24 100%);
-    color: #fff;
-    padding: 6vh 20px 20px;
-    text-align: center;
+  background: var(--navy);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  padding-bottom: env(safe-area-inset-bottom);
+}
 
-    .footerContent {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: column;
+.footerContent {
+  @include container;
+  padding-block: clamp(2.5rem, 6vw, 4rem) var(--space-5);
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: var(--space-7);
+
+  @include bp-down(820px) {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+  }
+
+  @include bp-down(520px) {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}
+
+.footerDetails {
+  min-width: 0;
+
+  @include bp-down(820px) {
+    grid-column: 1 / -1;
+  }
+}
+
+.orgDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--text);
+
+    img {
+      width: 2.75rem;
+      height: 2.75rem;
+      object-fit: contain;
     }
+  }
 
-    .footerTop {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        width: 100%;
-        padding: 2vh 0;
+  p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
 
-        .footerDetails {
-            width: 40%;
-            display: flex;
-            .orgDetails {
-                text-align: left;
-                display: flex;
-                flex-direction: column;
-                
-                h2 {
-                    font-size: 4rem;
-                    letter-spacing: 0.05rem;
-                    padding: 0;
-                    margin: 0;
-                    color: red;
-                    display: flex;
-                    align-items: center;
+  // First paragraph is the team name; give it a little emphasis.
+  h2 + p {
+    color: var(--accent-text);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+}
 
-                    // Target both direct img and img within EditableImage wrapper
-                    img,
-                    > div img {
-                        width: 20%;
-                        height: auto;
-                        margin-right: 1vw;
-                    }
-                    
-                    // Make EditableImage wrapper not break flex
-                    > div {
-                        display: flex;
-                        align-items: center;
-                    }
-                }
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
 
-                // Target EditableText wrappers containing p tags
-                > div {
-                    display: block;
-                    width: 100%;
-                }
+  h2 {
+    margin: 0 0 var(--space-3);
+    @include eyebrow;
+    color: var(--text);
+  }
 
-                p {
-                    font-size: 2rem;
-                    margin-bottom: 1vh;
-                    display: block;
-                    width: 100%;
-                }
-            }
-        }
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem; // comfortable touch target
+    font-size: var(--text-sm);
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: color var(--dur) var(--ease);
 
-        .footerLinks {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 20%;
-            letter-spacing: 0.05rem;
-
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 1vh;
-                font-weight: 900;
-                color: red;
-            }
-
-            a {
-                color: #fff;
-                text-decoration: none;
-                transition: color 0.3s ease-in-out;
-                font-size: 1.25rem;
-
-                &:hover {
-                    color: #ff0000;
-                }
-            }
-        }
+    &:hover {
+      color: var(--text);
     }
+  }
+}
 
-    .footerBottom {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: min-content;
-        padding: 0;
-        margin-bottom: 5vh;
-        margin-top: 5vh;
-        width: 95%;
-        justify-content: space-around;
-        border-bottom: 0.1px solid #333333;
-        border-top: 0.1px solid #333333;
-        letter-spacing: 0.05vw;
+.footerBottom {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
 
-        .footerBottomLinks {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            width: 70%;
+.footerBottomLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
 
-            a {
-                color: #ff0000;
-                transition: color 0.3s ease-in-out;
-                text-decoration: underline;
-            }
-        }
-    }
+  p {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--text-subtle);
+  }
 }
