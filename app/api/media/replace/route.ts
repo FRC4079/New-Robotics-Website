@@ -7,8 +7,8 @@ import {
   MEDIA_EXTENSIONS,
   backupFile,
   isAllowedUpload,
-  resolveInPublic,
-  toPublicUrl,
+  resolveUploadUrl,
+  toUploadUrl,
 } from '@/utils/media';
 
 function fail(error: string, status: number) {
@@ -38,9 +38,10 @@ export async function POST(request: NextRequest) {
       return fail(`File is too large. The limit is ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`, 413);
     }
 
-    const existingFullPath = resolveInPublic(existingPath);
+    // Only uploaded files can be replaced; the site's own assets belong to the repository.
+    const existingFullPath = resolveUploadUrl(existingPath);
     if (!existingFullPath || !MEDIA_EXTENSIONS.has(path.extname(existingFullPath).toLowerCase())) {
-      return fail('Invalid file path', 400);
+      return fail('Only uploaded files can be replaced', 400);
     }
 
     const info = await stat(existingFullPath).catch(() => null);
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'File replaced successfully',
-      filePath: toPublicUrl(existingFullPath),
+      filePath: toUploadUrl(existingFullPath),
       backupCreated: true,
     });
   } catch (error) {

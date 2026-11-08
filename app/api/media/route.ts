@@ -6,12 +6,16 @@ import {
   MAX_UPLOAD_BYTES,
   MEDIA_EXTENSIONS,
   PUBLIC_DIR,
+  UPLOAD_DIR,
+  UPLOAD_URL_PREFIX,
   backupFile,
   isAllowedUpload,
-  resolveInPublic,
+  resolveInside,
+  resolveUploadUrl,
   sanitizeFolder,
   sanitizeName,
   toPublicUrl,
+  toUploadUrl,
 } from '@/utils/media';
 
 type MediaFile = { type: 'file'; path: string; size: number };
@@ -21,13 +25,14 @@ function fail(error: string, status: number) {
   return NextResponse.json({ success: false, error }, { status });
 }
 
-// Get all media files
+// Get all media files: the site's own assets, plus everything uploaded through the CMS
 export async function GET() {
   const denied = await requireAdmin();
   if (denied) return denied;
 
   try {
-    const media = await getMediaStructure(PUBLIC_DIR);
+    const media: MediaStructure = await getMediaStructure(PUBLIC_DIR, toPublicUrl);
+    media[UPLOAD_URL_PREFIX.slice(1)] = await getMediaStructure(UPLOAD_DIR, toUploadUrl);
     return NextResponse.json({ success: true, media });
   } catch (error) {
     console.error('Error fetching media:', error);
@@ -60,7 +65,7 @@ export async function POST(request: NextRequest) {
     if (!fileName || !category || subcategory === null) {
       return fail('Invalid file name or folder', 400);
     }
-    const uploadDir = resolveInPublic([category, subcategory].filter(Boolean).join('/'));
+    const uploadDir = resolveInside(UPLOAD_DIR, [category, subcategory].filter(Boolean).join('/'));
     if (!uploadDir) {
       return fail('Invalid file name or folder', 400);
     }
@@ -80,7 +85,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'File uploaded successfully',
-      filePath: toPublicUrl(filePath),
+      filePath: toUploadUrl(filePath),
       fileName,
     });
   } catch (error) {
@@ -100,9 +105,10 @@ export async function DELETE(request: NextRequest) {
       return fail('No file path provided', 400);
     }
 
-    const fullPath = resolveInPublic(filePath);
+    // Only uploaded files can be removed; the site's own assets belong to the repository.
+    const fullPath = resolveUploadUrl(filePath);
     if (!fullPath || !MEDIA_EXTENSIONS.has(path.extname(fullPath).toLowerCase())) {
-      return fail('Invalid file path', 400);
+      return fail('Only uploaded files can be deleted', 400);
     }
 
     const info = await stat(fullPath).catch(() => null);
@@ -123,21 +129,29 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-// Recursively lists the media files under a folder
-async function getMediaStructure(dir: string): Promise<MediaStructure> {
+// Recursively lists the media files under a folder. A folder that does not exist yet is empty.
+async function getMediaStructure(dir: string, toUrl: (fullPath: string) => string): Promise<MediaStructure> {
   const structure: MediaStructure = {};
 
-  for (const item of await readdir(dir, { withFileTypes: true })) {
-    // Skip hidden entries and folders that are not media.
+  let items;
+  try {
+    items = await readdir(dir, { withFileTypes: true });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return structure;
+    throw error;
+  }
+
+  for (const item of items) {
+    // Skip hidden entries.
     if (item.name.startsWith('.')) continue;
     const itemPath = path.join(dir, item.name);
 
     if (item.isDirectory()) {
-      structure[item.name] = await getMediaStructure(itemPath);
+      structure[item.name] = await getMediaStructure(itemPath, toUrl);
     } else if (MEDIA_EXTENSIONS.has(path.extname(item.name).toLowerCase())) {
       structure[item.name] = {
         type: 'file',
-        path: toPublicUrl(itemPath),
+        path: toUrl(itemPath),
         size: (await stat(itemPath)).size,
       };
     }
