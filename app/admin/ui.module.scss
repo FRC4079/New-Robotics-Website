@@ -252,7 +252,7 @@
     overflow-wrap: anywhere;
   }
 
-  span {
+  > span {
     display: block;
     margin-top: 0.15rem;
     color: var(--text-muted);

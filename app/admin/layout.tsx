@@ -66,7 +66,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className={styles.account}>
           <p>
             <strong>{user.displayName}</strong>
-            {isSuperAdmin ? 'Super admin' : 'Editor'}
+            {!isSuperAdmin && 'Editor'}
           </p>
           <button type="button" className={styles.signOut} onClick={() => void logout()}>
             Sign out
