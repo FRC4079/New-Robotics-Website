@@ -19,12 +19,6 @@ export default function ContentManager() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [newItemSection, setNewItemSection] = useState('');
-  const [showPageBuilder, setShowPageBuilder] = useState(false);
-  const [newPageData, setNewPageData] = useState({
-    name: '',
-    routePath: '',
-    content: '<h2>Welcome to the new page!</h2><p>Add your content here...</p>'
-  });
   const [editingImageStyle, setEditingImageStyle] = useState<{
     section: string;
     parentPath: string;
@@ -57,7 +51,6 @@ export default function ContentManager() {
     { key: 'about', label: 'About Page', icon: 'ℹ️' },
     { key: 'contact', label: 'Contact Page', icon: '📞' },
     { key: 'teams', label: 'Teams', icon: '🤖' },
-    { key: 'pages', label: 'Page Builder', icon: '📄' },
   ];
 
   const handleEdit = (section: string, path: string, value: any, type: string) => {
@@ -149,40 +142,6 @@ export default function ContentManager() {
       alert('Item deleted successfully!');
     } else {
       alert('Failed to delete item: ' + result.error);
-    }
-  };
-
-  const handleCreatePage = async () => {
-    if (!newPageData.name || !newPageData.routePath) {
-      alert('Please provide both page name and route path');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/pages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          pageName: newPageData.name,
-          pageContent: newPageData.content,
-          routePath: newPageData.routePath
-        }),
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        alert(`Page created successfully! Visit ${result.pagePath}`);
-        setShowPageBuilder(false);
-        setNewPageData({ name: '', routePath: '', content: '<h2>Welcome to the new page!</h2><p>Add your content here...</p>' });
-        // Refresh content to show new page in navigation
-        window.location.reload();
-      } else {
-        alert('Failed to create page: ' + result.error);
-      }
-    } catch (error) {
-      alert('Failed to create page');
     }
   };
 
@@ -434,51 +393,7 @@ export default function ContentManager() {
       </div>
 
       <div className={styles.contentArea}>
-        {activeSection === 'pages' ? (
-          <div className={styles.pageBuilder}>
-            <div className={styles.pageBuilderHeader}>
-              <h2>Page Builder</h2>
-              <button 
-                onClick={() => setShowPageBuilder(true)}
-                className={styles.addBtn}
-              >
-                + Create New Page
-              </button>
-            </div>
-            
-            <div className={styles.existingPages}>
-              <h3>Existing Custom Pages</h3>
-              {content?.customPages ? (
-                <div className={styles.pagesList}>
-                  {Object.entries(content.customPages).map(([path, pageData]: [string, any]) => (
-                    <div key={path} className={styles.pageItem}>
-                      <div className={styles.pageInfo}>
-                        <h4>{pageData.title}</h4>
-                        <p>Route: /{path}</p>
-                      </div>
-                      <div className={styles.pageActions}>
-                        <button 
-                          onClick={() => window.open(`/${path}`, '_blank')}
-                          className={styles.previewBtn}
-                        >
-                          Preview
-                        </button>
-                        <button 
-                          onClick={() => handleEdit('customPages', `customPages.${path}`, pageData, 'object')}
-                          className={styles.editBtn}
-                        >
-                          Edit
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No custom pages created yet.</p>
-              )}
-            </div>
-          </div>
-        ) : activeSection === 'all' ? (
+        {activeSection === 'all' ? (
           <div className={styles.allSections}>
             {filteredContent.map(([sectionKey, sectionValue]) => (
               <div key={sectionKey} className={styles.section}>
@@ -559,74 +474,6 @@ export default function ContentManager() {
                 </button>
                 <button 
                   onClick={() => setEditingField(null)}
-                  className={styles.cancelBtn}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Page Builder Modal */}
-      {showPageBuilder && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h3>Create New Page</h3>
-              <button 
-                onClick={() => setShowPageBuilder(false)}
-                className={styles.closeBtn}
-              >
-                ×
-              </button>
-            </div>
-            
-            <div className={styles.modalBody}>
-              <div className={styles.pageForm}>
-                <div className={styles.formField}>
-                  <label>Page Name:</label>
-                  <input
-                    type="text"
-                    value={newPageData.name}
-                    onChange={(e) => setNewPageData({...newPageData, name: e.target.value})}
-                    placeholder="e.g., New Team Page"
-                    className={styles.editInput}
-                  />
-                </div>
-                
-                <div className={styles.formField}>
-                  <label>Route Path:</label>
-                  <input
-                    type="text"
-                    value={newPageData.routePath}
-                    onChange={(e) => setNewPageData({...newPageData, routePath: e.target.value})}
-                    placeholder="e.g., new-team (will become /new-team)"
-                    className={styles.editInput}
-                  />
-                  <small>Only letters, numbers, hyphens, and forward slashes allowed</small>
-                </div>
-                
-                <div className={styles.formField}>
-                  <label>Initial Content (HTML):</label>
-                  <textarea
-                    value={newPageData.content}
-                    onChange={(e) => setNewPageData({...newPageData, content: e.target.value})}
-                    className={styles.editTextarea}
-                    rows={10}
-                    placeholder="<h2>Page Title</h2><p>Your content here...</p>"
-                  />
-                  <small>You can use HTML tags for formatting</small>
-                </div>
-              </div>
-              
-              <div className={styles.modalActions}>
-                <button onClick={handleCreatePage} className={styles.saveBtn}>
-                  Create Page
-                </button>
-                <button 
-                  onClick={() => setShowPageBuilder(false)}
                   className={styles.cancelBtn}
                 >
                   Cancel
