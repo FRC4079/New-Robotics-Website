@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/utils/auth';
 import {
   ContentPathError,
   addAtPath,
@@ -32,6 +33,9 @@ export async function GET() {
 
 // Update site content
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { section, data } = await readBody(request);
 
@@ -66,6 +70,9 @@ export async function POST(request: NextRequest) {
 
 // Add new navigation item or content section
 export async function PUT(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { section, item } = await readBody(request);
 
@@ -94,6 +101,9 @@ export async function PUT(request: NextRequest) {
 
 // Delete content section or item
 export async function DELETE(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { searchParams } = new URL(request.url);
     const section = searchParams.get('section');
