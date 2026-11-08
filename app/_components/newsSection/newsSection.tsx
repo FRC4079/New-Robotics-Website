@@ -43,7 +43,7 @@ export default function NewsSection({
         setLocalArticles(articles);
     }, [articles]);
 
-    const categories = ['All', 'Competition', 'Achievement', 'Event', 'General'];
+    const categories = ['All', 'Competition', 'Achievement', 'Event', 'Newsletter', 'General'];
 
     const filteredArticles = React.useMemo(() => {
         let filtered = selectedCategory === 'All' 

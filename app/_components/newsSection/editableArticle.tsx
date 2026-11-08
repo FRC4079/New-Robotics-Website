@@ -14,7 +14,7 @@ export type NewsArticle = {
     content: string;
     author: string;
     publishDate: string;
-    category: 'Competition' | 'Achievement' | 'Event' | 'General';
+    category: 'Competition' | 'Achievement' | 'Event' | 'Newsletter' | 'General';
     image?: string;
     tags: string[];
     link?: string;

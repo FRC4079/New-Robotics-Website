@@ -6,7 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { EditModeProvider } from '@/contexts/EditModeContext';
 import { ContentProvider } from '@/contexts/ContentContext';
 import EditToolbar from '@/components/editable/EditToolbar';
-import { getServerContent } from '@/utils/contentStore';
+import { getVisibleContent } from '@/utils/visibleContent';
 import { fontVariables } from '@/utils/globalFonts';
 
 // Content is edited at runtime, so pages must be rendered per request
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({children}: { children: React.ReactNode }): Promise<React.ReactElement> {
-    const content = await getServerContent();
+    const content = await getVisibleContent();
 
     return (
         <html lang="en" className={fontVariables}>

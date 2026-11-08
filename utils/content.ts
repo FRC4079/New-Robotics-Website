@@ -358,12 +358,14 @@ export interface SiteContent {
       content: string;
       author: string;
       publishDate: string;
-      category: 'Competition' | 'Achievement' | 'Event' | 'General';
+      category: 'Competition' | 'Achievement' | 'Event' | 'Newsletter' | 'General';
       image?: string;
       imageStyle?: ImageStyle;
       tags: string[];
       link?: string;
       linkText?: string;
+      /** Missing means published, so older content keeps working. */
+      status?: 'draft' | 'published';
     }>;
   };
   footer: {

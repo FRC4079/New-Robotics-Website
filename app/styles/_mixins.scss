@@ -157,6 +157,12 @@
     color: #d8b4fe;
   }
 
+  &[data-category='Newsletter'] {
+    background: rgba(52, 211, 153, 0.14);
+    border-color: rgba(52, 211, 153, 0.45);
+    color: #6ee7b7;
+  }
+
   &[data-category='General'] {
     background: var(--accent-soft);
     border-color: rgba(255, 107, 115, 0.45);

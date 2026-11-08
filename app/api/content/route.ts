@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getVisibleContent } from '@/utils/visibleContent';
 import { requireEditAccess, requireSuperAdmin } from '@/utils/auth';
 import {
   ContentPathError,
   addAtPath,
-  getServerContent,
   parseContentPath,
   removeAtPath,
   setAtPath,
@@ -21,7 +21,7 @@ async function readBody(request: NextRequest): Promise<Record<string, unknown>> 
 
 // Get all site content
 export async function GET() {
-  const content = await getServerContent();
+  const content = await getVisibleContent();
   if (!content) {
     return NextResponse.json(
       { success: false, error: 'Content not available' },
