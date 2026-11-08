@@ -11,7 +11,7 @@ type FooterProps = {
 }
 
 export default function Footer({children}: FooterProps) {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     // Fallback to defaults if CMS content not available
     const footerData = content?.footer || {

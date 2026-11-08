@@ -48,15 +48,6 @@ export default function EditableArticle({
         window.location.href = `/news/${article.id}`;
     };
 
-    const formatDate = (dateString: string): string => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-    };
-
     const getCategoryColor = (category: string): string => {
         switch (category) {
             case 'Competition': return '#4285f4';

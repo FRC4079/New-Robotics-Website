@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './RichContentEditor.module.scss';
 import { useEditMode } from '@/contexts/EditModeContext';
-import EditableImage from './EditableImage';
 
 interface ContentBlock {
   type: 'text' | 'image';

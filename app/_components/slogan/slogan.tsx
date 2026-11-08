@@ -12,7 +12,7 @@ type SloganProps = {
 }
 
 export default function Slogan({ children, goalsPath = "homepage.goals" }: SloganProps) {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     const goals = content?.homepage?.goals;
     const displayTitle = goals?.title || "Our Goals";
