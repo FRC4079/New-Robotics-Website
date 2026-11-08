@@ -8,7 +8,7 @@ import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 
 export default function About() {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     
     const aboutData = content?.about || {
         hero: {

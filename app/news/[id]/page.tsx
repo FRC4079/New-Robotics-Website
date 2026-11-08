@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Navbar from '@/app/_components/navbar/navbar';
 import Footer from '@/app/_components/footer/footer';
@@ -10,7 +11,7 @@ import EditableText from '@/components/editable/EditableText';
 import EditableImage from '@/components/editable/EditableImage';
 import RichContentEditor from '@/components/editable/RichContentEditor';
 import { useEditMode } from '@/contexts/EditModeContext';
-import { getContentValue, getContentImageStyle } from '@/utils/contentHelpers';
+import { getContentValue } from '@/utils/contentHelpers';
 
 export default function ArticlePage() {
     const params = useParams();
@@ -37,8 +38,8 @@ export default function ArticlePage() {
                 <Navbar />
                 <div className={styles.notFound}>
                     <h1>Article Not Found</h1>
-                    <p>The article you're looking for doesn't exist.</p>
-                    <a href="/news">← Back to News</a>
+                    <p>The article you&apos;re looking for doesn&apos;t exist.</p>
+                    <Link href="/news">← Back to News</Link>
                 </div>
                 <Footer />
             </div>
@@ -139,7 +140,7 @@ export default function ArticlePage() {
                 <div className={styles.articleHeader}>
                     <div className={styles.headerContent}>
                         <div className={styles.breadcrumb}>
-                            <a href="/news">← Back to News</a>
+                            <Link href="/news">← Back to News</Link>
                         </div>
                         
                         <div 

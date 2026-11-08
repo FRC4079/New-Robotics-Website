@@ -25,7 +25,7 @@ export default function Stats({
     stats, 
     title 
 }: StatsProps): React.ReactElement {
-    const { content, loading } = useContent();
+    const { content } = useContent();
     const [animatedStats, setAnimatedStats] = React.useState<boolean>(false);
     
     // Use content from CMS or fallback to props or default values

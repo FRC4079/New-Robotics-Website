@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './login.module.scss';
 import logo from '@/public/logos/OARoboticsLogo_24-25.webp';
 
@@ -36,7 +37,7 @@ export default function AdminLogin() {
       } else {
         setError(data.error || 'Login failed');
       }
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setLoading(false);
@@ -103,9 +104,9 @@ export default function AdminLogin() {
         </form>
 
         <div className={styles.footer}>
-          <a href="/" className={styles.backLink}>
+          <Link href="/" className={styles.backLink}>
             ← Back to Website
-          </a>
+          </Link>
         </div>
       </div>
     </div>

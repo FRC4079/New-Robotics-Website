@@ -6,7 +6,7 @@ import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 
 export default function TeamsOverview() {
-  const { content, loading } = useContent();
+  const { content } = useContent();
   
   // Use CMS data or fallback to defaults
   const teams = content?.teamsOverview || [

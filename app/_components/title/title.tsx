@@ -32,7 +32,7 @@ export default function Title({
                               }: TitleProps): React.ReactElement {
     const [textToType, setTextToType] = React.useState<string>("");
     const [bgParallax, setBgParallax] = React.useState<number>(0);
-    const { content, updateContent } = useContent();
+    const { content } = useContent();
     const { isEditMode, addPendingChange } = useEditMode();
     const fileInputRef = React.useRef<HTMLInputElement>(null);
 
