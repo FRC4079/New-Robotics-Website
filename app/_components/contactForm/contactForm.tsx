@@ -32,6 +32,9 @@ export default function ContactForm({
 
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isSubmitted, setIsSubmitted] = React.useState(false);
+    const [submitError, setSubmitError] = React.useState<string | null>(null);
+    // Hidden from people; bots tend to fill every field they find.
+    const [honeypot, setHoneypot] = React.useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -44,13 +47,22 @@ export default function ContactForm({
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setSubmitError(null);
 
-        // Simulate form submission
-        setTimeout(() => {
-            console.log('Form submitted:', formData);
-            setIsSubmitting(false);
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...formData, website: honeypot }),
+            });
+            const result = await response.json().catch(() => null);
+            if (!response.ok || !result?.success) {
+                setSubmitError(result?.error || 'Your message could not be sent. Please try again.');
+                return;
+            }
+
             setIsSubmitted(true);
-            
+
             // Reset form after successful submission
             setTimeout(() => {
                 setIsSubmitted(false);
@@ -62,7 +74,11 @@ export default function ContactForm({
                     formType: 'general'
                 });
             }, 3000);
-        }, 2000);
+        } catch {
+            setSubmitError('Your message could not be sent. Please check your connection and try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const formTypes = [
@@ -166,6 +182,23 @@ export default function ContactForm({
                             placeholder="Tell us more about your inquiry..."
                         ></textarea>
                     </div>
+
+                    <div className={styles.honeypot} aria-hidden="true">
+                        <label htmlFor="website">Leave this field empty</label>
+                        <input
+                            type="text"
+                            id="website"
+                            name="website"
+                            tabIndex={-1}
+                            autoComplete="off"
+                            value={honeypot}
+                            onChange={(e) => setHoneypot(e.target.value)}
+                        />
+                    </div>
+
+                    {submitError && (
+                        <p className={styles.errorMessage} role="alert">{submitError}</p>
+                    )}
 
                     <div className={styles.formActions}>
                         <button 
