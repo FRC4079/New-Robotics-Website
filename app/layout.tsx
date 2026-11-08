@@ -6,6 +6,11 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { EditModeProvider } from '@/contexts/EditModeContext';
 import { ContentProvider } from '@/contexts/ContentContext';
 import EditToolbar from '@/components/editable/EditToolbar';
+import { getServerContent } from '@/utils/contentStore';
+
+// Content is edited at runtime, so pages must be rendered per request
+// instead of being frozen at build time.
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
     title: 'OA Robotics Website',
@@ -17,11 +22,13 @@ export const metadata: Metadata = {
     },
 }
 
-export default function RootLayout({children}: { children: React.ReactNode }): React.ReactElement {
+export default async function RootLayout({children}: { children: React.ReactNode }): Promise<React.ReactElement> {
+    const content = await getServerContent();
+
     return (
         <html lang="en">
         <body>
-            <ContentProvider>
+            <ContentProvider initialContent={content}>
                 <AuthProvider>
                     <EditModeProvider>
                         <EditToolbar />
