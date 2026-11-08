@@ -82,17 +82,16 @@ This website serves as the digital platform for Oxford Academy Robotics, providi
 │   │   └── media/                # Media management
 │   ├── api/                      # API routes
 │   │   ├── auth/                 # Authentication endpoints
+│   │   ├── contact/              # Contact form submissions
 │   │   ├── content/              # Content CRUD operations
-│   │   ├── login/                # Login handling
-│   │   ├── logout/               # Logout handling
 │   │   └── media/                # Media upload/management
 │   ├── contact/                  # Contact page
 │   ├── frc/                      # FRC team page
 │   ├── ftc/                      # FTC team page
-│   ├── login/                    # Public login page
 │   ├── news/                     # News section page
 │   ├── sponsors/                 # Sponsors page
 │   ├── team/                     # Team information page
+│   ├── uploads/                  # Serves files uploaded through the CMS
 │   ├── vex/                      # VEX team page
 │   ├── layout.tsx                # Root layout with providers
 │   ├── page.tsx                  # Homepage
@@ -106,6 +105,8 @@ This website serves as the digital platform for Oxford Academy Robotics, providi
 ├── content/                      # Content storage
 │   └── site-content.json         # All site content data
 ├── contexts/                     # React contexts
+│   ├── AuthContext.tsx           # Admin session state
+│   ├── ContentContext.tsx        # Site content state
 │   └── EditModeContext.tsx       # Edit mode state management
 ├── hooks/                        # Custom React hooks
 │   ├── useAuth.ts                # Authentication hook
@@ -115,11 +116,15 @@ This website serves as the digital platform for Oxford Academy Robotics, providi
 │   ├── logos/                    # Team and sponsor logos
 │   └── handmade/                 # Custom graphics
 ├── utils/                        # Utility functions
-│   ├── content.ts                # Content management utilities
+│   ├── auth.ts                   # Signed admin sessions (server only)
+│   ├── content.ts                # Content types
+│   ├── contentStore.ts           # Reads and writes the content file (server only)
 │   ├── globalFonts.ts            # Font configurations
+│   ├── media.ts                  # Upload paths and safety checks (server only)
+│   ├── rateLimit.ts              # Limits repeated attempts (server only)
 │   ├── sponsors.ts               # Sponsor data utilities
 │   └── styleHelpers.ts           # CSS helper functions
-├── middleware.ts                 # Next.js middleware
+├── proxy.ts                      # Protects /admin routes
 ├── next.config.ts                # Next.js configuration
 ├── tsconfig.json                 # TypeScript configuration
 ├── eslint.config.mjs             # ESLint configuration
@@ -130,7 +135,7 @@ This website serves as the digital platform for Oxford Academy Robotics, providi
 
 ### Prerequisites
 
-- Node.js 18.x or higher
+- Node.js 20.9 or higher (22 recommended)
 - npm 10.x or higher
 - Git
 
@@ -145,6 +150,8 @@ cd New-Robotics-Website-Redesign
 
 # Install dependencies
 npm install
+
+# Create .env.local with the admin login (see Environment Variables)
 
 # Start development server
 npm run dev
@@ -166,11 +173,11 @@ npm start
 
 ### Accessing Edit Mode
 
-1. Navigate to `/admin/login` or `/login`
+1. Navigate to `/admin/login`
 2. Authenticate with admin credentials
 3. Click "Enable Edit Mode" in the toolbar
 4. Edit content directly on any page
-5. Changes are automatically saved to `content/site-content.json`
+5. Changes are saved to the content file (`content/site-content.json` by default, or `CONTENT_FILE`)
 
 ### Editing Content
 
@@ -221,15 +228,10 @@ All content is stored in `content/site-content.json` with the following structur
 
 ## Deployment
 
-### Vercel (Recommended)
-
-```bash
-# Install Vercel CLI
-npm install -g vercel
-
-# Deploy to Vercel
-vercel
-```
+The CMS stores edited content, uploaded images and contact messages on the
+server's filesystem, so the site needs a host with persistent storage. Docker
+with a volume is the supported setup. Serverless hosts such as Vercel have a
+read-only filesystem, so editing would not work there.
 
 ### Docker
 
@@ -237,16 +239,45 @@ vercel
 # Build Docker image
 docker build -t oa-robotics-website .
 
-# Run container
-docker run -p 3000:3000 oa-robotics-website
+# Run container, keeping all site data in a named volume
+docker run -d -p 3000:3000 \
+  -v oa-robotics-data:/app/data \
+  -e ADMIN_USERNAME=admin \
+  -e ADMIN_PASSWORD='change-me' \
+  -e SESSION_SECRET="$(openssl rand -hex 32)" \
+  oa-robotics-website
 ```
+
+Everything written at runtime lives in `/app/data`, so mount a volume there to
+keep it across redeploys. The content file is created from the bundled
+`content/site-content.json` the first time it is needed. The image runs as a
+non-root user and ships only the built standalone server.
+
+The session cookie is marked `Secure` in production, so serve the site over
+HTTPS (a reverse proxy is fine). Plain `http://localhost` also works.
 
 ### Environment Variables
 
-Create a `.env.local` file for local development:
+Set these in `.env.local` for development, or on the container in production.
 
-```env
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+| Variable | Required | Description |
+| --- | --- | --- |
+| `ADMIN_USERNAME` | Yes | Username for `/admin/login` |
+| `ADMIN_PASSWORD` | Yes | Password for `/admin/login` |
+| `SESSION_SECRET` | Yes | Signs admin sessions. Use at least 32 random characters, for example `openssl rand -hex 32`. Changing it signs everyone out |
+| `CONTENT_FILE` | No | Where the edited content is stored. Defaults to `content/site-content.json`; the Docker image uses `/app/data/site-content.json` |
+| `UPLOAD_DIR` | No | Where uploaded images are stored and served from at `/uploads`. Defaults to `data/uploads` |
+| `MEDIA_BACKUP_DIR` | No | Where replaced and deleted uploads are copied. Defaults to `data/media-backups` |
+| `CONTACT_FILE` | No | Contact form messages are appended here as JSON lines. Defaults to `data/contact-messages.jsonl` |
+| `CONTACT_WEBHOOK_URL` | No | If set, each contact message is also posted to this URL (works with Slack and Discord webhooks, Zapier and similar) |
+
+### Scripts
+
+```bash
+npm run dev     # development server
+npm run build   # production build
+npm start       # run the production build
+npm run lint    # ESLint
 ```
 
 ## Browser Support
@@ -258,11 +289,10 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ## Performance Optimizations
 
-- Server-side rendering with Next.js App Router
-- Image optimization with Next.js Image component
+- Server-side rendering with Next.js App Router; pages are rendered with the current CMS content
+- Standalone production build with a small Docker image
 - Code splitting and lazy loading
 - CSS modules for optimized stylesheets
-- Static asset caching
 
 ## Contributing
 
@@ -295,7 +325,7 @@ Contributions are welcome! Please follow these guidelines:
 - Clear cookies and re-authenticate
 
 **Content not saving:**
-- Verify `content/site-content.json` has write permissions
+- Verify the content file (`CONTENT_FILE`, or `content/site-content.json` by default) has write permissions
 - Check API routes are functioning
 - Review browser console for errors
 
