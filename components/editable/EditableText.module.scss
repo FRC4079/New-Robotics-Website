@@ -1,69 +1,47 @@
+// Edit-mode affordances. Outlines are always faintly visible so touch
+// screens, which have no hover, can still tell what is editable.
+
 .editable {
   position: relative;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    outline: 2px dashed rgba(59, 130, 246, 0.5);
-    outline-offset: 4px;
+  cursor: text;
+  outline: 1px dashed rgba(255, 107, 115, 0.35);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+  transition: outline-color var(--dur) var(--ease), background var(--dur) var(--ease);
+
+  &:hover,
+  &:focus-visible {
+    outline: 2px dashed var(--accent-text);
+    background: rgba(255, 107, 115, 0.06);
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 12px;
-    height: 12px;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    pointer-events: none;
-    background: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  &:hover::after {
-    opacity: 1;
-  }
-
-  // Placeholder styling - only show when empty and in edit mode
+  // Placeholder, only shown while empty and in edit mode.
   &:empty[data-placeholder]::before {
     content: attr(data-placeholder);
-    color: #9ca3af;
+    color: var(--text-subtle);
     font-style: italic;
-    opacity: 0.6;
     pointer-events: none;
   }
 }
 
 .editing {
-  outline: 2px solid #3b82f6 !important;
+  outline: 2px solid var(--accent-text);
   outline-offset: 4px;
-  background: rgba(59, 130, 246, 0.05);
-  cursor: text;
-
-  &::after {
-    content: '';
-    opacity: 1;
-    background: #3b82f6;
-    color: white;
-  }
+  background: rgba(255, 107, 115, 0.08);
 }
 
-.hasChanges {
-  &::before {
-    content: '';
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    width: 8px;
-    height: 8px;
-    background: #f59e0b;
-    border-radius: 50%;
-    box-shadow: 0 0 0 2px white;
-  }
+// Small marker on text that has unsaved changes.
+.hasChanges::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--warning);
+  box-shadow: 0 0 0 2px var(--bg);
+  pointer-events: none;
 }
 
 .editableTextWrapper {
@@ -72,28 +50,23 @@
 }
 
 .styleButton {
-  position: fixed; // Changed from absolute since it's in a portal
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 2px solid white;
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
+  position: fixed; // rendered through a portal
+  width: 2.75rem;
+  height: 2.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
-  z-index: 10001; // Higher than StyleEditor to appear on top
+  border: 2px solid var(--text);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 10001; // above the style editor
   pointer-events: auto;
-  transition: none !important; // Completely disable all transitions
-  transform: none !important;  // No transforms by default
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6);
-  }
-
-  &:active {
-    opacity: 0.8;
+    background: var(--accent-hover);
   }
 }

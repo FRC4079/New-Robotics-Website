@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface EditModeContextType {
@@ -13,6 +13,9 @@ interface EditModeContextType {
   addPendingChange: (path: string, value: any) => void;
   clearPendingChanges: () => void;
   savePendingChanges: () => Promise<boolean>;
+  /** A short message shown in the edit bar, instead of a browser dialog. */
+  notice: string | null;
+  notify: (message: string) => void;
 }
 
 const EditModeContext = createContext<EditModeContextType | undefined>(undefined);
@@ -23,6 +26,15 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
   // Editing is only possible while signed in, so logging out also ends edit mode.
   const isEditMode = editRequested && isAuthenticated && canEditAny;
   const [pendingChanges, setPendingChanges] = useState<Map<string, any>>(new Map());
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const notify = useCallback((message: string) => setNotice(message), []);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(null), 6000);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
 
   const enableEditMode = useCallback(() => {
     setIsEditMode(true);
@@ -97,6 +109,8 @@ export function EditModeProvider({ children }: { children: React.ReactNode }) {
         addPendingChange,
         clearPendingChanges,
         savePendingChanges,
+        notice,
+        notify,
       }}
     >
       {children}

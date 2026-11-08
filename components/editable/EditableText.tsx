@@ -300,6 +300,7 @@ export default function EditableText({
           className={styles.styleButton}
           onClick={handleStyleButtonClick}
           title="Edit styles"
+          aria-label="Edit text styles"
           style={{
             position: 'fixed',
             left: `${buttonPosition.x}px`,
@@ -309,7 +310,7 @@ export default function EditableText({
             transform: 'none'     // No transform by default
           }}
         >
-          <Icon name="palette" size={14} />
+          <Icon name="palette" size={18} />
         </button>,
         document.body
       )}

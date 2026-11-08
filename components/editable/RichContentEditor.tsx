@@ -26,7 +26,7 @@ export default function RichContentEditor({
   onChange,
   className = '',
 }: RichContentEditorProps) {
-  const { isEditMode, addPendingChange } = useEditMode();
+  const { isEditMode, addPendingChange, notify } = useEditMode();
   const [blocks, setBlocks] = useState<ContentBlock[]>(() => parseContent(content));
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -148,7 +148,7 @@ export default function RichContentEditor({
         addPendingChange(path, serialized);
       } catch (error) {
         console.error('Error uploading image:', error);
-        alert('Failed to upload image');
+        notify('Could not upload the image.');
       }
     };
   };

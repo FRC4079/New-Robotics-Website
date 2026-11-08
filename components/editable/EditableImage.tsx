@@ -39,7 +39,7 @@ export default function EditableImage({
   style: initialStyle,
   onStyleChange,
 }: EditableImageProps) {
-  const { isEditMode: editModeOn, canEdit, addPendingChange, pendingChanges } = useEditMode();
+  const { isEditMode: editModeOn, canEdit, addPendingChange, pendingChanges, notify } = useEditMode();
   const isEditMode = editModeOn && canEdit(path);
   const { content } = useContent();
   const [localSrc, setLocalSrc] = useState(src);
@@ -140,13 +140,13 @@ export default function EditableImage({
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+      notify('Please choose an image file.');
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB');
+      notify('That image is over 5 MB. Please choose a smaller one.');
       return;
     }
 
@@ -185,7 +185,7 @@ export default function EditableImage({
       onChange?.(newSrc);
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Failed to upload image. Please try again.');
+      notify(error instanceof Error ? error.message : 'Could not upload the image. Please try again.');
     } finally {
       setIsUploading(false);
     }

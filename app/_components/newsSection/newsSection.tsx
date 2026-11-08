@@ -66,11 +66,10 @@ export default function NewsSection({
     };
 
     const handleDeleteArticle = (index: number) => {
-        if (confirm('Are you sure you want to delete this article?')) {
-            const updatedArticles = localArticles.filter((_, i) => i !== index);
-            setLocalArticles(updatedArticles);
-            addPendingChange('news.articles', updatedArticles);
-        }
+        // Nothing is removed until Save, and Discard in the edit bar undoes it.
+        const updatedArticles = localArticles.filter((_, i) => i !== index);
+        setLocalArticles(updatedArticles);
+        addPendingChange('news.articles', updatedArticles);
     };
 
     return (

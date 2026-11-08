@@ -8,7 +8,7 @@ interface MediaInserterProps {
 }
 
 export default function MediaInserter({ onInsert }: MediaInserterProps) {
-  const { isEditMode } = useEditMode();
+  const { isEditMode, notify } = useEditMode();
   const [isOpen, setIsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,7 +37,7 @@ export default function MediaInserter({ onInsert }: MediaInserterProps) {
       setIsOpen(false);
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Failed to upload image');
+      notify('Could not upload the image.');
     } finally {
       setUploading(false);
     }
