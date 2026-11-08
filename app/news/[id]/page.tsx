@@ -23,15 +23,6 @@ export default function ArticlePage() {
     const articleIndex = articles.findIndex((a: any) => a.id === articleId);
     const article = articles[articleIndex];
 
-    // Debug logging
-    React.useEffect(() => {
-        if (article) {
-            console.log('Article data:', article);
-            console.log('Article content:', article.content);
-            console.log('Content value:', getContentValue(article?.content));
-        }
-    }, [article]);
-
     if (!article && !isEditMode) {
         return (
             <div className={styles.articlePage}>
