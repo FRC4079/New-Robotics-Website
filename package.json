@@ -10,17 +10,17 @@
     "ncu": "npx npm-check-updates -u && npm install --force"
   },
   "dependencies": {
-    "next": "16.4.3",
+    "next": "16.4.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "sass": "^1.107.0"
+    "sass": "^1.108.0"
   },
   "devDependencies": {
     "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^10",
-    "eslint-config-next": "16.4.3",
+    "eslint-config-next": "16.4.5",
     "typescript": "~5.9.3"
   },
   "overrides": {
