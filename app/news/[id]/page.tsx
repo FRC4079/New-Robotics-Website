@@ -8,10 +8,15 @@ import { useContent } from '@/hooks/useContent';
 import { formatArticleDate } from '@/utils/formatDate';
 import styles from './articlePage.module.scss';
 import EditableText from '@/components/editable/EditableText';
-import EditableImage from '@/components/editable/EditableImage';
 import RichContentEditor from '@/components/editable/RichContentEditor';
+import StyleEditor from '@/components/editable/StyleEditor';
+import MediaAsset from '@/components/media/MediaAsset';
+import MediaPickerModal from '@/components/media/MediaPickerModal';
+import Icon from '@/components/icons/Icon';
+import { useBannerControls } from '@/components/editable/useBannerControls';
 import { useEditMode } from '@/contexts/EditModeContext';
 import { getContentValue } from '@/utils/contentHelpers';
+import { createPortal } from 'react-dom';
 
 export default function ArticlePage() {
     const params = useParams();
@@ -22,6 +27,34 @@ export default function ArticlePage() {
     const articles = content?.news?.articles || [];
     const articleIndex = articles.findIndex((a) => a.id === articleId);
     const article = articles[articleIndex];
+
+    const articlePath = articleIndex >= 0 ? `news.articles[${articleIndex}]` : 'news.articles[0]';
+    const articleImagePath = `${articlePath}.image`;
+
+    const {
+        isEditMode: canEditBanner,
+        containerRef,
+        bannerSrc,
+        bannerStyle,
+        position,
+        isRepositioning,
+        setIsRepositioning,
+        isDragging,
+        showMediaPicker,
+        setShowMediaPicker,
+        showStyleEditor,
+        setShowStyleEditor,
+        styleEditorPos,
+        openStyleEditorFrom,
+        updateBannerStyle,
+        updateBannerMedia,
+        resetPosition,
+        dragHandlers,
+    } = useBannerControls({
+        content,
+        bannerPath: articleImagePath,
+        fallbackSrc: '/images/PlaceholderBanner.jpg',
+    });
 
     if (!article && !isEditMode) {
         return (
@@ -37,77 +70,84 @@ export default function ArticlePage() {
         );
     }
 
-    const articlePath = `news.articles[${articleIndex}]`;
-    
-    // Get article image and style for banner
-    const articleImagePath = `${articlePath}.image`;
-    let articleImageSrc = '/images/PlaceholderBanner.jpg';
-    let articleImageStyle: { objectPosition?: string; objectFit?: string } = {};
-    
-    if (article?.image) {
-        const imageValue = article.image as unknown;
-        if (typeof imageValue === 'string') {
-            articleImageSrc = imageValue;
-        } else if (typeof imageValue === 'object' && imageValue !== null) {
-            const object = imageValue as { src?: string; value?: string; style?: typeof articleImageStyle };
-            articleImageSrc = object.src || object.value || '/images/PlaceholderBanner.jpg';
-            articleImageStyle = object.style || {};
-        }
-    }
-
-    // Map image styles to CSS background properties
-    let backgroundPosition = 'center center';
-    if (articleImageStyle.objectPosition) {
-        backgroundPosition = articleImageStyle.objectPosition;
-    }
-
-    let backgroundSize = 'cover';
-    if (articleImageStyle.objectFit) {
-        switch (articleImageStyle.objectFit) {
-            case 'contain':
-                backgroundSize = 'contain';
-                break;
-            case 'fill':
-                backgroundSize = '100% 100%';
-                break;
-            case 'none':
-                backgroundSize = 'auto';
-                break;
-            case 'scale-down':
-                backgroundSize = 'contain';
-                break;
-            default:
-                backgroundSize = 'cover';
-        }
-    }
-
-    const bannerStyle: React.CSSProperties = {
-        backgroundImage: `url(${articleImageSrc})`,
-        backgroundPosition: backgroundPosition,
-        backgroundSize: backgroundSize,
-        backgroundRepeat: 'no-repeat',
-    };
+    const hasArticleMedia = Boolean(article?.image || bannerSrc !== '/images/PlaceholderBanner.jpg');
 
     return (
         <div className={styles.articlePage}>
             <Navbar />
-            {article?.image && (
-                <div className={styles.articleBanner} style={bannerStyle}>
-                    {isEditMode && (
-                        <div className={styles.bannerControls}>
-                            <EditableImage
-                                src={articleImageSrc}
-                                alt="Article Banner"
-                                path={articleImagePath}
-                                width={120}
-                                height={80}
-                                className={styles.bannerPreview}
-                            />
-                            <span className={styles.bannerLabel}>Edit Banner</span>
+            {hasArticleMedia && (
+                <div
+                    ref={containerRef}
+                    className={`${styles.articleBanner} ${isRepositioning ? styles.repositioning : ''} ${isDragging ? styles.dragging : ''}`}
+                    {...dragHandlers}
+                >
+                    <span data-banner-media-wrapper="true" style={{ display: 'contents' }}>
+                        <MediaAsset
+                            src={bannerSrc}
+                            alt=""
+                            className={styles.bannerMedia}
+                            style={{
+                                objectFit: bannerStyle.objectFit || 'cover',
+                                objectPosition: bannerStyle.objectPosition || 'center center',
+                            }}
+                        />
+                    </span>
+                    {canEditBanner && (
+                        <div className={styles.bannerControls} data-banner-control="true">
+                            {isRepositioning ? (
+                                <div className={styles.repositionBar}>
+                                    <span className={styles.repositionHint}>
+                                        <Icon name="move" size={14} />
+                                        Drag banner ({position.x}% {position.y}%)
+                                    </span>
+                                    <button type="button" className={styles.bannerBtn} onClick={resetPosition}>
+                                        Reset
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`${styles.bannerBtn} ${styles.bannerPrimaryBtn}`}
+                                        onClick={() => setIsRepositioning(false)}
+                                    >
+                                        <Icon name="check" size={14} /> Done
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <button type="button" className={styles.bannerBtn} onClick={() => setShowMediaPicker(true)}>
+                                        <Icon name="image" size={15} /> Change Banner
+                                    </button>
+                                    <button type="button" className={styles.bannerBtn} onClick={() => setIsRepositioning(true)}>
+                                        <Icon name="move" size={15} /> Reposition
+                                    </button>
+                                    <button type="button" className={styles.bannerBtn} onClick={(e) => openStyleEditorFrom(e.currentTarget)}>
+                                        <Icon name="palette" size={15} /> Style
+                                    </button>
+                                </>
+                            )}
                         </div>
                     )}
                     <div className={styles.bannerOverlay} />
                 </div>
+            )}
+            {showMediaPicker && (
+                <MediaPickerModal
+                    title="Choose Article Banner Media"
+                    initialUrl={bannerSrc}
+                    category="images"
+                    subcategory="articles"
+                    onSelect={updateBannerMedia}
+                    onClose={() => setShowMediaPicker(false)}
+                />
+            )}
+            {typeof document !== 'undefined' && showStyleEditor && createPortal(
+                <StyleEditor
+                    type="image"
+                    currentStyles={bannerStyle}
+                    onStyleChange={updateBannerStyle}
+                    onClose={() => setShowStyleEditor(false)}
+                    position={styleEditorPos}
+                />,
+                document.body
             )}
             <div className={styles.articleContainer}>
                 <div className={styles.articleHeader}>

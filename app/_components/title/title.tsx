@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
 import styles from "@/app/_components/title/title.module.scss";
-import {StaticImageData} from "next/image";
+import { StaticImageData } from "next/image";
 import bannerImg from "@/public/images/PlaceholderBanner.jpg";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
+import StyleEditor from "@/components/editable/StyleEditor";
+import MediaAsset from "@/components/media/MediaAsset";
+import MediaPickerModal from "@/components/media/MediaPickerModal";
+import Icon from "@/components/icons/Icon";
+import { useBannerControls } from "@/components/editable/useBannerControls";
 import { useContent } from "@/hooks/useContent";
-import { useEditMode } from "@/contexts/EditModeContext";
 import { readContentPath } from "@/utils/contentHelpers";
+import { createPortal } from "react-dom";
 
 type TitleProps = {
     children?: React.ReactNode;
@@ -19,137 +24,132 @@ type TitleProps = {
 }
 
 export default function Title({
-                                  children,
-                                  title,
-                                  description,
-                                  img1 = bannerImg,
-                                  img2,
-                                  heroPath = "homepage.hero"
-                              }: TitleProps): React.ReactElement {
-    const [uploadError, setUploadError] = React.useState<string>("");
+    children,
+    title,
+    description,
+    img1 = bannerImg,
+    img2,
+    heroPath = "homepage.hero"
+}: TitleProps): React.ReactElement {
     const { content } = useContent();
-    const { isEditMode: editModeOn, canEdit, addPendingChange } = useEditMode();
-    const isEditMode = editModeOn && canEdit(`${heroPath}.bannerImage`);
-    const fileInputRef = React.useRef<HTMLInputElement>(null);
 
     // Overlay design image: the saved one wins over the default.
     const savedOverlay = readContentPath(content, `${heroPath}.overlayImage`);
     const overlaySrc = typeof savedOverlay === 'string' && savedOverlay ? savedOverlay : img2?.src;
 
-    // Get the banner image from content or use default
     const bannerPath = `${heroPath}.bannerImage`;
-    const bannerValue = readContentPath(content, bannerPath);
-    
-    // Extract src and style from bannerValue
-    let bannerSrc = img1.src;
-    let bannerStyle: { objectPosition?: string; objectFit?: string } = {};
-    
-    if (bannerValue) {
-        if (typeof bannerValue === 'string') {
-            bannerSrc = bannerValue;
-        } else if (typeof bannerValue === 'object') {
-            const object = bannerValue as { src?: string; style?: typeof bannerStyle };
-            bannerSrc = object.src || img1.src;
-            bannerStyle = object.style || {};
-        }
-    }
+    const {
+        isEditMode,
+        containerRef,
+        bannerSrc,
+        bannerStyle,
+        position,
+        isRepositioning,
+        setIsRepositioning,
+        isDragging,
+        showMediaPicker,
+        setShowMediaPicker,
+        showStyleEditor,
+        setShowStyleEditor,
+        styleEditorPos,
+        openStyleEditorFrom,
+        updateBannerStyle,
+        updateBannerMedia,
+        resetPosition,
+        dragHandlers,
+    } = useBannerControls({
+        content,
+        bannerPath,
+        fallbackSrc: img1.src,
+    });
 
-    // Saved crop position (objectPosition) maps onto the CSS background position.
-    const backgroundPosition: string = bannerStyle.objectPosition || "center";
-
-    const backgroundSizes: Record<string, string> = {
-        contain: "contain",
-        "scale-down": "contain",
-        fill: "100% 100%",
-        none: "auto",
-    };
-    const backgroundSize: string = backgroundSizes[bannerStyle.objectFit as string] ?? "cover";
-
-    const styleBanner: React.CSSProperties = {
-        backgroundImage: `url(${bannerSrc})`,
-        backgroundPosition,
-        backgroundSize,
-    };
-
-    const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setUploadError("");
-        try {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('category', 'images');
-            formData.append('subcategory', 'banners');
-
-            const response = await fetch('/api/media', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) throw new Error('Upload failed');
-
-            const data = await response.json();
-            
-            // Update the banner image in content
-            addPendingChange(bannerPath, { src: data.filePath });
-        } catch (error) {
-            console.error('Error uploading banner:', error);
-            setUploadError('Banner upload failed. Please try again.');
-        }
+    const mediaStyle: React.CSSProperties = {
+        objectFit: bannerStyle.objectFit || "cover",
+        objectPosition: bannerStyle.objectPosition || "center center",
     };
 
     return (
-        <div className={styles.top} style={styleBanner}>
-            <div className={styles.overlay}>
-                {isEditMode && (
-                    <div className={styles.bannerEditor}>
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/*"
-                            onChange={handleBannerUpload}
-                            className={styles.hiddenInput}
-                            hidden
-                        />
-                        <button
-                            className={styles.bannerEditButton}
-                            onClick={() => fileInputRef.current?.click()}
-                            title="Change Banner Image"
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <polyline points="21 15 16 10 5 21"/>
-                            </svg>
-                            <span>Change Banner</span>
-                        </button>
-                        
-                        {uploadError && <p className={styles.uploadError} role="alert">{uploadError}</p>}
+        <div
+            ref={containerRef}
+            className={`${styles.top} ${isRepositioning ? styles.repositioning : ""} ${isDragging ? styles.dragging : ""}`}
+            {...dragHandlers}
+        >
+            <div className={styles.mediaLayer} aria-hidden="true">
+                <span data-banner-media-wrapper="true" style={{ display: 'contents' }}>
+                    <MediaAsset
+                        src={bannerSrc}
+                        alt=""
+                        className={styles.mediaBackground}
+                        style={mediaStyle}
+                    />
+                </span>
+            </div>
 
-                        {/* Small preview for style editing */}
-                        <div className={styles.bannerPreview}>
-                            <EditableImage
-                                src={bannerSrc}
-                                alt="Banner Background"
-                                path={bannerPath}
-                                width={80}
-                                height={50}
-                                className={styles.previewImage}
-                            />
-                            <span className={styles.previewLabel}>Edit Style</span>
-                        </div>
+            <div className={`${styles.overlay} ${isRepositioning ? styles.overlayDimmed : ""}`}>
+                {isEditMode && (
+                    <div className={styles.bannerEditor} data-banner-control="true">
+                        {isRepositioning ? (
+                            <div className={styles.repositionBar}>
+                                <span className={styles.repositionHint}>
+                                    <Icon name="move" size={14} />
+                                    Drag banner image to position ({position.x}% {position.y}%)
+                                </span>
+                                <button
+                                    type="button"
+                                    className={styles.bannerEditButton}
+                                    onClick={resetPosition}
+                                >
+                                    Reset
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`${styles.bannerEditButton} ${styles.bannerPrimaryButton}`}
+                                    onClick={() => setIsRepositioning(false)}
+                                >
+                                    <Icon name="check" size={14} /> Done
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <button
+                                    type="button"
+                                    className={styles.bannerEditButton}
+                                    onClick={() => setShowMediaPicker(true)}
+                                    title="Change banner image, GIF, or video"
+                                >
+                                    <Icon name="image" size={16} />
+                                    <span>Change Banner</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className={styles.bannerEditButton}
+                                    onClick={() => setIsRepositioning(true)}
+                                    title="Drag background up or down to reposition"
+                                >
+                                    <Icon name="move" size={16} />
+                                    <span>Reposition</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    className={styles.bannerEditButton}
+                                    onClick={(e) => openStyleEditorFrom(e.currentTarget)}
+                                    title="Edit banner style properties"
+                                >
+                                    <Icon name="palette" size={16} />
+                                    <span>Style</span>
+                                </button>
+                            </>
+                        )}
                     </div>
                 )}
-                {
-                    img2 !== undefined &&
+                {img2 !== undefined && (
                     <EditableImage
                         src={overlaySrc ?? img2.src}
                         alt=""
                         path={`${heroPath}.overlayImage`}
                         className={styles.overlayImage}
                     />
-                }
+                )}
                 <EditableText
                     value={title || "OXFORD ACADEMY ROBOTICS"}
                     path={`${heroPath}.title`}
@@ -162,6 +162,28 @@ export default function Title({
                 />
                 {children && <div className={styles.extra}>{children}</div>}
             </div>
+
+            {showMediaPicker && (
+                <MediaPickerModal
+                    title="Choose Banner Image, GIF, or Video"
+                    initialUrl={bannerSrc}
+                    category="images"
+                    subcategory="banners"
+                    onSelect={updateBannerMedia}
+                    onClose={() => setShowMediaPicker(false)}
+                />
+            )}
+
+            {typeof document !== 'undefined' && showStyleEditor && createPortal(
+                <StyleEditor
+                    type="image"
+                    currentStyles={bannerStyle}
+                    onStyleChange={updateBannerStyle}
+                    onClose={() => setShowStyleEditor(false)}
+                    position={styleEditorPos}
+                />,
+                document.body
+            )}
         </div>
     );
 }
