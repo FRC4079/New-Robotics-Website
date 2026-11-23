@@ -6,6 +6,7 @@ import TeamOverviewSection from "@/app/_components/teamOverviewSection/teamOverv
 import RobotGallery from "@/app/_components/robotGallery/robotGallery";
 import TeamStructure from "@/app/_components/teamStructure/teamStructure";
 import CompetitionSchedule from "@/app/_components/competitionSchedule/competitionSchedule";
+import CustomSections from "@/components/sections/CustomSections";
 import { useContent } from "@/hooks/useContent";
 
 type TeamPageProps = {
@@ -33,6 +34,7 @@ export default function TeamPage({ teamKey, banner }: TeamPageProps): React.Reac
             bannerImage={banner}
             heroPath={`${base}.hero`}
         >
+            <CustomSections pageKey={teamKey} placement="after-hero" showAddButton={false} />
             {team.overview && <TeamOverviewSection {...team.overview} basePath={`${base}.overview`} />}
             {team.gallery && (
                 <RobotGallery title={team.gallery.title} robots={team.gallery.robots ?? []} basePath={`${base}.gallery`} />
@@ -43,6 +45,7 @@ export default function TeamPage({ teamKey, banner }: TeamPageProps): React.Reac
             {team.schedule && (
                 <CompetitionSchedule title={team.schedule.title} events={team.schedule.events ?? []} basePath={`${base}.schedule`} />
             )}
+            <CustomSections pageKey={teamKey} placement="before-footer" />
         </TeamPageLayout>
     );
 }

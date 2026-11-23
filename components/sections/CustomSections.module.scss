@@ -1,0 +1,509 @@
+@use '../../app/styles/mixins' as *;
+
+.section {
+  position: relative;
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+  background: var(--sec-bg, var(--bg));
+  color: var(--sec-text, var(--text-muted));
+
+  &.pad_compact {
+    padding-block: clamp(2rem, 4vw, 3.25rem);
+  }
+
+  &.pad_spacious {
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+
+  &.surface_raised {
+    background: var(--bg-raised);
+    border-block: 1px solid var(--border);
+  }
+
+  &.surface_accent_glow {
+    background:
+      radial-gradient(50rem 22rem at 50% 0%, rgba(224, 36, 47, 0.22), transparent 72%),
+      radial-gradient(40rem 18rem at 85% 100%, rgba(60, 80, 220, 0.14), transparent 70%),
+      var(--bg-raised);
+    border-block: 1px solid var(--border);
+  }
+}
+
+.inner {
+  @include container;
+
+  &.width_narrow {
+    width: min(100% - 2 * var(--gutter), 52rem);
+  }
+
+  &.width_wide {
+    width: min(100% - 2 * var(--gutter), 90rem);
+  }
+}
+
+.align_center {
+  text-align: center;
+
+  .header {
+    align-items: center;
+    margin-inline: auto;
+  }
+
+  .subtitle,
+  .body {
+    margin-inline: auto;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.eyebrow {
+  @include eyebrow;
+  color: var(--sec-accent, var(--accent-text));
+}
+
+.title {
+  @include section-title;
+  color: var(--sec-title, var(--text));
+  margin: 0;
+}
+
+.subtitle,
+.body {
+  @include lead;
+  color: var(--sec-text, var(--text-muted));
+  margin: 0;
+  white-space: pre-line;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.primaryBtn {
+  @include button-primary;
+  background: var(--sec-accent, var(--accent));
+
+  &:hover {
+    background: var(--sec-accent, var(--accent-hover));
+    filter: brightness(1.08);
+  }
+}
+
+.secondaryBtn {
+  @include button-outline;
+}
+
+// Split Text + Media
+.splitGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4.5rem);
+
+  @include bp-down(860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.splitMediaLeft {
+  .splitMediaWrap {
+    order: -1;
+  }
+}
+
+.splitText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.splitMediaWrap {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  background: var(--surface);
+
+  > div {
+    width: 100%;
+    display: block;
+  }
+
+  img,
+  video {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+}
+
+.mediaCaption {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+// Grids (Cards, Stats, Media Showcase)
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+
+  &.cols_2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  &.cols_4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  @include bp-down(960px) {
+    &.cols_4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @include bp-down(760px) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.card {
+  @include card;
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &.card_glass {
+    background: rgba(17, 20, 31, 0.72);
+    backdrop-filter: blur(10px);
+  }
+
+  &.card_minimal {
+    background: transparent;
+    border-color: var(--border);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: var(--text-xl);
+    color: var(--sec-title, var(--text));
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    color: var(--sec-text, var(--text-muted));
+  }
+}
+
+.cardIcon {
+  @include icon-tile(3rem);
+  color: var(--sec-accent, var(--accent-text));
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 3vw + 1rem, 3.2rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--sec-title, var(--text));
+}
+
+.cardLink {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--sec-accent, var(--accent-text));
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mediaCard {
+  @include card(0);
+  @include card-hover;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .mediaCardMedia {
+    aspect-ratio: 16 / 10;
+    background: var(--surface-2);
+    overflow: hidden;
+
+    > div {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    img,
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .mediaCardBody {
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    h3 {
+      margin: 0;
+      font-size: var(--text-lg);
+      color: var(--sec-title, var(--text));
+    }
+
+    p {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--sec-text, var(--text-muted));
+    }
+  }
+}
+
+// Edit-mode section bar & add-section prompt
+.sectionEditBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-strong);
+  background: rgba(11, 13, 22, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.sectionBadge {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.sectionControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.controlBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.15rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.controlDanger {
+  color: var(--danger);
+  border-color: rgba(248, 113, 113, 0.4);
+
+  &:hover:not(:disabled) {
+    border-color: var(--danger);
+    background: rgba(248, 113, 113, 0.12);
+  }
+}
+
+.addSectionWrap {
+  @include container;
+  padding-block: var(--space-4);
+  display: flex;
+  justify-content: center;
+}
+
+.addSectionBtn {
+  @include button-outline;
+  border-style: dashed;
+  background: rgba(17, 20, 31, 0.75);
+  color: var(--text);
+
+  &:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+// Modal for adding / styling sections
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10055;
+  background: rgba(5, 6, 12, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modal {
+  width: min(50rem, 100%);
+  max-height: min(88dvh, 48rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  color: var(--text);
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border);
+
+  h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+  }
+}
+
+.modalBody {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.templateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-3);
+}
+
+.templateCard {
+  @include card(var(--space-4));
+  @include card-hover;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+
+  strong {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+  }
+
+  span {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  @include bp-down(600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  input,
+  select,
+  textarea {
+    min-height: 2.5rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-raised);
+    color: var(--text);
+    font-size: var(--text-sm);
+
+    option {
+      background: var(--surface);
+      color: var(--text);
+    }
+  }
+}
+
+.itemRow {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--border);
+  background: var(--bg-raised);
+}

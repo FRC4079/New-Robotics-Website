@@ -10,6 +10,7 @@ import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 import EditableIcon from "@/components/icons/EditableIcon";
+import CustomSections from "@/components/sections/CustomSections";
 import { getContentValue } from "@/utils/contentHelpers";
 
 export default function Sponsor() {
@@ -192,6 +193,8 @@ export default function Sponsor() {
                 img1={img1}
                 heroPath="sponsors.banner"
             />
+            
+            <CustomSections pageKey="sponsors" placement="after-hero" showAddButton={false} />
             
             {/* Hero Section */}
             <section className={styles.heroSection}>
@@ -471,6 +474,8 @@ export default function Sponsor() {
                 </div>
             </section>
             
+            <CustomSections pageKey="sponsors" placement="before-footer" />
+
             <Footer/>
         </div>
     );

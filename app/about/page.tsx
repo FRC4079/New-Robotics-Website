@@ -7,6 +7,7 @@ import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableImage from "@/components/editable/EditableImage";
 import EditableIcon from "@/components/icons/EditableIcon";
+import CustomSections from "@/components/sections/CustomSections";
 import Link from "next/link";
 
 export default function About() {
@@ -75,6 +76,8 @@ export default function About() {
                     </div>
                 </div>
             </section>
+
+            <CustomSections pageKey="about" placement="after-hero" showAddButton={false} />
 
             {/* Mission Section */}
             <section className={styles.missionSection}>
@@ -230,6 +233,8 @@ export default function About() {
                     </div>
                 </div>
             </section>
+
+            <CustomSections pageKey="about" placement="before-footer" />
 
             <Footer/>
         </div>

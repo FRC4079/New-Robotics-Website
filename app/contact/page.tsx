@@ -9,6 +9,7 @@ import img1 from "@/public/images/robotics/contact_bg.jpg";
 import { useContent } from "@/hooks/useContent";
 import EditableText from "@/components/editable/EditableText";
 import EditableIcon from "@/components/icons/EditableIcon";
+import CustomSections from "@/components/sections/CustomSections";
 
 export default function Contact() {
     const { content } = useContent();
@@ -99,6 +100,8 @@ export default function Contact() {
                 img1={img1}
                 heroPath="contact.hero"
             />
+            
+            <CustomSections pageKey="contact" placement="after-hero" showAddButton={false} />
             
             {/* Contact Hero Section */}
             <section className={styles.contactHero}>
@@ -244,6 +247,8 @@ export default function Contact() {
                     </div>
                 </div>
             </section>
+
+            <CustomSections pageKey="contact" placement="before-footer" />
 
             <Footer />
         </div>

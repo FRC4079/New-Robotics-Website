@@ -5,6 +5,7 @@ import Navbar from "@/app/_components/navbar/navbar";
 import Footer from "@/app/_components/footer/footer";
 import Title from "@/app/_components/title/title";
 import TeamMembers from "@/app/_components/teamMembers/teamMembers";
+import CustomSections from "@/components/sections/CustomSections";
 import { getVisibleContent } from "@/utils/visibleContent";
 
 export const metadata: Metadata = {
@@ -23,10 +24,12 @@ export default async function Team(): Promise<React.ReactElement> {
                 description={hero?.subtitle ?? "Meet the talented students who make OA Robotics possible"}
                 heroPath="team.hero"
             />
+            <CustomSections pageKey="team" placement="after-hero" showAddButton={false} />
             <TeamMembers 
                 showFilter={true}
                 title="Team Members"
             />
+            <CustomSections pageKey="team" placement="before-footer" />
             <Footer />
         </div>
     );

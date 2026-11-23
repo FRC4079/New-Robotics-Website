@@ -21,15 +21,16 @@ export type PermissionArea = {
 };
 
 export const PERMISSION_AREAS: PermissionArea[] = [
-  { key: 'homepage', label: 'Homepage', description: 'Hero, about, stats, goals and team overview cards', prefixes: ['homepage', 'teamsOverview'] },
-  { key: 'about', label: 'About page', description: 'Mission, programs and impact', prefixes: ['about'] },
-  { key: 'contact', label: 'Contact page', description: 'Contact details and form text', prefixes: ['contact'] },
-  { key: 'frc', label: 'FRC page', description: 'Team 4079 page', prefixes: ['teams.frc'] },
-  { key: 'ftc', label: 'FTC page', description: 'FTC teams page', prefixes: ['teams.ftc'] },
-  { key: 'vex', label: 'VEX page', description: 'VEX teams page', prefixes: ['teams.vex'] },
-  { key: 'team', label: 'Team members', description: 'Team page hero and member profiles', prefixes: ['team', 'teamMembers'] },
-  { key: 'sponsors', label: 'Sponsors page', description: 'Sponsors, tiers and sponsorship info', prefixes: ['sponsors'] },
-  { key: 'news', label: 'News & newsletter', description: 'Create, edit and publish articles', prefixes: ['news'] },
+  { key: 'homepage', label: 'Homepage', description: 'Hero, about, stats, goals and team overview cards', prefixes: ['homepage', 'teamsOverview', 'pageSections.homepage'] },
+  { key: 'about', label: 'About page', description: 'Mission, programs and impact', prefixes: ['about', 'pageSections.about'] },
+  { key: 'contact', label: 'Contact page', description: 'Contact details and form text', prefixes: ['contact', 'pageSections.contact'] },
+  { key: 'frc', label: 'FRC page', description: 'Team 4079 page', prefixes: ['teams.frc', 'pageSections.frc'] },
+  { key: 'ftc', label: 'FTC page', description: 'FTC teams page', prefixes: ['teams.ftc', 'pageSections.ftc'] },
+  { key: 'vex', label: 'VEX page', description: 'VEX teams page', prefixes: ['teams.vex', 'pageSections.vex'] },
+  { key: 'team', label: 'Team members', description: 'Team page hero and member profiles', prefixes: ['team', 'teamMembers', 'pageSections.team'] },
+  { key: 'sponsors', label: 'Sponsors page', description: 'Sponsors, tiers and sponsorship info', prefixes: ['sponsors', 'pageSections.sponsors'] },
+  { key: 'news', label: 'News & newsletter', description: 'Create, edit and publish articles', prefixes: ['news', 'pageSections.news'] },
+  { key: 'pages', label: 'Pages & navigation', description: 'Create custom pages, manage navigation and add custom sections', prefixes: ['customPages', 'pageSections', 'navigation', 'footer.quickLinks'] },
   { key: 'animations', label: 'Website animations', description: 'Page reveal, hero entrance, card hover and speed', prefixes: ['site.animations'] },
   { key: 'footer', label: 'Footer & navigation', description: 'Footer links, socials and the menu', prefixes: ['footer', 'navigation'] },
 ];

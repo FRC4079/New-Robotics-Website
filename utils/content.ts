@@ -54,9 +54,80 @@ export interface TextStyle {
   animation?: ElementAnimationType;
 }
 
+export type CustomSectionType =
+  | 'text-media'
+  | 'cards'
+  | 'stats'
+  | 'media-showcase'
+  | 'cta'
+  | 'rich-text';
+
+export interface CustomSectionStyle {
+  surface?: 'default' | 'raised' | 'accent-glow' | 'custom';
+  customBackground?: string;
+  padding?: 'compact' | 'normal' | 'spacious';
+  maxWidth?: 'narrow' | 'standard' | 'wide';
+  textAlign?: 'left' | 'center';
+  mediaPosition?: 'left' | 'right';
+  columns?: 2 | 3 | 4;
+  cardStyle?: 'glass' | 'solid' | 'minimal';
+  accentColor?: string;
+  titleColor?: string;
+  textColor?: string;
+  animation?: 'inherit' | 'none' | 'fade' | 'fade-up' | 'slide-left' | 'slide-right' | 'zoom-in';
+}
+
+export interface CustomSectionItem {
+  id: string;
+  icon?: string;
+  value?: string;
+  title: string;
+  description: string;
+  media?: string;
+  linkLabel?: string;
+  linkHref?: string;
+}
+
+export interface CustomSection {
+  id: string;
+  type: CustomSectionType;
+  placement?: 'after-hero' | 'before-footer';
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  body?: string;
+  media?: string;
+  mediaAlt?: string;
+  mediaCaption?: string;
+  primaryButton?: { label: string; href: string };
+  secondaryButton?: { label: string; href: string };
+  items?: CustomSectionItem[];
+  style?: CustomSectionStyle;
+}
+
+export interface CustomPage {
+  slug: string;
+  title: string;
+  description?: string;
+  published?: boolean;
+  heroStyle?: 'banner' | 'minimal';
+  hero: {
+    title: string;
+    subtitle: string;
+    bannerImage?: string | { src: string; style?: ImageStyle };
+  };
+  theme?: {
+    accentColor?: string;
+    backgroundTint?: string;
+  };
+  sections: CustomSection[];
+}
+
 export interface SiteContent {
   /** Text and image styles for fields stored as plain values, keyed by dotted path. */
   _styles?: Record<string, TextStyle & ImageStyle>;
+  /** Extra sections added by admins to built-in pages, keyed by page name. */
+  pageSections?: Record<string, CustomSection[]>;
   site: {
     title: string;
     tagline: string;  
@@ -68,17 +139,7 @@ export interface SiteContent {
     organizationFullName?: string;
     animations?: SiteAnimationSettings;
   };
-  customPages?: {
-    [key: string]: {
-      title: string;
-      subtitle?: string;
-      content: string;
-      sections?: Array<{
-        title: string;
-        content: string;
-      }>;
-    };
-  };
+  customPages?: Record<string, CustomPage>;
   homepage: {
     hero: {
       title: string;

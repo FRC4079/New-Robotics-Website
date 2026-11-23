@@ -8,6 +8,7 @@ import AboutBrief from "@/app/_components/aboutbrief/aboutbrief";
 import Slogan from "@/app/_components/slogan/slogan";
 import Stats from "@/app/_components/stats/stats";
 import TeamsOverview from "@/app/_components/teamsOverview/teamsOverview";
+import CustomSections from "@/components/sections/CustomSections";
 import { getServerContent } from "@/utils/contentStore";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,6 +37,7 @@ export default async function Home(): Promise<React.ReactElement> {
                 img1={frontBannerImg}
                 img2={designImg}
             />
+            <CustomSections pageKey="homepage" placement="after-hero" showAddButton={false} />
             <AboutBrief
                 img={collage2Img}
                 description={content?.homepage?.aboutBrief?.description || "Oxford Academy Robotics is a student-run organization that competes in the FIRST Robotics Competition (FRC), FIRST Tech Challenge (FTC), and VEX Robotics Competition. Our mission is to inspire students to pursue careers in STEM fields by providing them with the opportunity to learn, compete, and thrive in a supportive environment."}
@@ -49,6 +51,8 @@ export default async function Home(): Promise<React.ReactElement> {
             <Slogan />
 
             <TeamsOverview />
+
+            <CustomSections pageKey="homepage" placement="before-footer" />
 
             {/* <Achievements 
                 title="Recent Achievements"

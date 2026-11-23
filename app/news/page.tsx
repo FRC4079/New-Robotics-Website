@@ -5,6 +5,7 @@ import Navbar from "@/app/_components/navbar/navbar";
 import Footer from "@/app/_components/footer/footer";
 import Title from "@/app/_components/title/title";
 import NewsSection from "@/app/_components/newsSection/newsSection";
+import CustomSections from "@/components/sections/CustomSections";
 import { useContent } from "@/hooks/useContent";
 
 export default function News(): React.ReactElement {
@@ -28,11 +29,13 @@ export default function News(): React.ReactElement {
                 description={newsData.hero.subtitle ?? newsData.hero.description}
                 heroPath="news.hero"
             />
+            <CustomSections pageKey="news" placement="after-hero" showAddButton={false} />
             <NewsSection 
                 articles={newsData.articles}
                 showAll={true}
                 title="All News Articles"
             />
+            <CustomSections pageKey="news" placement="before-footer" />
             <Footer />
         </div>
     );
