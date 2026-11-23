@@ -27,7 +27,7 @@ export const PERMISSION_AREAS: PermissionArea[] = [
   { key: 'frc', label: 'FRC page', description: 'Team 4079 page', prefixes: ['teams.frc'] },
   { key: 'ftc', label: 'FTC page', description: 'FTC teams page', prefixes: ['teams.ftc'] },
   { key: 'vex', label: 'VEX page', description: 'VEX teams page', prefixes: ['teams.vex'] },
-  { key: 'team', label: 'Team members', description: 'Member profiles', prefixes: ['teamMembers'] },
+  { key: 'team', label: 'Team members', description: 'Team page hero and member profiles', prefixes: ['team', 'teamMembers'] },
   { key: 'sponsors', label: 'Sponsors page', description: 'Sponsors, tiers and sponsorship info', prefixes: ['sponsors'] },
   { key: 'news', label: 'News & newsletter', description: 'Create, edit and publish articles', prefixes: ['news'] },
   { key: 'footer', label: 'Footer & navigation', description: 'Footer links, socials and the menu', prefixes: ['footer', 'navigation'] },

@@ -43,7 +43,15 @@ export default function EditableImage({
   const isEditMode = editModeOn && canEdit(path);
   const { content } = useContent();
   const [localSrc, setLocalSrc] = useState(src);
+  const [seenSrc, setSeenSrc] = useState(src);
+  if (src !== seenSrc) {
+    setSeenSrc(src);
+    if (!pendingChanges.has(path)) {
+      setLocalSrc(src);
+    }
+  }
   const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [showStyleEditor, setShowStyleEditor] = useState(false);
   const [styleEditorPosition, setStyleEditorPosition] = useState({ x: 0, y: 0 });
@@ -83,7 +91,9 @@ export default function EditableImage({
     if (incomingStyle) setLocalStyle(incomingStyle);
   }
 
-  const handleReplaceClick = () => {
+  const handleReplaceClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (isEditMode) {
       fileInputRef.current?.click();
     }
@@ -147,6 +157,7 @@ export default function EditableImage({
   };
 
   const handleStyleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (!showStyleEditor && imageRef.current) {
       const rect = imageRef.current.getBoundingClientRect();
@@ -205,6 +216,18 @@ export default function EditableImage({
         className={wrapperClassName}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+            setIsFocused(false);
+          }
+        }}
+        onClick={(e) => {
+          if (isEditMode) {
+            e.preventDefault();
+            setIsHovered((prev) => !prev);
+          }
+        }}
         data-path={path}
         data-editable="image"
       >
@@ -259,9 +282,10 @@ export default function EditableImage({
               hidden
             />
             
-            {(isHovered || isUploading) && (
+            {(isHovered || isFocused || isUploading) && (
               <div className={styles.overlay}>
                 <button
+                  type="button"
                   className={styles.replaceButton}
                   onClick={handleReplaceClick}
                   disabled={isUploading}
@@ -273,16 +297,17 @@ export default function EditableImage({
                     </>
                   ) : (
                     <>
-                      <Icon name="image" size={16} /> Replace Image
+                      <Icon name="image" size={14} /> Replace
                     </>
                   )}
                 </button>
                 <button
+                  type="button"
                   className={styles.styleButton}
                   onClick={handleStyleButtonClick}
                   title="Edit styles"
                 >
-                  <Icon name="palette" size={16} /> Style
+                  <Icon name="palette" size={14} /> Style
                 </button>
               </div>
             )}

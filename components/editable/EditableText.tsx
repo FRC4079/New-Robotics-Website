@@ -50,6 +50,7 @@ export default function EditableText({
   const mounted = typeof document !== 'undefined';
   const editRef = useRef<HTMLDivElement>(null);
   const isFirstFocusRef = useRef(false);
+  const cancelledRef = useRef(false);
 
   // The style button belongs to whichever text is hovered or being edited, so only one shows at a time.
   const showHover = () => {
@@ -150,17 +151,30 @@ export default function EditableText({
     }
   }, [isEditMode, buttonActive]);
 
-  const handleClick = () => {
-    if (isEditMode && !isEditing) {
-      isFirstFocusRef.current = true;
-      setIsEditing(true);
+  const handleClick = (e: React.MouseEvent) => {
+    if (isEditMode) {
+      // Prevent parent links (e.g. footer or CTA buttons) from navigating while editing.
+      e.preventDefault();
+      e.stopPropagation();
+      if (!isEditing) {
+        cancelledRef.current = false;
+        isFirstFocusRef.current = true;
+        setIsEditing(true);
+      }
     }
   };
 
   const handleBlur = () => {
     setIsEditing(false);
+    if (cancelledRef.current) {
+      cancelledRef.current = false;
+      if (editRef.current) {
+        editRef.current.textContent = localValue;
+      }
+      return;
+    }
     const currentText = editRef.current?.textContent || '';
-    if (currentText !== value) {
+    if (currentText !== localValue) {
       setLocalValue(currentText);
       addPendingChange(path, currentText);
       onChange?.(currentText);
@@ -178,7 +192,10 @@ export default function EditableText({
       editRef.current?.blur();
     }
     if (e.key === 'Escape') {
-      setLocalValue(value); // Revert changes
+      cancelledRef.current = true;
+      if (editRef.current) {
+        editRef.current.textContent = localValue;
+      }
       editRef.current?.blur();
     }
   };

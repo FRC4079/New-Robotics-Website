@@ -296,9 +296,11 @@ export default function NewsManager() {
               }}
             />
             {draft.image && (
-              <button type="button" className={ui.buttonQuiet} onClick={() => patch({ image: '' })}>
-                Remove image
-              </button>
+              <div style={{ marginTop: '0.5rem' }}>
+                <button type="button" className={ui.buttonQuiet} onClick={() => patch({ image: '' })}>
+                  Remove cover media
+                </button>
+              </div>
             )}
           </div>
 

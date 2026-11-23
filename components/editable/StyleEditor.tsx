@@ -30,6 +30,8 @@ export default function StyleEditor({
 }: StyleEditorProps) {
   const [localStyles, setLocalStyles] = useState(currentStyles);
   const [adjustedPosition, setAdjustedPosition] = useState(position);
+  const [dragOffset, setDragOffset] = useState<{ x: number; y: number } | null>(null);
+  const dragOriginRef = useRef<{ startX: number; startY: number; baseX: number; baseY: number } | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
   // Follow the styles passed in when they change (adjusting state while rendering).
@@ -39,8 +41,16 @@ export default function StyleEditor({
     setLocalStyles(currentStyles);
   }
 
-  // Adjust position to keep editor within viewport bounds
-  // Use useLayoutEffect for immediate measurement before paint
+  // Close on Escape so editors can dismiss the popover cleanly.
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  // Adjust position to keep editor within viewport bounds and clear of the bottom toolbar
   useLayoutEffect(() => {
     if (!editorRef.current) return;
 
@@ -48,38 +58,60 @@ export default function StyleEditor({
     const editorRect = editor.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
+    const bottomSafeMargin = 96; // Keep clear of EditToolbar
 
     let { x, y } = position;
 
-    // Ensure we have valid starting position
     if (x === 0 && y === 0) {
-      // Center it if no valid position was provided
       x = (viewportWidth - editorRect.width) / 2;
-      y = (viewportHeight - editorRect.height) / 2;
+      y = (viewportHeight - bottomSafeMargin - editorRect.height) / 2;
     }
 
-    // Check if editor goes off the right edge
-    if (x + editorRect.width > viewportWidth) {
-      x = viewportWidth - editorRect.width - 10; // 10px margin
+    if (x + editorRect.width > viewportWidth - 10) {
+      x = viewportWidth - editorRect.width - 10;
     }
 
-    // Check if editor goes off the left edge
     if (x < 10) {
       x = 10;
     }
 
-    // Check if editor goes off the bottom edge
-    if (y + editorRect.height > viewportHeight) {
-      y = viewportHeight - editorRect.height - 10; // 10px margin
+    if (y + editorRect.height > viewportHeight - bottomSafeMargin) {
+      y = viewportHeight - bottomSafeMargin - editorRect.height;
     }
 
-    // Check if editor goes off the top edge
     if (y < 10) {
       y = 10;
     }
 
     setAdjustedPosition({ x, y });
+    setDragOffset(null);
   }, [position]);
+
+  const activeX = dragOffset ? dragOffset.x : adjustedPosition.x;
+  const activeY = dragOffset ? dragOffset.y : adjustedPosition.y;
+
+  const handleHeaderPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragOriginRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      baseX: activeX,
+      baseY: activeY,
+    };
+  };
+
+  const handleHeaderPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragOriginRef.current || !editorRef.current) return;
+    const rect = editorRef.current.getBoundingClientRect();
+    const nextX = Math.max(8, Math.min(window.innerWidth - rect.width - 8, dragOriginRef.current.baseX + (e.clientX - dragOriginRef.current.startX)));
+    const nextY = Math.max(8, Math.min(window.innerHeight - rect.height - 8, dragOriginRef.current.baseY + (e.clientY - dragOriginRef.current.startY)));
+    setDragOffset({ x: nextX, y: nextY });
+  };
+
+  const handleHeaderPointerUp = () => {
+    dragOriginRef.current = null;
+  };
 
   const handleChange = (property: string, value: string) => {
     const updated = { ...localStyles, [property]: value };
@@ -98,14 +130,21 @@ export default function StyleEditor({
     <div 
       ref={editorRef}
       className={styles.styleEditor}
+      role="dialog"
+      aria-label="Style Properties"
       style={{ 
-        left: `${adjustedPosition.x}px`, 
-        top: `${adjustedPosition.y}px` 
+        left: `${activeX}px`, 
+        top: `${activeY}px` 
       }}
     >
-      <div className={styles.header}>
+      <div
+        className={styles.header}
+        onPointerDown={handleHeaderPointerDown}
+        onPointerMove={handleHeaderPointerMove}
+        onPointerUp={handleHeaderPointerUp}
+      >
         <h4>Style Properties</h4>
-        <button onClick={onClose} className={styles.closeBtn}>×</button>
+        <button type="button" onClick={onClose} className={styles.closeBtn} aria-label="Close style editor">×</button>
       </div>
 
       <div className={styles.content}>
@@ -121,13 +160,13 @@ export default function StyleEditor({
                   onChange={(e) => handleChange('color', e.target.value)}
                   placeholder="e.g., #ff0000, red, rgb(255,0,0)"
                 />
-                <input
-                  type="color"
-                  value={toPickerColor((localStyles as TextStyle).color)}
-                  onChange={(e) => handleChange('color', e.target.value)}
-                  style={{ width: '40px', marginLeft: '5px' }}
-                />
-                <button onClick={() => handleReset('color')} title="Reset">↺</button>
+                  <input
+                    type="color"
+                    value={toPickerColor((localStyles as TextStyle).color)}
+                    onChange={(e) => handleChange('color', e.target.value)}
+                    aria-label="Pick text color"
+                  />
+                  <button type="button" onClick={() => handleReset('color')} title="Reset">↺</button>
               </div>
             </div>
 
@@ -306,7 +345,7 @@ export default function StyleEditor({
                     <option value="75%">75%</option>
                     <option value="100%">100%</option>
                   </select>
-                  <span style={{ padding: '0 8px', color: '#666' }}>Horizontal</span>
+                  <span className={styles.subLabel}>Horizontal</span>
                 </div>
                 
                 {/* Vertical Position */}
@@ -333,7 +372,7 @@ export default function StyleEditor({
                     <option value="75%">75%</option>
                     <option value="100%">100%</option>
                   </select>
-                  <span style={{ padding: '0 8px', color: '#666' }}>Vertical</span>
+                  <span className={styles.subLabel}>Vertical</span>
                 </div>
                 
                 {/* Custom Input */}
@@ -344,7 +383,7 @@ export default function StyleEditor({
                     onChange={(e) => handleChange('objectPosition', e.target.value)}
                     placeholder="Custom: e.g., 50% 25%"
                   />
-                  <button onClick={() => handleReset('objectPosition')} title="Reset">↺</button>
+                  <button type="button" onClick={() => handleReset('objectPosition')} title="Reset">↺</button>
                 </div>
               </div>
             </div>
