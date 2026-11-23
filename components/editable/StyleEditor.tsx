@@ -250,7 +250,29 @@ export default function StyleEditor({
                   <option value="pre-line">Pre-line</option>
                   <option value="pre-wrap">Pre-wrap</option>
                 </select>
-                <button onClick={() => handleReset('whiteSpace')} title="Reset">↺</button>
+                <button type="button" onClick={() => handleReset('whiteSpace')} title="Reset">↺</button>
+              </div>
+            </div>
+
+            {/* Element Animation */}
+            <div className={styles.property}>
+              <label>Element Animation</label>
+              <div className={styles.inputGroup}>
+                <select
+                  value={(localStyles as TextStyle).animation || ''}
+                  onChange={(e) => handleChange('animation', e.target.value)}
+                >
+                  <option value="">Inherit Site Setting</option>
+                  <option value="none">None</option>
+                  <option value="fade">Fade In</option>
+                  <option value="fade-up">Fade Up</option>
+                  <option value="slide-left">Slide Left</option>
+                  <option value="slide-right">Slide Right</option>
+                  <option value="zoom-in">Zoom In</option>
+                  <option value="float">Gentle Float</option>
+                  <option value="pulse">Soft Pulse</option>
+                </select>
+                <button type="button" onClick={() => handleReset('animation')} title="Reset">↺</button>
               </div>
             </div>
           </>
@@ -385,6 +407,28 @@ export default function StyleEditor({
                   />
                   <button type="button" onClick={() => handleReset('objectPosition')} title="Reset">↺</button>
                 </div>
+              </div>
+            </div>
+
+            {/* Element Animation */}
+            <div className={styles.property}>
+              <label>Element Animation</label>
+              <div className={styles.inputGroup}>
+                <select
+                  value={(localStyles as ImageStyle).animation || ''}
+                  onChange={(e) => handleChange('animation', e.target.value)}
+                >
+                  <option value="">Inherit Site Setting</option>
+                  <option value="none">None</option>
+                  <option value="fade">Fade In</option>
+                  <option value="fade-up">Fade Up</option>
+                  <option value="slide-left">Slide Left</option>
+                  <option value="slide-right">Slide Right</option>
+                  <option value="zoom-in">Zoom In</option>
+                  <option value="float">Gentle Float</option>
+                  <option value="pulse">Soft Pulse</option>
+                </select>
+                <button type="button" onClick={() => handleReset('animation')} title="Reset">↺</button>
               </div>
             </div>
           </>

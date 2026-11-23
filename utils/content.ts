@@ -1,3 +1,38 @@
+export type AnimationPreset = 'none' | 'subtle' | 'smooth' | 'dynamic' | 'snappy';
+export type ScrollRevealType =
+  | 'none'
+  | 'fade'
+  | 'fade-up'
+  | 'fade-down'
+  | 'slide-left'
+  | 'slide-right'
+  | 'zoom-in'
+  | 'flip-up';
+export type HeroEntranceType = 'none' | 'rise' | 'fade' | 'slide-left' | 'zoom' | 'stagger';
+export type CardHoverType = 'none' | 'lift' | 'glow' | 'scale' | 'tilt';
+export type AnimationSpeed = 'slow' | 'normal' | 'fast';
+export type ElementAnimationType =
+  | 'inherit'
+  | 'none'
+  | 'fade'
+  | 'fade-up'
+  | 'slide-left'
+  | 'slide-right'
+  | 'zoom-in'
+  | 'float'
+  | 'pulse';
+
+export interface SiteAnimationSettings {
+  preset: AnimationPreset;
+  scrollReveal: ScrollRevealType;
+  heroEntrance: HeroEntranceType;
+  cardHover: CardHoverType;
+  speed: AnimationSpeed;
+  stagger: boolean;
+  staggerDelayMs?: number;
+  respectReducedMotion: boolean;
+}
+
 // Style properties for images
 export interface ImageStyle {
   width?: string;
@@ -5,6 +40,7 @@ export interface ImageStyle {
   borderRadius?: string;
   objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
   objectPosition?: string; // e.g., 'center', 'top', 'bottom', 'left', 'right', '50% 50%'
+  animation?: ElementAnimationType;
 }
 
 // Style properties for text
@@ -15,6 +51,7 @@ export interface TextStyle {
   fontWeight?: '300' | '400' | '500' | '600' | '700' | '900';
   lineHeight?: string;
   whiteSpace?: 'normal' | 'pre-line' | 'pre-wrap';
+  animation?: ElementAnimationType;
 }
 
 export interface SiteContent {
@@ -29,6 +66,7 @@ export interface SiteContent {
     logoAlt: string;
     organizationName: string;
     organizationFullName?: string;
+    animations?: SiteAnimationSettings;
   };
   customPages?: {
     [key: string]: {

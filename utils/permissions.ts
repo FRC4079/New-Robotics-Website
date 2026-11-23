@@ -30,6 +30,7 @@ export const PERMISSION_AREAS: PermissionArea[] = [
   { key: 'team', label: 'Team members', description: 'Team page hero and member profiles', prefixes: ['team', 'teamMembers'] },
   { key: 'sponsors', label: 'Sponsors page', description: 'Sponsors, tiers and sponsorship info', prefixes: ['sponsors'] },
   { key: 'news', label: 'News & newsletter', description: 'Create, edit and publish articles', prefixes: ['news'] },
+  { key: 'animations', label: 'Website animations', description: 'Page reveal, hero entrance, card hover and speed', prefixes: ['site.animations'] },
   { key: 'footer', label: 'Footer & navigation', description: 'Footer links, socials and the menu', prefixes: ['footer', 'navigation'] },
 ];
 

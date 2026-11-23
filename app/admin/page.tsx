@@ -44,6 +44,14 @@ export default function AdminDashboard() {
           </Link>
         )}
 
+        {canEdit('site.animations') && (
+          <Link href="/admin/animations" className={styles.tile}>
+            <Icon name="sparkles" size={26} />
+            <strong>Website animations</strong>
+            <span>Set motion presets, scroll reveals, hero entrances, and card hover effects.</span>
+          </Link>
+        )}
+
         {isSuperAdmin && (
           <Link href="/admin/users" className={styles.tile}>
             <Icon name="users" size={26} />

@@ -286,6 +286,7 @@ export default function EditableText({
           onKeyDown={handleKeyDown}
           data-path={path}
           data-editable="text"
+          data-el-anim={localStyle.animation && localStyle.animation !== 'inherit' ? localStyle.animation : undefined}
           data-placeholder={!localValue && isEditMode ? placeholder : undefined}
           style={inlineStyle}
           onMouseEnter={isEditMode ? showHover : undefined}

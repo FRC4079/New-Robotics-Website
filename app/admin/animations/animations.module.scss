@@ -1,0 +1,230 @@
+@use '../../styles/mixins' as *;
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.presetCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-raised);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+
+  &:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+    transform: translateY(-2px);
+  }
+
+  strong {
+    font-family: var(--font-display);
+    font-size: var(--text-base);
+  }
+
+  span {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+}
+
+.presetActive {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+
+  &:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+.previewStage {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-strong);
+  background:
+    radial-gradient(32rem 16rem at 20% 0%, rgba(224, 36, 47, 0.16), transparent 70%),
+    var(--bg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.previewTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.previewBadge {
+  @include eyebrow;
+}
+
+.previewHero {
+  margin-bottom: var(--space-5);
+
+  h3 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-2xl);
+    font-weight: 900;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+
+  @include bp-down(640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.previewCard {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: transform var(--preview-dur, 0.2s) var(--ease),
+    border-color var(--preview-dur, 0.2s) var(--ease),
+    box-shadow var(--preview-dur, 0.2s) var(--ease),
+    background var(--preview-dur, 0.2s) var(--ease);
+
+  strong {
+    display: block;
+    font-family: var(--font-display);
+    margin-bottom: var(--space-1);
+  }
+
+  span {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+}
+
+.hover_lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+.hover_glow:hover {
+  transform: translateY(-2px);
+  border-color: rgba(224, 36, 47, 0.55);
+  box-shadow: 0 12px 28px rgba(224, 36, 47, 0.2);
+}
+
+.hover_scale:hover {
+  transform: scale(1.03);
+  border-color: var(--border-strong);
+}
+
+.hover_tilt:hover {
+  transform: perspective(700px) translateY(-4px) rotateX(3deg) scale(1.01);
+  border-color: var(--accent);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.4);
+}
+
+.hover_none:hover {
+  transform: none;
+}
+
+.anim_fade {
+  animation: prevFade var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_fade-up,
+.anim_rise {
+  animation: prevFadeUp var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_fade-down {
+  animation: prevFadeDown var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_slide-left {
+  animation: prevSlideLeft var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_slide-right {
+  animation: prevSlideRight var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_zoom-in,
+.anim_zoom {
+  animation: prevZoom var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_flip-up {
+  animation: prevFlip var(--preview-reveal-dur, 0.6s) var(--ease) both;
+}
+
+.anim_stagger {
+  animation: prevStagger var(--preview-reveal-dur, 0.65s) var(--ease) both;
+}
+
+.anim_none {
+  animation: none;
+}
+
+@keyframes prevFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes prevFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevFadeDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevSlideLeft {
+  from { opacity: 0; transform: translateX(26px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevSlideRight {
+  from { opacity: 0; transform: translateX(-26px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevZoom {
+  from { opacity: 0; transform: scale(0.93); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevFlip {
+  from { opacity: 0; transform: perspective(800px) rotateX(10deg) translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes prevStagger {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}

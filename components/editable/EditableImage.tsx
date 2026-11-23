@@ -198,6 +198,7 @@ export default function EditableImage({
         }}
         data-path={path}
         data-editable="image"
+        data-el-anim={localStyle.animation && localStyle.animation !== 'inherit' ? localStyle.animation : undefined}
       >
         <MediaAsset
           src={localSrc}
