@@ -3,6 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import MediaAsset from '@/components/media/MediaAsset';
+import MediaPickerModal from '@/components/media/MediaPickerModal';
+import { MEDIA_ACCEPT, uploadMediaFile } from '@/utils/mediaHelpers';
 import ui from '../ui.module.scss';
 import styles from './news.module.scss';
 
@@ -73,6 +76,7 @@ export default function NewsManager() {
   const [status, setStatus] = useState<Status>(null);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -179,16 +183,10 @@ export default function NewsManager() {
     setUploading(true);
     setStatus(null);
     try {
-      const form = new FormData();
-      form.append('file', file);
-      form.append('category', 'images');
-      form.append('subcategory', 'articles');
-      const response = await fetch('/api/media', { method: 'POST', body: form });
-      const data = await response.json();
-      if (data.success) patch({ image: data.filePath });
-      else setStatus({ kind: 'error', text: data.error ?? 'Upload failed.' });
-    } catch {
-      setStatus({ kind: 'error', text: 'Upload failed.' });
+      const filePath = await uploadMediaFile(file, 'images', 'articles');
+      patch({ image: filePath });
+    } catch (err) {
+      setStatus({ kind: 'error', text: err instanceof Error ? err.message : 'Upload failed.' });
     } finally {
       setUploading(false);
       if (fileInput.current) fileInput.current.value = '';
@@ -280,29 +278,43 @@ export default function NewsManager() {
           </div>
 
           <div className={ui.field}>
-            <label htmlFor="imageFile">Cover image</label>
+            <label htmlFor="imageFile">Cover image, GIF, or video</label>
             {draft.image && (
-              <img src={draft.image} alt="" className={styles.preview} />
+              <MediaAsset src={draft.image} alt="" className={styles.preview} />
             )}
             <input
               ref={fileInput}
               id="imageFile"
               type="file"
-              accept="image/*"
+              accept={MEDIA_ACCEPT}
               disabled={uploading}
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) void upload(file);
               }}
             />
-            {draft.image && (
-              <div style={{ marginTop: '0.5rem' }}>
+            <div className={ui.actions} style={{ marginTop: '0.5rem' }}>
+              <button type="button" className={ui.buttonQuiet} onClick={() => setShowMediaPicker(true)}>
+                Browse Media Library / Paste URL
+              </button>
+              {draft.image && (
                 <button type="button" className={ui.buttonQuiet} onClick={() => patch({ image: '' })}>
                   Remove cover media
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
+
+          {showMediaPicker && (
+            <MediaPickerModal
+              title="Choose Cover Image, GIF, or Video"
+              initialUrl={draft.image ?? ''}
+              category="images"
+              subcategory="articles"
+              onSelect={(url) => patch({ image: url })}
+              onClose={() => setShowMediaPicker(false)}
+            />
+          )}
 
           <div className={ui.actions}>
             <button type="button" className={ui.button} disabled={busy || uploading} onClick={() => void save(true)}>

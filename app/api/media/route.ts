@@ -3,12 +3,12 @@ import { mkdir, readdir, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { requireEditor, requireSuperAdmin } from '@/utils/auth';
 import {
-  MAX_UPLOAD_BYTES,
   MEDIA_EXTENSIONS,
   PUBLIC_DIR,
   UPLOAD_DIR,
   UPLOAD_URL_PREFIX,
   backupFile,
+  getMaxUploadBytes,
   isAllowedUpload,
   resolveInside,
   resolveUploadUrl,
@@ -55,10 +55,11 @@ export async function POST(request: NextRequest) {
       return fail('No file provided', 400);
     }
     if (!isAllowedUpload(file)) {
-      return fail('Invalid file type. Only images are allowed.', 400);
+      return fail('Invalid file type. Only images, GIFs, and videos (.mp4, .webm, .mov, .ogv) are allowed.', 400);
     }
-    if (file.size > MAX_UPLOAD_BYTES) {
-      return fail(`File is too large. The limit is ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`, 413);
+    const maxBytes = getMaxUploadBytes(file);
+    if (file.size > maxBytes) {
+      return fail(`File is too large. The limit is ${maxBytes / 1024 / 1024} MB.`, 413);
     }
 
     const fileName = sanitizeName(file.name);

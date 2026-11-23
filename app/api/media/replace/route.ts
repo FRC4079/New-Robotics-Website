@@ -3,9 +3,9 @@ import { stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { requireSuperAdmin } from '@/utils/auth';
 import {
-  MAX_UPLOAD_BYTES,
   MEDIA_EXTENSIONS,
   backupFile,
+  getMaxUploadBytes,
   isAllowedUpload,
   resolveUploadUrl,
   toUploadUrl,
@@ -32,10 +32,11 @@ export async function POST(request: NextRequest) {
       return fail('No existing file path provided', 400);
     }
     if (!isAllowedUpload(file)) {
-      return fail('Invalid file type. Only images are allowed.', 400);
+      return fail('Invalid file type. Only images, GIFs, and videos (.mp4, .webm, .mov, .ogv) are allowed.', 400);
     }
-    if (file.size > MAX_UPLOAD_BYTES) {
-      return fail(`File is too large. The limit is ${MAX_UPLOAD_BYTES / 1024 / 1024} MB.`, 413);
+    const maxBytes = getMaxUploadBytes(file);
+    if (file.size > maxBytes) {
+      return fail(`File is too large. The limit is ${maxBytes / 1024 / 1024} MB.`, 413);
     }
 
     // Only uploaded files can be replaced; the site's own assets belong to the repository.

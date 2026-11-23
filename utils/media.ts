@@ -22,6 +22,7 @@ export const BACKUP_DIR = process.env.MEDIA_BACKUP_DIR
   : path.join(process.cwd(), 'data', 'media-backups');
 
 export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+export const MAX_VIDEO_UPLOAD_BYTES = 50 * 1024 * 1024;
 
 /** Accepted upload types and the file extensions that may carry them. */
 const UPLOAD_TYPES: Record<string, string[]> = {
@@ -31,6 +32,10 @@ const UPLOAD_TYPES: Record<string, string[]> = {
   'image/gif': ['.gif'],
   'image/webp': ['.webp'],
   'image/svg+xml': ['.svg'],
+  'video/mp4': ['.mp4', '.m4v'],
+  'video/webm': ['.webm'],
+  'video/quicktime': ['.mov', '.mp4'],
+  'video/ogg': ['.ogv'],
 };
 
 /** Content types for the files that may be served from the uploads folder. */
@@ -41,12 +46,22 @@ export const SERVED_TYPES: Record<string, string> = {
   '.gif': 'image/gif',
   '.webp': 'image/webp',
   '.svg': 'image/svg+xml',
+  '.mp4': 'video/mp4',
+  '.m4v': 'video/mp4',
+  '.webm': 'video/webm',
+  '.mov': 'video/quicktime',
+  '.ogv': 'video/ogg',
 };
 
 /** Extensions listed by the media manager. */
 export const MEDIA_EXTENSIONS = new Set([
-  '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.mov', '.avi',
+  '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp4', '.m4v', '.webm', '.mov', '.ogv', '.avi',
 ]);
+
+/** Maximum allowed byte size based on whether the upload is a video or image/GIF. */
+export function getMaxUploadBytes(file: File): number {
+  return file.type.startsWith('video/') ? MAX_VIDEO_UPLOAD_BYTES : MAX_UPLOAD_BYTES;
+}
 
 /** True when the upload's MIME type is allowed and matches its file extension. */
 export function isAllowedUpload(file: File): boolean {

@@ -2,9 +2,10 @@
 import React, { useState, useRef } from 'react';
 import styles from './RichContentEditor.module.scss';
 import { useEditMode } from '@/contexts/EditModeContext';
+import { MEDIA_ACCEPT, isVideoUrl, uploadMediaFile } from '@/utils/mediaHelpers';
 
 interface ContentBlock {
-  type: 'text' | 'image';
+  type: 'text' | 'image' | 'video';
   content: string;
   id: string;
   imageStyle?: {
@@ -21,15 +22,14 @@ interface RichContentEditorProps {
 }
 
 function parseContent(html: string): ContentBlock[] {
-    // Simple parser - split by image tags and create blocks
+    // Split by image and video tags and create blocks
     const parts: ContentBlock[] = [];
-    const imgRegex = /<img[^>]+src="([^"]+)"[^>]*>/g;
+    const mediaRegex = /<(img|video)\b[^>]*\bsrc="([^"]+)"[^>]*>(?:<\/video>)?/gi;
     let lastIndex = 0;
     let match;
     let blockId = 0;
 
-    while ((match = imgRegex.exec(html)) !== null) {
-      // Add text before image
+    while ((match = mediaRegex.exec(html)) !== null) {
       if (match.index > lastIndex) {
         const textContent = html.substring(lastIndex, match.index);
         if (textContent.trim()) {
@@ -41,10 +41,10 @@ function parseContent(html: string): ContentBlock[] {
         }
       }
 
-      // Add image
+      const tag = match[1].toLowerCase();
       parts.push({
-        type: 'image',
-        content: match[1],
+        type: tag === 'video' || isVideoUrl(match[2]) ? 'video' : 'image',
+        content: match[2],
         id: `block-${blockId++}`,
       });
 
@@ -97,7 +97,12 @@ export default function RichContentEditor({
       } else {
         const alignment = block.imageStyle?.alignment || 'center';
         const width = block.imageStyle?.width || '100%';
-        return `<img src="${block.content}" alt="Article image" style="width: ${width}; display: block; margin: ${alignment === 'center' ? '20px auto' : alignment === 'right' ? '20px 0 20px auto' : '20px auto 20px 0'};" />`;
+        const margin = alignment === 'center' ? '20px auto' : alignment === 'right' ? '20px 0 20px auto' : '20px auto 20px 0';
+        const styleAttr = `width: ${width}; display: block; margin: ${margin};`;
+        if (block.type === 'video' || isVideoUrl(block.content)) {
+          return `<video src="${block.content}" controls playsInline style="${styleAttr}"></video>`;
+        }
+        return `<img src="${block.content}" alt="Article media" style="${styleAttr}" />`;
       }
     }).join('');
   }
@@ -119,27 +124,15 @@ export default function RichContentEditor({
       if (!file) return;
 
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('category', 'images');
-        formData.append('subcategory', 'articles');
+        const filePath = await uploadMediaFile(file, 'images', 'articles');
+        const blockType = isVideoUrl(filePath) || file.type.startsWith('video/') ? 'video' : 'image';
 
-        const response = await fetch('/api/media', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) throw new Error('Upload failed');
-
-        const data = await response.json();
-        
-        // Insert new image block after the specified block
         const insertIndex = blocks.findIndex(b => b.id === afterBlockId) + 1;
         const newBlocks = [
           ...blocks.slice(0, insertIndex),
           {
-            type: 'image' as const,
-            content: data.filePath,
+            type: blockType as 'image' | 'video',
+            content: filePath,
             id: `block-${Date.now()}`,
             imageStyle: { width: '100%', alignment: 'center' as const },
           },
@@ -151,8 +144,8 @@ export default function RichContentEditor({
         onChange?.(serialized);
         addPendingChange(path, serialized);
       } catch (error) {
-        console.error('Error uploading image:', error);
-        notify('Could not upload the image.');
+        console.error('Error uploading media:', error);
+        notify(error instanceof Error ? error.message : 'Could not upload the media.');
       }
     };
   };
@@ -191,7 +184,7 @@ export default function RichContentEditor({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept={MEDIA_ACCEPT}
         style={{ display: 'none' }}
       />
       
@@ -219,15 +212,28 @@ export default function RichContentEditor({
             </div>
           ) : (
             <div className={styles.imageBlock}>
-              <img
-                src={block.content}
-                alt="Article content"
-                style={{
-                  width: block.imageStyle?.width || '100%',
-                  margin: '20px auto',
-                  display: 'block',
-                }}
-              />
+              {block.type === 'video' || isVideoUrl(block.content) ? (
+                <video
+                  src={block.content}
+                  controls
+                  playsInline
+                  style={{
+                    width: block.imageStyle?.width || '100%',
+                    margin: '20px auto',
+                    display: 'block',
+                  }}
+                />
+              ) : (
+                <img
+                  src={block.content}
+                  alt="Article content"
+                  style={{
+                    width: block.imageStyle?.width || '100%',
+                    margin: '20px auto',
+                    display: 'block',
+                  }}
+                />
+              )}
               <div className={styles.imageControls}>
                 <select
                   value={block.imageStyle?.width || '100%'}

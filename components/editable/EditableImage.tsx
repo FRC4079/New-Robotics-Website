@@ -4,11 +4,13 @@ import { createPortal } from 'react-dom';
 import { useEditMode } from '@/contexts/EditModeContext';
 import { useContent } from '@/hooks/useContent';
 import styles from './EditableImage.module.scss';
-import Image from 'next/image';
 import StyleEditor from './StyleEditor';
 import { ImageStyle } from '@/utils/content';
 import { getContentImageStyle, getStoredStyle } from '@/utils/contentHelpers';
 import Icon from '@/components/icons/Icon';
+import MediaAsset from '@/components/media/MediaAsset';
+import MediaPickerModal from '@/components/media/MediaPickerModal';
+import { MEDIA_ACCEPT, uploadMediaFile } from '@/utils/mediaHelpers';
 
 interface EditableImageProps {
   src: string;
@@ -53,6 +55,7 @@ export default function EditableImage({
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
   const [showStyleEditor, setShowStyleEditor] = useState(false);
   const [styleEditorPosition, setStyleEditorPosition] = useState({ x: 0, y: 0 });
   // Portals only render in edit mode, which never happens on the server.
@@ -91,11 +94,17 @@ export default function EditableImage({
     if (incomingStyle) setLocalStyle(incomingStyle);
   }
 
+  const applyMediaSrc = (newSrc: string) => {
+    setLocalSrc(newSrc);
+    addPendingChange(path, newSrc);
+    onChange?.(newSrc);
+  };
+
   const handleReplaceClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (isEditMode) {
-      fileInputRef.current?.click();
+      setShowMediaPicker(true);
     }
   };
 
@@ -103,54 +112,13 @@ export default function EditableImage({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      notify('Please choose an image file.');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      notify('That image is over 5 MB. Please choose a smaller one.');
-      return;
-    }
-
     setIsUploading(true);
-
     try {
-      // Upload to media API
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const response = await fetch('/api/media', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      const data = await response.json();
-      
-      if (!data.success) {
-        throw new Error(data.error || 'Upload failed');
-      }
-      
-      // API returns filePath, not url
-      const newSrc = data.filePath;
-
-      // Update local state
-      setLocalSrc(newSrc);
-      
-      // Add to pending changes
-      addPendingChange(path, newSrc);
-      
-      // Call onChange callback
-      onChange?.(newSrc);
+      const newSrc = await uploadMediaFile(file);
+      applyMediaSrc(newSrc);
     } catch (error) {
-      console.error('Error uploading image:', error);
-      notify(error instanceof Error ? error.message : 'Could not upload the image. Please try again.');
+      console.error('Error uploading media:', error);
+      notify(error instanceof Error ? error.message : 'Could not upload the media file. Please try again.');
     } finally {
       setIsUploading(false);
     }
@@ -231,52 +199,31 @@ export default function EditableImage({
         data-path={path}
         data-editable="image"
       >
-        {useNextImage ? (
-          fill ? (
-            <Image
-              src={localSrc}
-              alt={alt}
-              fill
-              style={{ 
-                objectFit: imageStyle.objectFit, 
-                objectPosition: imageStyle.objectPosition,
-                borderRadius: imageStyle.borderRadius 
-              }}
-              className={className}
-            />
-          ) : (
-            <Image
-              src={localSrc}
-              alt={alt}
-              width={width || 500}
-              height={height || 300}
-              style={{ 
-                objectFit: imageStyle.objectFit, 
-                objectPosition: imageStyle.objectPosition,
-                borderRadius: imageStyle.borderRadius 
-              }}
-              className={className}
-            />
-          )
-        ) : (
-          <img
-            src={localSrc}
-            alt={alt}
-            width={width}
-            height={height}
-            loading="lazy"
-            decoding="async"
-            className={className}
-            style={imageStyle}
-          />
-        )}
+        <MediaAsset
+          src={localSrc}
+          alt={alt}
+          width={width}
+          height={height}
+          fill={fill}
+          useNextImage={useNextImage}
+          className={className}
+          style={
+            useNextImage
+              ? {
+                  objectFit: imageStyle.objectFit,
+                  objectPosition: imageStyle.objectPosition,
+                  borderRadius: imageStyle.borderRadius,
+                }
+              : imageStyle
+          }
+        />
 
         {isEditMode && (
           <>
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept={MEDIA_ACCEPT}
               onChange={handleFileChange}
               className={styles.hiddenInput}
               hidden
@@ -314,6 +261,15 @@ export default function EditableImage({
           </>
         )}
       </div>
+
+      {mounted && showMediaPicker && (
+        <MediaPickerModal
+          title="Replace Image, GIF, or Video"
+          initialUrl={localSrc}
+          onSelect={applyMediaSrc}
+          onClose={() => setShowMediaPicker(false)}
+        />
+      )}
 
       {mounted && showStyleEditor && createPortal(
         <StyleEditor

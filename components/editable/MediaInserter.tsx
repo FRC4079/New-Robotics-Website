@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import styles from './MediaInserter.module.scss';
 import { useEditMode } from '@/contexts/EditModeContext';
+import { MEDIA_ACCEPT, uploadMediaFile } from '@/utils/mediaHelpers';
 
 interface MediaInserterProps {
   onInsert: (imageUrl: string, alt: string) => void;
@@ -21,23 +22,12 @@ export default function MediaInserter({ onInsert }: MediaInserterProps) {
 
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('category', 'images');
-
-      const response = await fetch('/api/media', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) throw new Error('Upload failed');
-
-      const data = await response.json();
-      onInsert(data.filePath, file.name);
+      const filePath = await uploadMediaFile(file, 'images');
+      onInsert(filePath, file.name);
       setIsOpen(false);
     } catch (error) {
-      console.error('Error uploading image:', error);
-      notify('Could not upload the image.');
+      console.error('Error uploading media:', error);
+      notify(error instanceof Error ? error.message : 'Could not upload the media.');
     } finally {
       setUploading(false);
     }
@@ -62,16 +52,17 @@ export default function MediaInserter({ onInsert }: MediaInserterProps) {
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept={MEDIA_ACCEPT}
             onChange={handleFileSelect}
             style={{ display: 'none' }}
           />
           <button
+            type="button"
             className={styles.menuOption}
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
           >
-            {uploading ? 'Uploading...' : 'Upload Image'}
+            {uploading ? 'Uploading...' : 'Upload Image / GIF / Video'}
           </button>
         </div>
       )}

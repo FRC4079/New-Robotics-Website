@@ -2,6 +2,7 @@
 import React from 'react';
 import styles from './teamMembers.module.scss';
 import { useContent } from '@/hooks/useContent';
+import MediaAsset from '@/components/media/MediaAsset';
 
 type TeamMember = {
     id: string;
@@ -95,7 +96,7 @@ export default function TeamMembers({
                         <div key={member.id} className={styles.memberCard}>
                             <div className={styles.memberImage}>
                                 {member.image ? (
-                                    <img src={member.image} alt={member.name} />
+                                    <MediaAsset src={member.image} alt={member.name} />
                                 ) : (
                                     <div className={styles.placeholder}>
                                         <span>{member.name.split(' ').map(n => n[0]).join('')}</span>
