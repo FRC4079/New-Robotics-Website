@@ -30,6 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const items: NavItem[] = [
     { href: '/admin', label: 'Dashboard', icon: 'home', show: true },
+    { href: '/admin/pages', label: 'Pages & nav', icon: 'layers', show: canEdit('customPages') || canEdit('navigation') },
     { href: '/admin/news', label: 'News', icon: 'megaphone', show: canEdit('news') },
     { href: '/admin/animations', label: 'Animations', icon: 'sparkles', show: canEdit('site.animations') },
     { href: '/admin/users', label: 'Accounts', icon: 'users', show: isSuperAdmin },

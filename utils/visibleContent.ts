@@ -10,16 +10,33 @@ import type { SiteContent } from '@/utils/content';
  */
 export async function getVisibleContent(): Promise<SiteContent | null> {
   const content = await getServerContent();
-  if (!content?.news?.articles) return content;
+  if (!content) return content;
 
   const user = await getSessionUser();
-  if (user && canEditPath(user, 'news')) return content;
+  let next = content;
 
-  return {
-    ...content,
-    news: {
-      ...content.news,
-      articles: content.news.articles.filter((article) => article.status !== 'draft'),
-    },
-  };
+  if (content.news?.articles && !(user && canEditPath(user, 'news'))) {
+    next = {
+      ...next,
+      news: {
+        ...content.news,
+        articles: content.news.articles.filter((article) => article.status !== 'draft'),
+      },
+    };
+  }
+
+  if (content.customPages && !(user && canEditPath(user, 'customPages'))) {
+    const visiblePages: NonNullable<SiteContent['customPages']> = {};
+    for (const [slug, page] of Object.entries(content.customPages)) {
+      if (page && page.published !== false) {
+        visiblePages[slug] = page;
+      }
+    }
+    next = {
+      ...next,
+      customPages: visiblePages,
+    };
+  }
+
+  return next;
 }

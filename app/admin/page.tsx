@@ -33,8 +33,16 @@ export default function AdminDashboard() {
         <Link href="/" className={styles.tile} onClick={enableEditMode}>
           <Icon name="pencil" size={26} />
           <strong>Edit pages</strong>
-          <span>Open the website and change text, images and icons right where they appear.</span>
+          <span>Open the website and change text, images, videos, banners and sections right where they appear.</span>
         </Link>
+
+        {(canEdit('customPages') || canEdit('navigation')) && (
+          <Link href="/admin/pages" className={styles.tile}>
+            <Icon name="layers" size={26} />
+            <strong>Pages &amp; navigation</strong>
+            <span>Create new pages, style custom sections, and organize navbar and footer links.</span>
+          </Link>
+        )}
 
         {canEdit('news') && (
           <Link href="/admin/news" className={styles.tile}>
